@@ -1,5 +1,5 @@
 {
-  "name": "wed-invi",
+  "name": "bora-n-maria",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,9 +11,9 @@
     "format:fix": "prettier --write --list-different ."
   },
   "dependencies": {
-    "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "next": "14.0.4"
   },
   "devDependencies": {
     "@types/node": "^20",
