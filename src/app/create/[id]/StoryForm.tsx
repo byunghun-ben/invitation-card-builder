@@ -1,29 +1,78 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 type Props = {
-  id: string;
   index: number;
-  onChangeTitle: (id: string, title: string) => void;
-};
-
-const StoryForm = ({ id, index, onChangeTitle }: Props) => {
-  const FORM_TITLE = `${index + 1}번째 스토리`;
-
-  const [images, setImages] = useState<
-    {
+  story: {
+    id: string;
+    title: string;
+    images: {
       id: string;
       url: string;
-    }[]
-  >([]);
+    }[];
+  };
+  onChangeTitle: (id: string, title: string) => void;
+  onChangeImages: (
+    id: string,
+    images: {
+      id: string;
+      url: string;
+    }[],
+  ) => void;
+};
 
-  const isImageEmpty = images.length === 0;
+const StoryForm = ({ index, story, onChangeTitle, onChangeImages }: Props) => {
+  const FORM_TITLE = `${index + 1}번째 스토리`;
+
+  const isImageEmpty = story.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const removeImage = (id: string) => () => {
-    setImages(prev => prev.filter(image => image.id !== id));
+    const newImages = story.images.filter(image => image.id !== id);
+
+    onChangeImages(story.id, newImages);
+  };
+
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (!files) {
+      return;
+    }
+
+    const file = files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const dataURL = reader.result;
+
+      if (!dataURL || typeof dataURL !== "string") {
+        return;
+      }
+
+      const id = Math.random().toString(36).slice(2);
+
+      const newImages = [
+        ...story.images,
+        {
+          id,
+          url: dataURL,
+        },
+      ];
+
+      onChangeImages(story.id, newImages);
+    };
+
+    reader.readAsDataURL(file);
+
+    e.target.value = "";
   };
 
   return (
@@ -34,9 +83,10 @@ const StoryForm = ({ id, index, onChangeTitle }: Props) => {
         <div className="flex flex-col gap-4">
           <input
             type="text"
-            className="py-2 px-3 border border-slate-400 rounded"
+            className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
             placeholder="스토리 제목을 입력하세요."
-            onChange={e => onChangeTitle(id, e.target.value)}
+            value={story.title}
+            onChange={e => onChangeTitle(story.id, e.target.value)}
           />
 
           {isImageEmpty && (
@@ -54,7 +104,7 @@ const StoryForm = ({ id, index, onChangeTitle }: Props) => {
           {!isImageEmpty && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {images.map((image, index) => (
+              {story.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <div
                     className="h-16 w-16 bg-cover bg-center border rounded"
@@ -85,43 +135,7 @@ const StoryForm = ({ id, index, onChangeTitle }: Props) => {
             className="hidden"
             ref={fileInputRef}
             accept="image/*, video/*"
-            onChange={e => {
-              const files = e.target.files;
-
-              if (!files) {
-                return;
-              }
-
-              const file = files[0];
-
-              if (!file) {
-                return;
-              }
-
-              const reader = new FileReader();
-
-              reader.onload = () => {
-                const dataURL = reader.result;
-
-                if (!dataURL || typeof dataURL !== "string") {
-                  return;
-                }
-
-                const id = Math.random().toString(36).slice(2);
-
-                setImages(prev => [
-                  ...prev,
-                  {
-                    id,
-                    url: dataURL,
-                  },
-                ]);
-              };
-
-              reader.readAsDataURL(file);
-
-              e.target.value = "";
-            }}
+            onChange={onChangeFile}
           />
         </div>
       </div>
