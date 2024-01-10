@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import StoryForm from "./StoryForm";
 import PostForm from "./PostForm";
+import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import Image from "next/image";
 
 const Page = () => {
   const [title, setTitle] = useState("");
@@ -135,7 +137,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen">
       <Tab.Group>
         <section className="basis-48 shrink-0 py-10 pl-10 border-r">
           <Tab.List className="flex flex-col items-start gap-10">
@@ -185,7 +187,7 @@ const Page = () => {
             </Tab>
           </Tab.List>
         </section>
-        <section className="basis-96 flex-1 flex flex-col border-r">
+        <section className="basis-96 flex-1 flex flex-col border-r overflow-y-auto">
           <Tab.Panels className="flex-1 flex flex-col">
             <Tab.Panel className="flex-1 flex flex-col p-10">
               <div className="flex flex-col gap-10">
@@ -345,6 +347,7 @@ const Page = () => {
         </section>
       </Tab.Group>
       <section className="basis-96 max-w-96 flex-1 flex flex-col">
+        {/* Header */}
         <div className="h-10 px-3 flex items-center">
           <span>{title || "청첩장 제목을 입력하세요"}</span>
           <div className="ml-auto flex items-center">
@@ -394,6 +397,33 @@ const Page = () => {
             </button>
           </div>
         </div>
+        {/* Header */}
+
+        {/* Story */}
+        <div className="flex py-2 px-4">
+          <div className="flex gap-3 overflow-x-auto overscroll-contain no-scrollbar">
+            {stories.map(story => (
+              <div
+                key={story.id}
+                className="flex-none basis-16 flex flex-col gap-1 items-center"
+              >
+                <div>
+                  <Image
+                    src={story.images?.[0]?.url || DEFAULT_IMAGE}
+                    alt="스토리 썸네일 이미지"
+                    className="w-16 h-16 rounded-full border object-cover"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+                <span className="text-xxs line-clamp-1">
+                  {story.title || "스토리"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Story */}
       </section>
     </div>
   );

@@ -33,13 +33,6 @@ const PostForm = ({
 }: Props) => {
   const FORM_TITLE = `${index + 1}번째 게시물`;
 
-  // const [images, setImages] = useState<
-  //   {
-  //     id: string;
-  //     url: string;
-  //   }[]
-  // >([]);
-
   const isImageEmpty = post.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
