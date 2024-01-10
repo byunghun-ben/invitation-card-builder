@@ -7,7 +7,7 @@ const page = () => {
   const [isOpenStories, setIsOpenStories] = useState(false);
   const stories: (Story | string)[] = [
     {
-      url: "http://test.g-it.kr/data/file/test_video/237872521_Y3pdvykb_500.mp4",
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
       type: "video",
     },
     {
