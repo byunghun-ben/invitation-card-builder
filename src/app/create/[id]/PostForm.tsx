@@ -1,29 +1,92 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 type Props = {
-  id: string;
   index: number;
-  onChangeTitle: (id: string, title: string) => void;
-};
-
-const PostForm = ({ id, index, onChangeTitle }: Props) => {
-  const FORM_TITLE = `${index + 1}번째 스토리`;
-
-  const [images, setImages] = useState<
-    {
+  post: {
+    id: string;
+    title: string;
+    content: string;
+    images: {
       id: string;
       url: string;
-    }[]
-  >([]);
+    }[];
+  };
+  onChangeTitle: (id: string, title: string) => void;
+  onChangeContent: (id: string, content: string) => void;
+  onChangeImages: (
+    id: string,
+    images: {
+      id: string;
+      url: string;
+    }[],
+  ) => void;
+};
 
-  const isImageEmpty = images.length === 0;
+const PostForm = ({
+  post,
+  index,
+  onChangeTitle,
+  onChangeContent,
+  onChangeImages,
+}: Props) => {
+  const FORM_TITLE = `${index + 1}번째 게시물`;
+
+  // const [images, setImages] = useState<
+  //   {
+  //     id: string;
+  //     url: string;
+  //   }[]
+  // >([]);
+
+  const isImageEmpty = post.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (!files) {
+      return;
+    }
+
+    const file = files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const dataURL = reader.result;
+
+      if (!dataURL || typeof dataURL !== "string") {
+        return;
+      }
+
+      const id = Math.random().toString(36).slice(2);
+
+      const newImages = [
+        ...post.images,
+        {
+          id,
+          url: dataURL,
+        },
+      ];
+
+      onChangeImages(post.id, newImages);
+    };
+
+    reader.readAsDataURL(file);
+
+    e.target.value = "";
+  };
+
   const removeImage = (id: string) => () => {
-    setImages(prev => prev.filter(image => image.id !== id));
+    const newImages = post.images.filter(image => image.id !== id);
+    onChangeImages(post.id, newImages);
   };
 
   return (
@@ -34,9 +97,10 @@ const PostForm = ({ id, index, onChangeTitle }: Props) => {
         <div className="flex flex-col gap-4">
           <input
             type="text"
-            className="py-2 px-3 border border-slate-400 rounded"
-            placeholder="스토리 제목을 입력하세요."
-            onChange={e => onChangeTitle(id, e.target.value)}
+            className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
+            placeholder="게시물 제목을 입력하세요."
+            value={post.title}
+            onChange={e => onChangeTitle(post.id, e.target.value)}
           />
 
           {isImageEmpty && (
@@ -54,7 +118,7 @@ const PostForm = ({ id, index, onChangeTitle }: Props) => {
           {!isImageEmpty && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {images.map((image, index) => (
+              {post.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <div
                     className="h-16 w-16 bg-cover bg-center border rounded"
@@ -85,42 +149,18 @@ const PostForm = ({ id, index, onChangeTitle }: Props) => {
             className="hidden"
             ref={fileInputRef}
             accept="image/*, video/*"
-            onChange={e => {
-              const files = e.target.files;
+            onChange={onChangeFile}
+          />
 
-              if (!files) {
-                return;
-              }
-
-              const file = files[0];
-
-              if (!file) {
-                return;
-              }
-
-              const reader = new FileReader();
-
-              reader.onload = () => {
-                const dataURL = reader.result;
-
-                if (!dataURL || typeof dataURL !== "string") {
-                  return;
-                }
-
-                const id = Math.random().toString(36).slice(2);
-
-                setImages(prev => [
-                  ...prev,
-                  {
-                    id,
-                    url: dataURL,
-                  },
-                ]);
-              };
-
-              reader.readAsDataURL(file);
-
-              e.target.value = "";
+          <textarea
+            className="min-h-20 resize-none py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
+            placeholder="본문을 입력하세요."
+            value={post.content}
+            onChange={e => onChangeContent(post.id, e.target.value)}
+            onKeyUp={e => {
+              // TODO: Auto resize
+              e.currentTarget.style.height = "auto";
+              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}
           />
         </div>
