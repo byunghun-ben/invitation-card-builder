@@ -17,6 +17,7 @@ const page = () => {
       url: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcsFQjn%2FbtqJWrt4dsW%2FaUszoE6rBAnM1eb7IP96lK%2Fimg.jpg",
     },
     "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbJASiX%2FbtqJ1McF7cJ%2FkxUYPxDGpayAmb4OLeRxI1%2Fimg.jpg",
+    "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FEtvoP%2FbtqJXVnS6vK%2Fp5u6YZWbkGWWWkCkJI0hE1%2Fimg.jpg",
   ];
   return (
     <>
