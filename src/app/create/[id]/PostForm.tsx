@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef } from "react";
 
 type Props = {
   index: number;
@@ -13,6 +13,7 @@ type Props = {
       url: string;
     }[];
   };
+  onRemove: (postId: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeContent: (id: string, content: string) => void;
   onChangeImages: (
@@ -27,6 +28,7 @@ type Props = {
 const PostForm = ({
   post,
   index,
+  onRemove,
   onChangeTitle,
   onChangeContent,
   onChangeImages,
@@ -37,63 +39,96 @@ const PostForm = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleRemove = useCallback(() => {
+    onRemove(post.id);
+  }, [post.id]);
 
-    if (!files) {
-      return;
-    }
+  const onChangeFile = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
 
-    const file = files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const dataURL = reader.result;
-
-      if (!dataURL || typeof dataURL !== "string") {
+      if (!files) {
         return;
       }
 
-      const id = Math.random().toString(36).slice(2);
+      const file = files[0];
 
-      const newImages = [
-        ...post.images,
-        {
-          id,
-          url: dataURL,
-        },
-      ];
+      if (!file) {
+        return;
+      }
 
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const dataURL = reader.result;
+
+        if (!dataURL || typeof dataURL !== "string") {
+          return;
+        }
+
+        const id = Math.random().toString(36).slice(2);
+
+        const newImages = [
+          ...post.images,
+          {
+            id,
+            url: dataURL,
+          },
+        ];
+
+        onChangeImages(post.id, newImages);
+      };
+
+      reader.readAsDataURL(file);
+
+      e.target.value = "";
+    },
+    [post.images],
+  );
+
+  const removeImage = useCallback(
+    (id: string) => () => {
+      const newImages = post.images.filter(image => image.id !== id);
       onChangeImages(post.id, newImages);
-    };
+    },
+    [],
+  );
 
-    reader.readAsDataURL(file);
+  const handleChangeTitle = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onChangeTitle(post.id, e.target.value);
+    },
+    [post.id],
+  );
 
-    e.target.value = "";
-  };
-
-  const removeImage = (id: string) => () => {
-    const newImages = post.images.filter(image => image.id !== id);
-    onChangeImages(post.id, newImages);
-  };
+  const handleChangeContent = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      onChangeContent(post.id, e.target.value);
+    },
+    [post.id],
+  );
 
   return (
     <>
       {/* Story */}
       <div className="flex flex-col gap-2">
-        <h3>{FORM_TITLE}</h3>
+        <div className="flex items-center justify-between">
+          <h3>{FORM_TITLE}</h3>
+          <button
+            type="button"
+            className="text-xxs text-red-500"
+            onClick={handleRemove}
+          >
+            게시물 삭제
+          </button>
+        </div>
         <div className="flex flex-col gap-4">
           <input
             type="text"
             className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
             placeholder="게시물 제목을 입력하세요."
             value={post.title}
-            onChange={e => onChangeTitle(post.id, e.target.value)}
+            onChange={handleChangeTitle}
           />
 
           {isImageEmpty && (
@@ -141,7 +176,7 @@ const PostForm = ({
             type="file"
             className="hidden"
             ref={fileInputRef}
-            accept="image/*, video/*"
+            accept="image/*"
             onChange={onChangeFile}
           />
 
@@ -149,7 +184,7 @@ const PostForm = ({
             className="min-h-20 resize-none py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
             placeholder="본문을 입력하세요."
             value={post.content}
-            onChange={e => onChangeContent(post.id, e.target.value)}
+            onChange={handleChangeContent}
             onKeyUp={e => {
               // TODO: Auto resize
               e.currentTarget.style.height = "auto";

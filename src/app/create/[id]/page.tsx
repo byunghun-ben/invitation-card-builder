@@ -2,11 +2,12 @@
 
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import StoryForm from "./StoryForm";
 import PostForm from "./PostForm";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import Image from "next/image";
+import PostItem from "./PostItem";
 
 const Page = () => {
   const [title, setTitle] = useState("");
@@ -21,9 +22,15 @@ const Page = () => {
         url: string;
       }[];
     }[]
-  >([]);
+  >([
+    {
+      id: Math.random().toString(),
+      title: "",
+      images: [],
+    },
+  ]);
 
-  const addStory = () => {
+  const addStory = useCallback(() => {
     setStories(stories => [
       ...stories,
       {
@@ -32,9 +39,13 @@ const Page = () => {
         images: [],
       },
     ]);
-  };
+  }, []);
 
-  const onChangeStoryTitle = (id: string, title: string) => {
+  const onRemoveStory = useCallback((storyId: string) => {
+    setStories(stories => stories.filter(story => story.id !== storyId));
+  }, []);
+
+  const onChangeStoryTitle = useCallback((id: string, title: string) => {
     setStories(stories =>
       stories.map(story =>
         story.id === id
@@ -45,26 +56,29 @@ const Page = () => {
           : story,
       ),
     );
-  };
+  }, []);
 
-  const onChangeStoryImage = (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => {
-    setStories(stories =>
-      stories.map(story =>
-        story.id === id
-          ? {
-              ...story,
-              images,
-            }
-          : story,
-      ),
-    );
-  };
+  const onChangeStoryImage = useCallback(
+    (
+      id: string,
+      images: {
+        id: string;
+        url: string;
+      }[],
+    ) => {
+      setStories(stories =>
+        stories.map(story =>
+          story.id === id
+            ? {
+                ...story,
+                images,
+              }
+            : story,
+        ),
+      );
+    },
+    [],
+  );
 
   // POST
   const [posts, setPosts] = useState<
@@ -77,9 +91,16 @@ const Page = () => {
         url: string;
       }[];
     }[]
-  >([]);
+  >([
+    {
+      id: Math.random().toString(),
+      title: "",
+      content: "",
+      images: [],
+    },
+  ]);
 
-  const addPost = () => {
+  const addPost = useCallback(() => {
     setPosts(posts => [
       ...posts,
       {
@@ -89,9 +110,13 @@ const Page = () => {
         images: [],
       },
     ]);
-  };
+  }, []);
 
-  const onChangePostTitle = (id: string, title: string) => {
+  const onRemovePost = useCallback((postId: string) => {
+    setPosts(posts => posts.filter(post => post.id !== postId));
+  }, []);
+
+  const onChangePostTitle = useCallback((id: string, title: string) => {
     setPosts(posts =>
       posts.map(post =>
         post.id === id
@@ -102,9 +127,9 @@ const Page = () => {
           : post,
       ),
     );
-  };
+  }, []);
 
-  const onChangePostContent = (id: string, content: string) => {
+  const onChangePostContent = useCallback((id: string, content: string) => {
     setPosts(posts =>
       posts.map(post =>
         post.id === id
@@ -115,26 +140,29 @@ const Page = () => {
           : post,
       ),
     );
-  };
+  }, []);
 
-  const onChangePostImage = (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => {
-    setPosts(posts =>
-      posts.map(post =>
-        post.id === id
-          ? {
-              ...post,
-              images,
-            }
-          : post,
-      ),
-    );
-  };
+  const onChangePostImage = useCallback(
+    (
+      id: string,
+      images: {
+        id: string;
+        url: string;
+      }[],
+    ) => {
+      setPosts(posts =>
+        posts.map(post =>
+          post.id === id
+            ? {
+                ...post,
+                images,
+              }
+            : post,
+        ),
+      );
+    },
+    [],
+  );
 
   return (
     <div className="flex h-screen">
@@ -285,6 +313,7 @@ const Page = () => {
                     key={story.id}
                     index={index}
                     story={story}
+                    onRemove={onRemoveStory}
                     onChangeTitle={onChangeStoryTitle}
                     onChangeImages={onChangeStoryImage}
                   />
@@ -325,6 +354,7 @@ const Page = () => {
                     key={post.id}
                     post={post}
                     index={index}
+                    onRemove={onRemovePost}
                     onChangeTitle={onChangePostTitle}
                     onChangeContent={onChangePostContent}
                     onChangeImages={onChangePostImage}
@@ -346,9 +376,9 @@ const Page = () => {
           </Tab.Panels>
         </section>
       </Tab.Group>
-      <section className="basis-96 max-w-96 flex-1 flex flex-col">
+      <section className="basis-96 max-w-96 flex-1 flex flex-col overflow-y-auto">
         {/* Header */}
-        <div className="h-10 px-3 flex items-center">
+        <div className="flex-none h-10 px-3 flex items-center">
           <span>{title || "청첩장 제목을 입력하세요"}</span>
           <div className="ml-auto flex items-center">
             <button
@@ -400,7 +430,7 @@ const Page = () => {
         {/* Header */}
 
         {/* Story */}
-        <div className="flex py-2 px-4">
+        <div className="flex-none flex py-2 px-4">
           <div className="flex gap-3 overflow-x-auto overscroll-contain no-scrollbar">
             {stories.map(story => (
               <div
@@ -424,6 +454,28 @@ const Page = () => {
           </div>
         </div>
         {/* Story */}
+
+        {/* Posts */}
+        <div className="flex-none flex flex-col">
+          {/* Empty */}
+          {posts.length === 0 && (
+            <div className="flex flex-col">
+              <div className="flex flex-col items-center py-6 border">
+                <span className="text-slate-500">아직 게시물이 없어요.</span>
+                <span className="text-slate-500">
+                  둘만의 이야기가 담긴 게시물을 추가해보세요!
+                </span>
+              </div>
+            </div>
+          )}
+          {/* Empty */}
+          {/* Post */}
+          {posts.map(post => (
+            <PostItem key={post.id} post={post} />
+          ))}
+          {/* Post */}
+        </div>
+        {/* Posts */}
       </section>
     </div>
   );
