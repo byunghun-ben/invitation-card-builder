@@ -1,18 +1,16 @@
 "use client";
 
+import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import { FileImage } from "./page";
 
 type Props = {
   post: {
     id: string;
     title: string;
     content: string;
-    images: {
-      id: string;
-      url: string;
-    }[];
+    images: FileImage[];
   };
 };
 
@@ -47,6 +45,8 @@ const PostItem = ({ post }: Props) => {
   const handleLike = useCallback(() => {
     setLikeCount(prev => prev + 1);
   }, []);
+
+  const contentDivRef = useRef<HTMLDivElement>(null);
 
   return (
     <div key={post.id} className="flex flex-col">
@@ -155,7 +155,11 @@ const PostItem = ({ post }: Props) => {
       <div className="flex flex-col gap-2 p-3">
         <div className="flex flex-col gap-1">
           <span className="text-xs">{`좋아요 ${likeCount}개`}</span>
-          <span className="text-xs">{post.content || "본문을 입력하세요"}</span>
+          <div ref={contentDivRef}>
+            <div className="text-xs whitespace-pre">
+              {post.content || "본문을 입력하세요"}
+            </div>
+          </div>
         </div>
         <span className="text-xs">댓글 0개 모두 보기</span>
       </div>

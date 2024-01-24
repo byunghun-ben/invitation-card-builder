@@ -1,6 +1,8 @@
 "use client";
 
 import { ChangeEvent, useCallback, useRef } from "react";
+import { useChangeImage } from "./useFile";
+import { FileImage } from "./page";
 
 type Props = {
   index: number;
@@ -8,21 +10,12 @@ type Props = {
     id: string;
     title: string;
     content: string;
-    images: {
-      id: string;
-      url: string;
-    }[];
+    images: FileImage[];
   };
   onRemove: (postId: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeContent: (id: string, content: string) => void;
-  onChangeImages: (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => void;
+  onChangeImages: (id: string, images: FileImage[]) => void;
 };
 
 const PostForm = ({
@@ -43,48 +36,17 @@ const PostForm = ({
     onRemove(post.id);
   }, [post.id]);
 
-  const onChangeFile = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-
-      if (!files) {
-        return;
-      }
-
-      const file = files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const dataURL = reader.result;
-
-        if (!dataURL || typeof dataURL !== "string") {
-          return;
-        }
-
-        const id = Math.random().toString(36).slice(2);
-
-        const newImages = [
-          ...post.images,
-          {
-            id,
-            url: dataURL,
-          },
-        ];
-
-        onChangeImages(post.id, newImages);
-      };
-
-      reader.readAsDataURL(file);
-
-      e.target.value = "";
+  const handleChangeImage = useCallback(
+    (image: FileImage) => {
+      const newImages = [...post.images, image];
+      onChangeImages(post.id, newImages);
     },
-    [post.images],
+    [post.id, post.images, onChangeImages],
   );
+
+  const { handleChangeFileInput } = useChangeImage({
+    onChangeImage: handleChangeImage,
+  });
 
   const removeImage = useCallback(
     (id: string) => () => {
@@ -177,7 +139,7 @@ const PostForm = ({
             className="hidden"
             ref={fileInputRef}
             accept="image/*"
-            onChange={onChangeFile}
+            onChange={handleChangeFileInput}
           />
 
           <textarea
@@ -186,7 +148,6 @@ const PostForm = ({
             value={post.content}
             onChange={handleChangeContent}
             onKeyUp={e => {
-              // TODO: Auto resize
               e.currentTarget.style.height = "auto";
               e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}

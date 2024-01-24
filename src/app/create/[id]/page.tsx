@@ -8,6 +8,20 @@ import PostForm from "./PostForm";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import Image from "next/image";
 import PostItem from "./PostItem";
+import WeddingHallForm from "./WeddingHallForm";
+import WeddingHallItem from "./WeddingHallItem";
+
+export type FileImage = {
+  id: string;
+  url: string;
+};
+
+type WeddingHall = {
+  name: string;
+  address: string;
+  images: FileImage[];
+  content: string;
+};
 
 const Page = () => {
   const [title, setTitle] = useState("");
@@ -163,6 +177,53 @@ const Page = () => {
     },
     [],
   );
+  // POST
+
+  // WEDDING HALL
+  const [weddingHall, setWeddingHall] = useState<WeddingHall>({
+    name: "",
+    address: "",
+    images: [],
+    content: "",
+  });
+
+  const handleWeddingHallNameChange = useCallback((weddingHallName: string) => {
+    setWeddingHall(prev => ({
+      ...prev,
+      name: weddingHallName,
+    }));
+  }, []);
+
+  const handleWeddingHallAddressChange = useCallback(
+    (weddingHallAddress: string) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        address: weddingHallAddress,
+      }));
+    },
+    [],
+  );
+
+  const handleWeddingHallImageChange = useCallback(
+    (weddingHallImages: FileImage[]) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        images: weddingHallImages,
+      }));
+    },
+    [],
+  );
+
+  const handleWeddingHallContentChange = useCallback(
+    (weddingHallContent: string) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        content: weddingHallContent,
+      }));
+    },
+    [],
+  );
+  // WEDDING HALL
 
   return (
     <div className="flex h-screen">
@@ -372,7 +433,15 @@ const Page = () => {
                 {/* Action Button */}
               </div>
             </Tab.Panel>
-            <Tab.Panel className="flex-1">4</Tab.Panel>
+            <Tab.Panel className="flex-1 flex flex-col p-10">
+              <WeddingHallForm
+                weddingHall={weddingHall}
+                onChangeName={handleWeddingHallNameChange}
+                onChangeAddress={handleWeddingHallAddressChange}
+                onChangeContent={handleWeddingHallContentChange}
+                onChangeImages={handleWeddingHallImageChange}
+              />
+            </Tab.Panel>
           </Tab.Panels>
         </section>
       </Tab.Group>
@@ -462,9 +531,9 @@ const Page = () => {
             <div className="flex flex-col">
               <div className="flex flex-col items-center py-6 border">
                 <span className="text-slate-500">아직 게시물이 없어요.</span>
-                <span className="text-slate-500">
+                <p className="text-slate-500">
                   둘만의 이야기가 담긴 게시물을 추가해보세요!
-                </span>
+                </p>
               </div>
             </div>
           )}
@@ -476,6 +545,10 @@ const Page = () => {
           {/* Post */}
         </div>
         {/* Posts */}
+
+        {/* WeddingHall */}
+        <WeddingHallItem weddingHall={weddingHall} />
+        {/* WeddingHall */}
       </section>
     </div>
   );
