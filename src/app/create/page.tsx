@@ -15,7 +15,7 @@ const Page = () => {
                   <span className="flex-none">https://bora-n-maria.com/</span>
                   <input
                     type="text"
-                    className="flex-1 border px-2 py-1 rounded"
+                    className="flex-1 border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
                     placeholder="주소를 입력하세요"
                   />
                 </div>
@@ -28,7 +28,7 @@ const Page = () => {
               <div className="flex flex-col gap-1 w-full">
                 <input
                   type="text"
-                  className="border px-2 py-1 rounded w-full"
+                  className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
                   placeholder="비밀번호를 입력하세요."
                 />
                 <div className="flex flex-col w-full text-xs">
@@ -52,7 +52,7 @@ const Page = () => {
                   <span className="flex-none">https://bora-n-maria.com/</span>
                   <input
                     type="text"
-                    className="border px-2 py-1 rounded"
+                    className="border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
                     placeholder="주소를 입력하세요"
                   />
                 </div>
@@ -65,7 +65,7 @@ const Page = () => {
               <div className="flex flex-col gap-1 w-full">
                 <input
                   type="text"
-                  className="border px-2 py-1 rounded w-full"
+                  className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
                   placeholder="비밀번호를 입력하세요."
                 />
                 <div className="flex flex-col w-full text-xs">
