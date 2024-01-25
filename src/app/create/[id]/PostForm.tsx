@@ -53,21 +53,21 @@ const PostForm = ({
       const newImages = post.images.filter(image => image.id !== id);
       onChangeImages(post.id, newImages);
     },
-    [],
+    [post.images, post.id, onChangeImages],
   );
 
   const handleChangeTitle = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChangeTitle(post.id, e.target.value);
     },
-    [post.id],
+    [post.id, onChangeTitle],
   );
 
   const handleChangeContent = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement>) => {
       onChangeContent(post.id, e.target.value);
     },
-    [post.id],
+    [post.id, onChangeContent],
   );
 
   return (

@@ -46,7 +46,7 @@ const StoryForm = ({
 
       onChangeImages(story.id, newImages);
     },
-    [onChangeImages, story.id],
+    [story.images, story.id, onChangeImages],
   );
 
   const onChangeFile = useCallback(
