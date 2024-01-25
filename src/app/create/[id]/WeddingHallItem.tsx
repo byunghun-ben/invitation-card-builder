@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
-import { MouseEventHandler, useRef, useState } from "react";
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const ImageNextButton = ({
   onClick,
@@ -12,10 +18,20 @@ const ImageNextButton = ({
   return (
     <button
       type="button"
-      className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center justify-center w-8 h-8 bg-slate-700 rounded-full dark:bg-slate-700 z-10"
+      className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center justify-center w-8 h-8 rounded-full z-10 bg-white bg-opacity-0 hover:bg-opacity-80"
       onClick={onClick}
     >
-      <span className="text-2xl font-bold">❯</span>
+      <svg
+        className="w-8 h-8 text-slate-500 hover:text-slate-900"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M7.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 11-1.414-1.414L11.586 10 7.293 5.707a1 1 0 010-1.414z"
+        />
+      </svg>
     </button>
   );
 };
@@ -28,10 +44,20 @@ const ImagePrevButton = ({
   return (
     <button
       type="button"
-      className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center justify-center w-8 h-8 bg-slate-700 rounded-full dark:bg-slate-700 z-10"
+      className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center justify-center w-8 h-8 rounded-full z-10 bg-white bg-opacity-0 hover:bg-opacity-80"
       onClick={onClick}
     >
-      <span className="text-2xl font-bold">❮</span>
+      <svg
+        className="w-8 h-8 text-slate-500 hover:text-slate-900"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M12.707 4.293a1 1 0 010 1.414L8.414 10l4.293 4.293a1 1 0 11-1.414 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 0z"
+        />
+      </svg>
     </button>
   );
 };
@@ -50,9 +76,35 @@ type Props = {
 
 const WeddingHallItem = ({ weddingHall }: Props) => {
   const content = weddingHall.content || "식장 소개가 없습니다.";
+  const weddingHallImages = weddingHall.images || [];
+  const weddingHallImageCount = weddingHallImages.length;
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [weddingHallImageCount]);
+
+  const handlePrev = useCallback(() => {
+    const isLastIndex = activeImageIndex === 0;
+
+    if (isLastIndex) {
+      return;
+    }
+
+    setActiveImageIndex(prev => prev - 1);
+  }, [activeImageIndex]);
+
+  const handleNext = useCallback(() => {
+    const isLastIndex = activeImageIndex === weddingHallImageCount - 1;
+
+    if (isLastIndex) {
+      return;
+    }
+
+    setActiveImageIndex(prev => prev + 1);
+  }, [activeImageIndex, weddingHallImageCount]);
 
   return (
     <div className="flex-none flex flex-col">
@@ -72,24 +124,8 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
       <div className="relative bg-slate-50">
         <div className="w-full" style={{ paddingBottom: "100%" }} />
         <div className="absolute inset-0" ref={imageContainerRef}>
-          <ImagePrevButton
-            onClick={() => {
-              if (activeImageIndex === 0) {
-                return;
-              }
-
-              setActiveImageIndex(prev => prev - 1);
-            }}
-          />
-          <ImageNextButton
-            onClick={() => {
-              if (activeImageIndex >= 2) {
-                return;
-              }
-
-              setActiveImageIndex(prev => prev + 1);
-            }}
-          />
+          <ImagePrevButton onClick={handlePrev} />
+          <ImageNextButton onClick={handleNext} />
           <div className="w-full h-full bg-blue-300 overflow-hidden">
             <ul
               className="flex w-full h-full"
@@ -98,9 +134,16 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
                 transition: "transform 0.5s ease-in-out",
               }}
             >
-              <li className="flex-none w-full h-full bg-green-300">1</li>
-              <li className="flex-none w-full h-full bg-red-300">2</li>
-              <li className="flex-none w-full h-full bg-amber-300">3</li>
+              {weddingHall.images.map(image => (
+                <li key={image.id} className="relative flex-none w-full h-full">
+                  <Image
+                    src={image.url}
+                    alt="식장 설명 이미지"
+                    className="object-cover"
+                    layout="fill"
+                  />
+                </li>
+              ))}
             </ul>
           </div>
         </div>
