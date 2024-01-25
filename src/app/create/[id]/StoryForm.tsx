@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef } from "react";
 
 type Props = {
   index: number;
@@ -12,6 +12,7 @@ type Props = {
       url: string;
     }[];
   };
+  onRemove: (id: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeImages: (
     id: string,
@@ -22,64 +23,89 @@ type Props = {
   ) => void;
 };
 
-const StoryForm = ({ index, story, onChangeTitle, onChangeImages }: Props) => {
+const StoryForm = ({
+  index,
+  story,
+  onRemove,
+  onChangeTitle,
+  onChangeImages,
+}: Props) => {
   const FORM_TITLE = `${index + 1}번째 스토리`;
 
   const isImageEmpty = story.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const removeImage = (id: string) => () => {
-    const newImages = story.images.filter(image => image.id !== id);
+  const handleRemove = useCallback(() => {
+    onRemove(story.id);
+  }, [onRemove, story.id]);
 
-    onChangeImages(story.id, newImages);
-  };
+  const removeImage = useCallback(
+    (id: string) => () => {
+      const newImages = story.images.filter(image => image.id !== id);
 
-  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+      onChangeImages(story.id, newImages);
+    },
+    [story.images, story.id, onChangeImages],
+  );
 
-    if (!files) {
-      return;
-    }
+  const onChangeFile = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
 
-    const file = files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const dataURL = reader.result;
-
-      if (!dataURL || typeof dataURL !== "string") {
+      if (!files) {
         return;
       }
 
-      const id = Math.random().toString(36).slice(2);
+      const file = files[0];
 
-      const newImages = [
-        ...story.images,
-        {
-          id,
-          url: dataURL,
-        },
-      ];
+      if (!file) {
+        return;
+      }
 
-      onChangeImages(story.id, newImages);
-    };
+      const reader = new FileReader();
 
-    reader.readAsDataURL(file);
+      reader.onload = () => {
+        const dataURL = reader.result;
 
-    e.target.value = "";
-  };
+        if (!dataURL || typeof dataURL !== "string") {
+          return;
+        }
+
+        const id = Math.random().toString(36).slice(2);
+
+        const newImages = [
+          ...story.images,
+          {
+            id,
+            url: dataURL,
+          },
+        ];
+
+        onChangeImages(story.id, newImages);
+      };
+
+      reader.readAsDataURL(file);
+
+      e.target.value = "";
+    },
+    [onChangeImages, story.images, story.id],
+  );
 
   return (
     <>
       {/* Story */}
       <div className="flex flex-col gap-2">
-        <h3>{FORM_TITLE}</h3>
+        <div className="flex items-center justify-between">
+          <h3>{FORM_TITLE}</h3>
+          <button
+            type="button"
+            className="flex items-center justify-center"
+            onClick={handleRemove}
+          >
+            <span className="text-xs text-red-500">스토리 삭제</span>
+          </button>
+        </div>
         <div className="flex flex-col gap-4">
           <input
             type="text"
