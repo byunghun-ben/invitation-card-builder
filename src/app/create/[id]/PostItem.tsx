@@ -71,11 +71,11 @@ const PostItem = ({ post }: Props) => {
         <div className="absolute inset-0" ref={containerRef}>
           <div className="w-full h-full relative overflow-hidden">
             <button
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10"
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-8 h-8 rounded-full z-10 bg-white bg-opacity-0 hover:bg-opacity-80"
               onClick={handlePrev}
             >
               <svg
-                className="w-8 h-8 text-gray-500 hover:text-gray-900"
+                className="w-8 h-8 text-slate-500 hover:text-slate-900"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -88,11 +88,11 @@ const PostItem = ({ post }: Props) => {
             </button>
 
             <button
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10"
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 w-8 h-8 rounded-full z-10 bg-white bg-opacity-0 hover:bg-opacity-80"
               onClick={handleNext}
             >
               <svg
-                className="w-8 h-8 text-gray-500 hover:text-gray-900"
+                className="w-8 h-8 text-slate-500 hover:text-slate-900"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
