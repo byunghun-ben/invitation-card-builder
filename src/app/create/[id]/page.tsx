@@ -38,7 +38,7 @@ const Page = () => {
     }[]
   >([
     {
-      id: Math.random().toString(),
+      id: Math.random().toString(36).slice(2),
       title: "",
       images: [],
     },
@@ -48,7 +48,7 @@ const Page = () => {
     setStories(stories => [
       ...stories,
       {
-        id: Math.random().toString(),
+        id: Math.random().toString(36).slice(2),
         title: "",
         images: [],
       },
@@ -107,7 +107,7 @@ const Page = () => {
     }[]
   >([
     {
-      id: Math.random().toString(),
+      id: Math.random().toString(36).slice(2),
       title: "",
       content: "",
       images: [],
@@ -118,7 +118,7 @@ const Page = () => {
     setPosts(posts => [
       ...posts,
       {
-        id: Math.random().toString(),
+        id: Math.random().toString(36).slice(2),
         title: "",
         content: "",
         images: [],
@@ -228,53 +228,74 @@ const Page = () => {
   return (
     <div className="flex h-screen">
       <Tab.Group>
-        <section className="basis-48 shrink-0 py-10 pl-10 border-r">
-          <Tab.List className="flex flex-col items-start gap-10">
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              일반
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              스토리
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              게시물
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              결혼식장
-            </Tab>
-          </Tab.List>
+        <section className="basis-48 shrink-0 border-r">
+          <div className="w-full flex flex-col gap-4">
+            <Tab.List className="flex flex-col items-start gap-10 py-10 pl-10">
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                일반
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                스토리
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                게시물
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                결혼식장
+              </Tab>
+            </Tab.List>
+
+            <div className="h-px bg-slate-700" />
+
+            <div className="px-10 py-10 flex flex-col">
+              <button
+                type="button"
+                className="border py-2 px-4 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900"
+                onClick={() => {
+                  console.log("data", {
+                    title,
+                    stories,
+                    posts,
+                    weddingHall,
+                  });
+                }}
+              >
+                <span className="font-bold">저장하기</span>
+              </button>
+            </div>
+          </div>
         </section>
         <section className="basis-96 flex-1 flex flex-col border-r overflow-y-auto">
           <Tab.Panels className="flex-1 flex flex-col">
