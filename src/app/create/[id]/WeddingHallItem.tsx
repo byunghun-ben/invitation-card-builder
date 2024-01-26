@@ -140,7 +140,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
                     src={image.url}
                     alt="식장 설명 이미지"
                     className="object-cover"
-                    layout="fill"
+                    fill
                   />
                 </li>
               ))}

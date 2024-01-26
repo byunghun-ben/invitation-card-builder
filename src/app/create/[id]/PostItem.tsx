@@ -116,7 +116,7 @@ const PostItem = ({ post }: Props) => {
                     src={image.url}
                     alt="게시물 이미지"
                     className="object-cover h-full w-full"
-                    layout="fill"
+                    fill
                   />
                 </li>
               ))}
