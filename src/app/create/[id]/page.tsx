@@ -2,39 +2,43 @@
 
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import StoryForm from "./StoryForm";
 import PostForm from "./PostForm";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import Image from "next/image";
+import PostItem from "./PostItem";
+import WeddingHallForm from "./WeddingHallForm";
+import WeddingHallItem from "./WeddingHallItem";
 
 const Page = () => {
   const [title, setTitle] = useState("");
 
   // STORY
-  const [stories, setStories] = useState<
+  const [stories, setStories] = useState<InstaStory[]>([
     {
-      id: string;
-      title: string;
-      images: {
-        id: string;
-        url: string;
-      }[];
-    }[]
-  >([]);
+      id: Math.random().toString(36).slice(2),
+      title: "",
+      images: [],
+    },
+  ]);
 
-  const addStory = () => {
+  const addStory = useCallback(() => {
     setStories(stories => [
       ...stories,
       {
-        id: Math.random().toString(),
+        id: Math.random().toString(36).slice(2),
         title: "",
         images: [],
       },
     ]);
-  };
+  }, []);
 
-  const onChangeStoryTitle = (id: string, title: string) => {
+  const onRemoveStory = useCallback((storyId: string) => {
+    setStories(stories => stories.filter(story => story.id !== storyId));
+  }, []);
+
+  const onChangeStoryTitle = useCallback((id: string, title: string) => {
     setStories(stories =>
       stories.map(story =>
         story.id === id
@@ -45,15 +49,9 @@ const Page = () => {
           : story,
       ),
     );
-  };
+  }, []);
 
-  const onChangeStoryImage = (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => {
+  const onChangeStoryImage = useCallback((id: string, images: FileImage[]) => {
     setStories(stories =>
       stories.map(story =>
         story.id === id
@@ -64,34 +62,35 @@ const Page = () => {
           : story,
       ),
     );
-  };
+  }, []);
 
   // POST
-  const [posts, setPosts] = useState<
+  const [posts, setPosts] = useState<InstaPost[]>([
     {
-      id: string;
-      title: string;
-      content: string;
-      images: {
-        id: string;
-        url: string;
-      }[];
-    }[]
-  >([]);
+      id: Math.random().toString(36).slice(2),
+      title: "",
+      content: "",
+      images: [],
+    },
+  ]);
 
-  const addPost = () => {
+  const addPost = useCallback(() => {
     setPosts(posts => [
       ...posts,
       {
-        id: Math.random().toString(),
+        id: Math.random().toString(36).slice(2),
         title: "",
         content: "",
         images: [],
       },
     ]);
-  };
+  }, []);
 
-  const onChangePostTitle = (id: string, title: string) => {
+  const onRemovePost = useCallback((postId: string) => {
+    setPosts(posts => posts.filter(post => post.id !== postId));
+  }, []);
+
+  const onChangePostTitle = useCallback((id: string, title: string) => {
     setPosts(posts =>
       posts.map(post =>
         post.id === id
@@ -102,9 +101,9 @@ const Page = () => {
           : post,
       ),
     );
-  };
+  }, []);
 
-  const onChangePostContent = (id: string, content: string) => {
+  const onChangePostContent = useCallback((id: string, content: string) => {
     setPosts(posts =>
       posts.map(post =>
         post.id === id
@@ -115,15 +114,9 @@ const Page = () => {
           : post,
       ),
     );
-  };
+  }, []);
 
-  const onChangePostImage = (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => {
+  const onChangePostImage = useCallback((id: string, images: FileImage[]) => {
     setPosts(posts =>
       posts.map(post =>
         post.id === id
@@ -134,58 +127,126 @@ const Page = () => {
           : post,
       ),
     );
-  };
+  }, []);
+  // POST
+
+  // WEDDING HALL
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
+    name: "",
+    address: "",
+    images: [],
+    content: "",
+  });
+
+  const handleWeddingHallNameChange = useCallback((weddingHallName: string) => {
+    setWeddingHall(prev => ({
+      ...prev,
+      name: weddingHallName,
+    }));
+  }, []);
+
+  const handleWeddingHallAddressChange = useCallback(
+    (weddingHallAddress: string) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        address: weddingHallAddress,
+      }));
+    },
+    [],
+  );
+
+  const handleWeddingHallImageChange = useCallback(
+    (weddingHallImages: FileImage[]) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        images: weddingHallImages,
+      }));
+    },
+    [],
+  );
+
+  const handleWeddingHallContentChange = useCallback(
+    (weddingHallContent: string) => {
+      setWeddingHall(prev => ({
+        ...prev,
+        content: weddingHallContent,
+      }));
+    },
+    [],
+  );
+  // WEDDING HALL
 
   return (
     <div className="flex h-screen">
       <Tab.Group>
-        <section className="basis-48 shrink-0 py-10 pl-10 border-r">
-          <Tab.List className="flex flex-col items-start gap-10">
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              일반
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              스토리
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              게시물
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                `py-2 px-3 ${
-                  selected
-                    ? "font-bold text-slate-900 dark:text-white"
-                    : "text-slate-400"
-                }`
-              }
-            >
-              결혼식장
-            </Tab>
-          </Tab.List>
+        <section className="basis-48 shrink-0 border-r">
+          <div className="w-full flex flex-col gap-4">
+            <Tab.List className="flex flex-col items-start gap-10 py-10 pl-10">
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                일반
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                스토리
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                게시물
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `py-2 px-3 ${
+                    selected
+                      ? "font-bold text-slate-900 dark:text-white"
+                      : "text-slate-400"
+                  }`
+                }
+              >
+                결혼식장
+              </Tab>
+            </Tab.List>
+
+            <div className="h-px bg-slate-700" />
+
+            <div className="px-10 py-10 flex flex-col">
+              <button
+                type="button"
+                className="border py-2 px-4 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900"
+                onClick={() => {
+                  console.log("data", {
+                    title,
+                    stories,
+                    posts,
+                    weddingHall,
+                  });
+                }}
+              >
+                <span className="font-bold">저장하기</span>
+              </button>
+            </div>
+          </div>
         </section>
         <section className="basis-96 flex-1 flex flex-col border-r overflow-y-auto">
           <Tab.Panels className="flex-1 flex flex-col">
@@ -285,6 +346,7 @@ const Page = () => {
                     key={story.id}
                     index={index}
                     story={story}
+                    onRemove={onRemoveStory}
                     onChangeTitle={onChangeStoryTitle}
                     onChangeImages={onChangeStoryImage}
                   />
@@ -325,6 +387,7 @@ const Page = () => {
                     key={post.id}
                     post={post}
                     index={index}
+                    onRemove={onRemovePost}
                     onChangeTitle={onChangePostTitle}
                     onChangeContent={onChangePostContent}
                     onChangeImages={onChangePostImage}
@@ -342,13 +405,21 @@ const Page = () => {
                 {/* Action Button */}
               </div>
             </Tab.Panel>
-            <Tab.Panel className="flex-1">4</Tab.Panel>
+            <Tab.Panel className="flex-1 flex flex-col p-10">
+              <WeddingHallForm
+                weddingHall={weddingHall}
+                onChangeName={handleWeddingHallNameChange}
+                onChangeAddress={handleWeddingHallAddressChange}
+                onChangeContent={handleWeddingHallContentChange}
+                onChangeImages={handleWeddingHallImageChange}
+              />
+            </Tab.Panel>
           </Tab.Panels>
         </section>
       </Tab.Group>
-      <section className="basis-96 max-w-96 flex-1 flex flex-col">
+      <section className="basis-96 max-w-96 flex-1 flex flex-col overflow-y-auto">
         {/* Header */}
-        <div className="h-10 px-3 flex items-center">
+        <div className="flex-none h-10 px-3 flex items-center">
           <span>{title || "청첩장 제목을 입력하세요"}</span>
           <div className="ml-auto flex items-center">
             <button
@@ -400,7 +471,7 @@ const Page = () => {
         {/* Header */}
 
         {/* Story */}
-        <div className="flex py-2 px-4">
+        <div className="flex-none flex py-2 px-4">
           <div className="flex gap-3 overflow-x-auto overscroll-contain no-scrollbar">
             {stories.map(story => (
               <div
@@ -424,6 +495,32 @@ const Page = () => {
           </div>
         </div>
         {/* Story */}
+
+        {/* Posts */}
+        <div className="flex-none flex flex-col">
+          {/* Empty */}
+          {posts.length === 0 && (
+            <div className="flex flex-col">
+              <div className="flex flex-col items-center py-6 border">
+                <span className="text-slate-500">아직 게시물이 없어요.</span>
+                <p className="text-slate-500">
+                  둘만의 이야기가 담긴 게시물을 추가해보세요!
+                </p>
+              </div>
+            </div>
+          )}
+          {/* Empty */}
+          {/* Post */}
+          {posts.map(post => (
+            <PostItem key={post.id} post={post} />
+          ))}
+          {/* Post */}
+        </div>
+        {/* Posts */}
+
+        {/* WeddingHall */}
+        <WeddingHallItem weddingHall={weddingHall} />
+        {/* WeddingHall */}
       </section>
     </div>
   );

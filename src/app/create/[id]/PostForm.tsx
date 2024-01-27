@@ -1,32 +1,21 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef } from "react";
+import { useChangeImage } from "./useFile";
 
 type Props = {
   index: number;
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    images: {
-      id: string;
-      url: string;
-    }[];
-  };
+  post: InstaPost;
+  onRemove: (postId: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeContent: (id: string, content: string) => void;
-  onChangeImages: (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => void;
+  onChangeImages: (id: string, images: FileImage[]) => void;
 };
 
 const PostForm = ({
   post,
   index,
+  onRemove,
   onChangeTitle,
   onChangeContent,
   onChangeImages,
@@ -37,63 +26,65 @@ const PostForm = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleRemove = useCallback(() => {
+    onRemove(post.id);
+  }, [post.id]);
 
-    if (!files) {
-      return;
-    }
-
-    const file = files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const dataURL = reader.result;
-
-      if (!dataURL || typeof dataURL !== "string") {
-        return;
-      }
-
-      const id = Math.random().toString(36).slice(2);
-
-      const newImages = [
-        ...post.images,
-        {
-          id,
-          url: dataURL,
-        },
-      ];
-
+  const handleChangeImage = useCallback(
+    (image: FileImage) => {
+      const newImages = [...post.images, image];
       onChangeImages(post.id, newImages);
-    };
+    },
+    [post.id, post.images, onChangeImages],
+  );
 
-    reader.readAsDataURL(file);
+  const { handleChangeFileInput } = useChangeImage({
+    onChangeImage: handleChangeImage,
+  });
 
-    e.target.value = "";
-  };
+  const removeImage = useCallback(
+    (id: string) => () => {
+      const newImages = post.images.filter(image => image.id !== id);
+      onChangeImages(post.id, newImages);
+    },
+    [post.images, post.id, onChangeImages],
+  );
 
-  const removeImage = (id: string) => () => {
-    const newImages = post.images.filter(image => image.id !== id);
-    onChangeImages(post.id, newImages);
-  };
+  const handleChangeTitle = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onChangeTitle(post.id, e.target.value);
+    },
+    [post.id, onChangeTitle],
+  );
+
+  const handleChangeContent = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      onChangeContent(post.id, e.target.value);
+    },
+    [post.id, onChangeContent],
+  );
 
   return (
     <>
       {/* Story */}
       <div className="flex flex-col gap-2">
-        <h3>{FORM_TITLE}</h3>
+        <div className="flex items-center justify-between">
+          <h3>{FORM_TITLE}</h3>
+          <button
+            type="button"
+            className="text-xxs text-red-500"
+            onClick={handleRemove}
+          >
+            게시물 삭제
+          </button>
+        </div>
         <div className="flex flex-col gap-4">
           <input
             type="text"
             className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
             placeholder="게시물 제목을 입력하세요."
             value={post.title}
-            onChange={e => onChangeTitle(post.id, e.target.value)}
+            onChange={handleChangeTitle}
           />
 
           {isImageEmpty && (
@@ -141,17 +132,16 @@ const PostForm = ({
             type="file"
             className="hidden"
             ref={fileInputRef}
-            accept="image/*, video/*"
-            onChange={onChangeFile}
+            accept="image/*"
+            onChange={handleChangeFileInput}
           />
 
           <textarea
             className="min-h-20 resize-none py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
             placeholder="본문을 입력하세요."
             value={post.content}
-            onChange={e => onChangeContent(post.id, e.target.value)}
+            onChange={handleChangeContent}
             onKeyUp={e => {
-              // TODO: Auto resize
               e.currentTarget.style.height = "auto";
               e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}
