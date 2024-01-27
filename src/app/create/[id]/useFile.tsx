@@ -3,7 +3,7 @@
 import { ChangeEvent, useCallback } from "react";
 
 type Props = {
-  onChangeImage: (image: { id: string; url: string }) => void;
+  onChangeImage: (image: FileImage) => void;
 };
 
 const readFileAsDataURL = (file: File) => {
@@ -55,7 +55,7 @@ export const useChangeImage = ({ onChangeImage }: Props) => {
 };
 
 type UseChangeImagesProps = {
-  onChangeImages: (images: { id: string; url: string }[]) => void;
+  onChangeImages: (images: FileImage[]) => void;
 };
 
 export const useChangeImages = ({ onChangeImages }: UseChangeImagesProps) => {

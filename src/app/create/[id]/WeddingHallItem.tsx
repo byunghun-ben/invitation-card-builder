@@ -63,15 +63,7 @@ const ImagePrevButton = ({
 };
 
 type Props = {
-  weddingHall: {
-    name: string;
-    address: string;
-    images: {
-      id: string;
-      url: string;
-    }[];
-    content: string;
-  };
+  weddingHall: InstaWeddingHall;
 };
 
 const WeddingHallItem = ({ weddingHall }: Props) => {

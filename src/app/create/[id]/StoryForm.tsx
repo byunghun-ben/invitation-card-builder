@@ -4,23 +4,10 @@ import { ChangeEvent, useCallback, useRef } from "react";
 
 type Props = {
   index: number;
-  story: {
-    id: string;
-    title: string;
-    images: {
-      id: string;
-      url: string;
-    }[];
-  };
+  story: InstaStory;
   onRemove: (id: string) => void;
   onChangeTitle: (id: string, title: string) => void;
-  onChangeImages: (
-    id: string,
-    images: {
-      id: string;
-      url: string;
-    }[],
-  ) => void;
+  onChangeImages: (id: string, images: FileImage[]) => void;
 };
 
 const StoryForm = ({

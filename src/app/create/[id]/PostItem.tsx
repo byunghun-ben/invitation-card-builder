@@ -3,15 +3,9 @@
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { FileImage } from "./page";
 
 type Props = {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    images: FileImage[];
-  };
+  post: InstaPost;
 };
 
 const PostItem = ({ post }: Props) => {

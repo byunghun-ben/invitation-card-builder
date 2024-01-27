@@ -11,32 +11,11 @@ import PostItem from "./PostItem";
 import WeddingHallForm from "./WeddingHallForm";
 import WeddingHallItem from "./WeddingHallItem";
 
-export type FileImage = {
-  id: string;
-  url: string;
-};
-
-type WeddingHall = {
-  name: string;
-  address: string;
-  images: FileImage[];
-  content: string;
-};
-
 const Page = () => {
   const [title, setTitle] = useState("");
 
   // STORY
-  const [stories, setStories] = useState<
-    {
-      id: string;
-      title: string;
-      images: {
-        id: string;
-        url: string;
-      }[];
-    }[]
-  >([
+  const [stories, setStories] = useState<InstaStory[]>([
     {
       id: Math.random().toString(36).slice(2),
       title: "",
@@ -72,40 +51,21 @@ const Page = () => {
     );
   }, []);
 
-  const onChangeStoryImage = useCallback(
-    (
-      id: string,
-      images: {
-        id: string;
-        url: string;
-      }[],
-    ) => {
-      setStories(stories =>
-        stories.map(story =>
-          story.id === id
-            ? {
-                ...story,
-                images,
-              }
-            : story,
-        ),
-      );
-    },
-    [],
-  );
+  const onChangeStoryImage = useCallback((id: string, images: FileImage[]) => {
+    setStories(stories =>
+      stories.map(story =>
+        story.id === id
+          ? {
+              ...story,
+              images,
+            }
+          : story,
+      ),
+    );
+  }, []);
 
   // POST
-  const [posts, setPosts] = useState<
-    {
-      id: string;
-      title: string;
-      content: string;
-      images: {
-        id: string;
-        url: string;
-      }[];
-    }[]
-  >([
+  const [posts, setPosts] = useState<InstaPost[]>([
     {
       id: Math.random().toString(36).slice(2),
       title: "",
@@ -156,31 +116,22 @@ const Page = () => {
     );
   }, []);
 
-  const onChangePostImage = useCallback(
-    (
-      id: string,
-      images: {
-        id: string;
-        url: string;
-      }[],
-    ) => {
-      setPosts(posts =>
-        posts.map(post =>
-          post.id === id
-            ? {
-                ...post,
-                images,
-              }
-            : post,
-        ),
-      );
-    },
-    [],
-  );
+  const onChangePostImage = useCallback((id: string, images: FileImage[]) => {
+    setPosts(posts =>
+      posts.map(post =>
+        post.id === id
+          ? {
+              ...post,
+              images,
+            }
+          : post,
+      ),
+    );
+  }, []);
   // POST
 
   // WEDDING HALL
-  const [weddingHall, setWeddingHall] = useState<WeddingHall>({
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
     name: "",
     address: "",
     images: [],
