@@ -3,10 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-// 영어, 숫자, -, _ 만 입력 가능
-const INVITATION_ID_REGEX = /^[a-zA-Z0-9-_]*$/;
-
-const CreateForm = () => {
+const EditForm = () => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -15,15 +12,7 @@ const CreateForm = () => {
 
   const handleChangeInvitationId = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const isNotValid = !INVITATION_ID_REGEX.test(event.target.value);
-      if (isNotValid) {
-        alert("영어, 숫자, -, _ 만 입력 가능합니다.");
-        return;
-      }
-
       setInvitationId(event.target.value);
-
-      // 로컬 스토리지에 동일한 청첩장 ID가 있는지 확인을 여기에서 해도 될 듯
 
       const isDisabled =
         event.target.value.length === 0 || password.length === 0;
@@ -43,39 +32,37 @@ const CreateForm = () => {
     [invitationId],
   );
 
+  const checkInvitationId = useCallback(() => {
+    const localStorageData = localStorage.getItem("invitationIds") || "[]";
+    const parsedData = JSON.parse(localStorageData) as {
+      id: string;
+      password: string;
+    }[];
+    const isExist = parsedData.some(item => {
+      return item.id === invitationId && item.password === password;
+    });
+
+    return isExist;
+  }, [invitationId, password]);
+
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      // 로컬 스토리지에 동일한 청첩장 ID가 있는지 확인
-      const ids = localStorage.getItem("invitationIds") || "[]";
-      const parsedIds = JSON.parse(ids) as { id: string; password: string }[];
-      const isExist = parsedIds.some(item => item.id === invitationId);
-      if (isExist) {
-        alert("이미 존재하는 청첩장 ID입니다.");
+      const isValid = checkInvitationId();
+      if (!isValid) {
+        alert("주소와 비밀번호를 다시 확인해주세요.");
         return;
       }
 
-      // 로컬 스토리지에 청첩장 정보를 저장
-      const key = `invitationIds`;
-      const value = JSON.stringify([
-        ...parsedIds,
-        {
-          id: invitationId,
-          password,
-        },
-      ]);
-      localStorage.setItem(key, value);
-
-      // 청첩장 수정 페이지로 이동
       router.push(`/create/${invitationId}`);
     },
-    [invitationId, password, router],
+    [checkInvitationId, invitationId, router],
   );
 
   return (
     <div className="px-4 py-10 flex flex-col items-center">
-      <h1 className="text-xl font-bold mb-10">처음 청첩장을 만든다면?</h1>
+      <h1 className="text-xl font-bold mb-10">만들던 청첩장이 있다면?</h1>
       <form className="flex-1 flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex-1 flex flex-col gap-2">
           <div className="flex flex-col gap-1">
@@ -87,29 +74,19 @@ const CreateForm = () => {
                 placeholder="주소를 입력하세요"
                 value={invitationId}
                 onChange={handleChangeInvitationId}
-                autoComplete="one-time-code"
               />
-            </div>
-            <div className="flex flex-col w-full text-xs">
-              <p>청첩장을 보기 위해 접근하는 주소입니다.</p>
-              <p>(결제 전에는 확인할 수 없어요.)</p>
             </div>
           </div>
 
           <div className="flex flex-col gap-1 w-full">
-            <div>
-              <input
-                type="password"
-                className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
-                placeholder="비밀번호를 입력하세요."
-                value={password}
-                onChange={handleChangePassword}
-                autoComplete="one-time-code"
-              />
-            </div>
-            <div className="flex flex-col w-full text-xs">
-              <span>청첩장을 수정할 때, 사용할 비밀번호를 입력하세요.</span>
-            </div>
+            <input
+              className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
+              placeholder="비밀번호를 입력하세요."
+              value={password}
+              onChange={handleChangePassword}
+              type="password"
+              autoComplete="one-time-code"
+            />
           </div>
         </div>
         <button
@@ -124,4 +101,4 @@ const CreateForm = () => {
   );
 };
 
-export default CreateForm;
+export default EditForm;
