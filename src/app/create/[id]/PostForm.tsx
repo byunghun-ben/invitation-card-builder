@@ -2,16 +2,10 @@
 
 import { ChangeEvent, useCallback, useRef } from "react";
 import { useChangeImage } from "./useFile";
-import { FileImage } from "./page";
 
 type Props = {
   index: number;
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    images: FileImage[];
-  };
+  post: InstaPost;
   onRemove: (postId: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeContent: (id: string, content: string) => void;

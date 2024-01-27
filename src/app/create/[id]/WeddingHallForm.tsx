@@ -2,16 +2,10 @@
 
 import { useCallback, useRef } from "react";
 import { useChangeImages } from "./useFile";
-import { FileImage } from "./page";
 import Image from "next/image";
 
 type Props = {
-  weddingHall: {
-    name: string;
-    address: string;
-    images: FileImage[];
-    content: string;
-  };
+  weddingHall: InstaWeddingHall;
   onChangeName: (name: string) => void;
   onChangeAddress: (address: string) => void;
   onChangeContent: (content: string) => void;
