@@ -1,3 +1,9 @@
+type InstaMeta = {
+  groomName: string;
+  brideName: string;
+  title: string;
+};
+
 type FileImage = {
   id: string;
   url: string;
