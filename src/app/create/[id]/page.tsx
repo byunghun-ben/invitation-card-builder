@@ -1,27 +1,88 @@
 "use client";
 
-import { Tab } from "@headlessui/react";
-import Link from "next/link";
-import { useCallback, useState } from "react";
-import StoryForm from "./StoryForm";
-import PostForm from "./PostForm";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import { Tab } from "@headlessui/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import PostForm from "./PostForm";
 import PostItem from "./PostItem";
+import StoryForm from "./StoryForm";
+import SubmitButton from "./SubmitButton";
 import WeddingHallForm from "./WeddingHallForm";
 import WeddingHallItem from "./WeddingHallItem";
 
-const Page = () => {
-  const [title, setTitle] = useState("");
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
+const Page = (props: PageProps) => {
+  const id = props.params.id;
+
+  const [data, setData] = useState<{
+    meta: InstaMeta;
+    stories: InstaStory[];
+    posts: InstaPost[];
+    weddingHall: InstaWeddingHall;
+  }>({
+    meta: {
+      title: "",
+      brideName: "",
+      groomName: "",
+    },
+    stories: [],
+    posts: [],
+    weddingHall: {
+      name: "",
+      address: "",
+      images: [],
+      content: "",
+    },
+  });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const key = `data-${id}`;
+    const stringifiedData = localStorage.getItem(key);
+
+    setIsLoaded(true);
+
+    if (!stringifiedData) {
+      return;
+    }
+
+    const data = JSON.parse(stringifiedData);
+
+    if (data) {
+      setData(data);
+    }
+  }, [id]);
+
+  console.log("data", data);
+
+  if (!isLoaded) {
+    return <></>;
+  }
+
+  return <InnerPage defaultValue={data} />;
+};
+
+type InnerPageProps = {
+  defaultValue: {
+    meta: InstaMeta;
+    stories: InstaStory[];
+    posts: InstaPost[];
+    weddingHall: InstaWeddingHall;
+  };
+};
+
+const InnerPage = ({ defaultValue }: InnerPageProps) => {
+  const [meta, setMeta] = useState<InstaMeta>(defaultValue.meta);
 
   // STORY
-  const [stories, setStories] = useState<InstaStory[]>([
-    {
-      id: Math.random().toString(36).slice(2),
-      title: "",
-      images: [],
-    },
-  ]);
+  const [stories, setStories] = useState<InstaStory[]>(defaultValue.stories);
 
   const addStory = useCallback(() => {
     setStories(stories => [
@@ -65,14 +126,7 @@ const Page = () => {
   }, []);
 
   // POST
-  const [posts, setPosts] = useState<InstaPost[]>([
-    {
-      id: Math.random().toString(36).slice(2),
-      title: "",
-      content: "",
-      images: [],
-    },
-  ]);
+  const [posts, setPosts] = useState<InstaPost[]>(defaultValue.posts);
 
   const addPost = useCallback(() => {
     setPosts(posts => [
@@ -131,12 +185,9 @@ const Page = () => {
   // POST
 
   // WEDDING HALL
-  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
-    name: "",
-    address: "",
-    images: [],
-    content: "",
-  });
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
+    defaultValue.weddingHall,
+  );
 
   const handleWeddingHallNameChange = useCallback((weddingHallName: string) => {
     setWeddingHall(prev => ({
@@ -231,20 +282,12 @@ const Page = () => {
             <div className="h-px bg-slate-700" />
 
             <div className="px-10 py-10 flex flex-col">
-              <button
-                type="button"
-                className="border py-2 px-4 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900"
-                onClick={() => {
-                  console.log("data", {
-                    title,
-                    stories,
-                    posts,
-                    weddingHall,
-                  });
-                }}
-              >
-                <span className="font-bold">저장하기</span>
-              </button>
+              <SubmitButton
+                meta={meta}
+                posts={posts}
+                stories={stories}
+                weddingHall={weddingHall}
+              />
             </div>
           </div>
         </section>
@@ -267,6 +310,13 @@ const Page = () => {
                         type="text"
                         placeholder="이름을 입력하세요"
                         className="p-2 border rounded dark:bg-slate-900"
+                        value={meta.groomName}
+                        onChange={e =>
+                          setMeta(prev => ({
+                            ...prev,
+                            groomName: e.target.value,
+                          }))
+                        }
                       />
                     </div>
 
@@ -282,6 +332,13 @@ const Page = () => {
                         type="text"
                         placeholder="이름을 입력하세요"
                         className="p-2 border rounded dark:bg-slate-900"
+                        value={meta.brideName}
+                        onChange={e =>
+                          setMeta(prev => ({
+                            ...prev,
+                            brideName: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                   </div>
@@ -302,8 +359,10 @@ const Page = () => {
                         type="text"
                         placeholder="제목을 입력하세요"
                         className="py-2 px-3 border rounded dark:bg-slate-900"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
+                        value={meta.title}
+                        onChange={e =>
+                          setMeta(prev => ({ ...prev, title: e.target.value }))
+                        }
                       />
                     </div>
 
@@ -420,7 +479,7 @@ const Page = () => {
       <section className="basis-96 max-w-96 flex-1 flex flex-col overflow-y-auto">
         {/* Header */}
         <div className="flex-none h-10 px-3 flex items-center">
-          <span>{title || "청첩장 제목을 입력하세요"}</span>
+          <span>{meta.title || "청첩장 제목을 입력하세요"}</span>
           <div className="ml-auto flex items-center">
             <button
               type="button"

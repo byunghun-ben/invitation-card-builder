@@ -1,5 +1,6 @@
 "use client";
 
+import { InstagramTemplateAPI } from "@/api";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
@@ -32,32 +33,33 @@ const EditForm = () => {
     [invitationId],
   );
 
-  const checkInvitationId = useCallback(() => {
-    const localStorageData = localStorage.getItem("invitationIds") || "[]";
-    const parsedData = JSON.parse(localStorageData) as {
-      id: string;
-      password: string;
-    }[];
-    const isExist = parsedData.some(item => {
-      return item.id === invitationId && item.password === password;
-    });
-
-    return isExist;
-  }, [invitationId, password]);
-
   const handleSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const isValid = checkInvitationId();
-      if (!isValid) {
-        alert("주소와 비밀번호를 다시 확인해주세요.");
-        return;
-      }
+      try {
+        const response = await fetch("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            id: invitationId,
+            password,
+          }),
+        });
 
-      router.push(`/create/${invitationId}`);
+        const body = await response.json();
+
+        if (response.status !== 200) {
+          alert(body.message);
+          return;
+        }
+
+        console.log("success", body);
+        router.push(`/create/${invitationId}`);
+      } catch (error) {
+        console.log("error", error);
+      }
     },
-    [checkInvitationId, invitationId, router],
+    [invitationId, password, router],
   );
 
   return (
