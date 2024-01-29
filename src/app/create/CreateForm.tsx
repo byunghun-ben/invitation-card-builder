@@ -1,5 +1,6 @@
 "use client";
 
+import { InstagramTemplateAPI } from "@/api";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
@@ -23,8 +24,6 @@ const CreateForm = () => {
 
       setInvitationId(event.target.value);
 
-      // 로컬 스토리지에 동일한 청첩장 ID가 있는지 확인을 여기에서 해도 될 듯
-
       const isDisabled =
         event.target.value.length === 0 || password.length === 0;
       setIsDisabled(isDisabled);
@@ -44,31 +43,23 @@ const CreateForm = () => {
   );
 
   const handleSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      // 로컬 스토리지에 동일한 청첩장 ID가 있는지 확인
-      const ids = localStorage.getItem("invitationIds") || "[]";
-      const parsedIds = JSON.parse(ids) as { id: string; password: string }[];
-      const isExist = parsedIds.some(item => item.id === invitationId);
-      if (isExist) {
-        alert("이미 존재하는 청첩장 ID입니다.");
-        return;
-      }
-
-      // 로컬 스토리지에 청첩장 정보를 저장
-      const key = `invitationIds`;
-      const value = JSON.stringify([
-        ...parsedIds,
-        {
+      try {
+        await InstagramTemplateAPI.create({
           id: invitationId,
           password,
-        },
-      ]);
-      localStorage.setItem(key, value);
+        });
 
-      // 청첩장 수정 페이지로 이동
-      router.push(`/create/${invitationId}`);
+        router.push(`/create/${invitationId}`);
+      } catch (error) {
+        console.error("error", error);
+        alert("청첩장을 만들지 못했습니다.");
+        // TODO: 에러 처리
+        // 1. 이미 존재하는 청첩장 주소
+        // 2. 서버 에러
+      }
     },
     [invitationId, password, router],
   );

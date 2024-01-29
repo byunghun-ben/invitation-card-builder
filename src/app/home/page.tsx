@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 
 const getInstagramTemplates = async () => {
-  return fetch(process.env.API_URL + "instagram-templates")
+  return fetch(process.env.API_URL + "/instagram-templates")
     .then(res => {
       return res.json();
     })
