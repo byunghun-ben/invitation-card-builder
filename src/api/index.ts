@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-const responseSchema = z.object({
-  statusCode: z.number(),
-  message: z.string(),
-});
-
 const createTemplateDto = z.object({
   id: z.string(),
   password: z.string(),
@@ -23,17 +18,11 @@ const create = async (props: CreateTemplateDto) => {
     body: JSON.stringify(data),
   });
 
-  const body = await response.json();
-
-  const parsedBody = responseSchema.parse(body);
-
-  const isOk = parsedBody.statusCode === 200;
-
-  if (!isOk) {
-    throw new Error(parsedBody.message);
+  if (!response.ok) {
+    throw new Error("청첩장을 생성할 수 없습니다.");
   }
 
-  return parsedBody;
+  return response.ok;
 };
 
 // find one
