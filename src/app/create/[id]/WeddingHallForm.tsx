@@ -1,15 +1,16 @@
 "use client";
 
+import { InstaImage, InstaWeddingHall } from "@/schemas/instagram";
+import Image from "next/image";
 import { useCallback, useRef } from "react";
 import { useChangeImages } from "./useFile";
-import Image from "next/image";
 
 type Props = {
   weddingHall: InstaWeddingHall;
   onChangeName: (name: string) => void;
   onChangeAddress: (address: string) => void;
   onChangeContent: (content: string) => void;
-  onChangeImages: (images: FileImage[]) => void;
+  onChangeImages: (images: InstaImage[]) => void;
 };
 
 const WeddingHallForm = ({

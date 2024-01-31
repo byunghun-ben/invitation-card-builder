@@ -1,5 +1,6 @@
 "use client";
 
+import { InstaImage, InstaPost } from "@/schemas/instagram";
 import { ChangeEvent, useCallback, useRef } from "react";
 import { useChangeImage } from "./useFile";
 
@@ -9,7 +10,7 @@ type Props = {
   onRemove: (postId: string) => void;
   onChangeTitle: (id: string, title: string) => void;
   onChangeContent: (id: string, content: string) => void;
-  onChangeImages: (id: string, images: FileImage[]) => void;
+  onChangeImages: (id: string, images: InstaImage[]) => void;
 };
 
 const PostForm = ({
@@ -31,7 +32,7 @@ const PostForm = ({
   }, [post.id]);
 
   const handleChangeImage = useCallback(
-    (image: FileImage) => {
+    (image: InstaImage) => {
       const newImages = [...post.images, image];
       onChangeImages(post.id, newImages);
     },

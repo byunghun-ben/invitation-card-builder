@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import { InstaWeddingHall } from "@/schemas/instagram";
+import Image from "next/image";
 import {
   MouseEventHandler,
   useCallback,
