@@ -1,5 +1,6 @@
 "use client";
 
+import { InstaImage, InstaStory } from "@/schemas/instagram";
 import { ChangeEvent, useCallback, useRef } from "react";
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
   story: InstaStory;
   onRemove: (id: string) => void;
   onChangeTitle: (id: string, title: string) => void;
-  onChangeImages: (id: string, images: FileImage[]) => void;
+  onChangeImages: (id: string, images: InstaImage[]) => void;
 };
 
 const StoryForm = ({
