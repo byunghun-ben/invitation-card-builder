@@ -1,9 +1,10 @@
 "use client";
 
+import { InstaImage } from "@/schemas/instagram";
 import { ChangeEvent, useCallback } from "react";
 
 type Props = {
-  onChangeImage: (image: FileImage) => void;
+  onChangeImage: (image: InstaImage) => void;
 };
 
 const readFileAsDataURL = (file: File) => {
@@ -55,7 +56,7 @@ export const useChangeImage = ({ onChangeImage }: Props) => {
 };
 
 type UseChangeImagesProps = {
-  onChangeImages: (images: FileImage[]) => void;
+  onChangeImages: (images: InstaImage[]) => void;
 };
 
 export const useChangeImages = ({ onChangeImages }: UseChangeImagesProps) => {

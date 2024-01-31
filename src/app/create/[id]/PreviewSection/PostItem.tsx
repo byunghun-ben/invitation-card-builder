@@ -1,6 +1,7 @@
 "use client";
 
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
