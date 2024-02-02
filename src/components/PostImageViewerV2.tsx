@@ -81,7 +81,7 @@ const PostImageViewerV2 = ({ post }: Props) => {
       // console.log("handleMouseMove");
 
       const endX = e.pageX - imageContainer.offsetLeft;
-      const SCROLL_SPEED = 1;
+      const SCROLL_SPEED = 3;
       const distance = (endX - startX) * SCROLL_SPEED;
 
       imageContainer.scrollLeft = scrollLeft - distance;
