@@ -9,7 +9,7 @@ import {
 } from "@/schemas/instagram";
 import Image from "next/image";
 import PostItem from "./PostItem";
-import WeddingHallItem from "./WeddingHallItem";
+import WeddingHallItem from "@/components/WeddingHallItem";
 
 type Props = {
   metadata: InstaMetadata;
