@@ -5,9 +5,9 @@ import HeartIcon from "@/foundation/icons/HeartIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
-import { useCallback, useState } from "react";
-import PostImageViewer from "./PostImageViewer";
 import Link from "next/link";
+import { useCallback, useState } from "react";
+import PostImageViewerV2 from "./PostImageViewerV2";
 
 type Props = {
   post: InstaPost;
@@ -37,7 +37,7 @@ const PostItem = ({ post }: Props) => {
       </div>
       {/* Header */}
 
-      <PostImageViewer post={post} />
+      <PostImageViewerV2 post={post} />
 
       {/* Like & ImageIndex */}
       <div className="relative flex items-center my-1">
