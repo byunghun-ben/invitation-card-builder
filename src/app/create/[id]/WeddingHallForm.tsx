@@ -2,8 +2,9 @@
 
 import { InstaImage, InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
+import { uid } from "radash";
 import { useCallback, useRef } from "react";
-import { useChangeImages } from "./useFile";
+import { useProcessMultipleImages } from "./useFile";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -40,8 +41,22 @@ const WeddingHallForm = ({
     imageRef.current?.click();
   }, []);
 
-  const { handleChangeFileInputMultiple } = useChangeImages({
-    onChangeImages: onChangeImages,
+  const handleProcessImages = useCallback((blobs: Blob[]) => {
+    const newImages = blobs.map(blob => {
+      const id = uid(10, "image-id");
+      const url = URL.createObjectURL(blob);
+
+      return {
+        id,
+        url,
+      };
+    });
+
+    onChangeImages(newImages);
+  }, []);
+
+  const { handleChangeFileInputMultiple } = useProcessMultipleImages({
+    onProcessImages: handleProcessImages,
   });
 
   const handleRemoveImage = useCallback(

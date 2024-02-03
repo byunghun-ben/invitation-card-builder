@@ -1,7 +1,9 @@
 "use client";
 
 import { InstaImage, InstaStory } from "@/schemas/instagram";
-import { ChangeEvent, useCallback, useRef } from "react";
+import { uid } from "radash";
+import { useCallback, useRef } from "react";
+import { useProcessImage } from "./useFile";
 
 type Props = {
   index: number;
@@ -37,48 +39,26 @@ const StoryForm = ({
     [story.images, story.id, onChangeImages],
   );
 
-  const onChangeFile = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
+  const handleChangeImage = useCallback(
+    (blob: Blob) => {
+      const id = uid(10, "image-id");
+      const url = URL.createObjectURL(blob);
+      const newImages = [
+        ...story.images,
+        {
+          id,
+          url,
+        },
+      ];
 
-      if (!files) {
-        return;
-      }
-
-      const file = files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const dataURL = reader.result;
-
-        if (!dataURL || typeof dataURL !== "string") {
-          return;
-        }
-
-        const id = Math.random().toString(36).slice(2);
-
-        const newImages = [
-          ...story.images,
-          {
-            id,
-            url: dataURL,
-          },
-        ];
-
-        onChangeImages(story.id, newImages);
-      };
-
-      reader.readAsDataURL(file);
-
-      e.target.value = "";
+      onChangeImages(story.id, newImages);
     },
-    [onChangeImages, story.images, story.id],
+    [story.images, story.id, onChangeImages],
   );
+
+  const { handleChangeFileInput } = useProcessImage({
+    onProcessImages: handleChangeImage,
+  });
 
   return (
     <>
@@ -148,8 +128,8 @@ const StoryForm = ({
             type="file"
             className="hidden"
             ref={fileInputRef}
-            accept="image/*, video/*"
-            onChange={onChangeFile}
+            accept="image/jpeg, image/png, image/webp"
+            onChange={handleChangeFileInput}
           />
         </div>
       </div>

@@ -2,7 +2,8 @@
 
 import { InstaImage, InstaPost } from "@/schemas/instagram";
 import { ChangeEvent, useCallback, useRef } from "react";
-import { useChangeImage } from "./useFile";
+import { useProcessImage } from "./useFile";
+import { uid } from "radash";
 
 type Props = {
   index: number;
@@ -32,15 +33,23 @@ const PostForm = ({
   }, [post.id]);
 
   const handleChangeImage = useCallback(
-    (image: InstaImage) => {
-      const newImages = [...post.images, image];
+    (blob: Blob) => {
+      const id = uid(10, "image-id");
+      const url = URL.createObjectURL(blob);
+      const newImages = [
+        ...post.images,
+        {
+          id,
+          url,
+        },
+      ];
       onChangeImages(post.id, newImages);
     },
     [post.id, post.images, onChangeImages],
   );
 
-  const { handleChangeFileInput } = useChangeImage({
-    onChangeImage: handleChangeImage,
+  const { handleChangeFileInput } = useProcessImage({
+    onProcessImages: handleChangeImage,
   });
 
   const removeImage = useCallback(
@@ -133,7 +142,7 @@ const PostForm = ({
             type="file"
             className="hidden"
             ref={fileInputRef}
-            accept="image/*"
+            accept="image/jpeg, image/png, image/webp"
             onChange={handleChangeFileInput}
           />
 
