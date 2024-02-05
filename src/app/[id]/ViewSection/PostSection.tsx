@@ -22,6 +22,7 @@ const posts: InstaPost[] = [
     ],
     content: "포스트 내용",
     likes: 12,
+    replies: [],
   },
   {
     id: uid(10, "post-id"),
@@ -42,6 +43,7 @@ const posts: InstaPost[] = [
     ],
     content: "포스트 내용",
     likes: 12,
+    replies: [],
   },
   {
     id: uid(10, "post-id"),
@@ -62,6 +64,7 @@ const posts: InstaPost[] = [
     ],
     content: "포스트 내용",
     likes: 12,
+    replies: [],
   },
   {
     id: uid(10, "post-id"),
@@ -82,11 +85,15 @@ const posts: InstaPost[] = [
     ],
     content: "포스트 내용",
     likes: 12,
+    replies: [
+      { name: "김병훈", content: "결혼 축하해요!!" },
+      { name: "손정현", content: "행복하세요!!" },
+      { name: "엄퐁재", content: "축하드려요!!" },
+    ],
   },
 ];
 
 const PostSection = () => {
-  console.log(posts);
   return (
     <div className="flex-none flex flex-col">
       {posts.map(post => (

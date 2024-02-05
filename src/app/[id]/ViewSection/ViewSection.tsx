@@ -8,6 +8,7 @@ import WeddingHallItem from "@/components/WeddingHallItem";
 import { InstaWeddingHall } from "@/schemas/instagram";
 import { uid } from "radash";
 import { Switch } from "@headlessui/react";
+import InstaHeader from "../InstaHeader";
 
 const WEDDING_HALL: InstaWeddingHall = {
   name: "웨딩홀 이름",
@@ -30,87 +31,15 @@ const WEDDING_HALL: InstaWeddingHall = {
 };
 
 const ViewSection = () => {
-  const divRef = useRef<HTMLDivElement>(null);
-  useFullHeight({ divRef });
-
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const handleToggleColorScheme = useCallback((isDarkScheme: boolean) => {
-    const body = document.querySelector("body");
-    body?.classList.remove(isDarkScheme ? "light-mode" : "dark-mode");
-    body?.classList.add(isDarkScheme ? "dark-mode" : "light-mode");
-    setIsDarkMode(isDarkScheme);
-  }, []);
-
-  useEffect(() => {
-    const isDarkScheme = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    const body = document.querySelector("body");
-    body?.classList.add(isDarkScheme ? "dark-mode" : "light-mode");
-    setIsDarkMode(isDarkScheme);
-
-    const handleColorSchemeChange = (e: MediaQueryListEvent) => {
-      setIsDarkMode(e.matches);
-    };
-
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", handleColorSchemeChange);
-
-    return () => {
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", handleColorSchemeChange);
-    };
-  }, []);
-
   return (
-    <div className="h-full flex-1 min-w-80 md:max-w-xl" ref={divRef}>
-      <div className="h-full flex flex-col border overflow-y-auto">
-        <div className="flex-none h-10 px-3 flex items-center">
-          <span>청첩장 제목입니다</span>
-          <div className="ml-auto flex items-center">
-            <button
-              type="button"
-              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-900 rounded"
-            >
-              🚀
-            </button>
-            <Switch
-              checked={isDarkMode}
-              onChange={handleToggleColorScheme}
-              className={({ checked }) => {
-                const base = "relative flex h-6 w-11 items-center rounded-full";
+    <div className="h-full w-full flex-1 flex flex-col">
+      <InstaHeader />
 
-                if (checked) {
-                  return `${base} bg-yellow-400`;
-                }
+      <StorySection />
 
-                return `${base} bg-yellow-600`;
-              }}
-            >
-              {({ checked }) => (
-                <>
-                  <span className="sr-only">Dark Mode</span>
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                      checked ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </>
-              )}
-            </Switch>
-          </div>
-        </div>
+      <PostSection />
 
-        <StorySection />
-
-        <PostSection />
-
-        <WeddingHallItem weddingHall={WEDDING_HALL} />
-      </div>
+      <WeddingHallItem weddingHall={WEDDING_HALL} />
     </div>
   );
 };

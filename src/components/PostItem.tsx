@@ -8,13 +8,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import PostImageViewerV2 from "./PostImageViewerV2";
+import { usePathname } from "next/navigation";
 
 type Props = {
   post: InstaPost;
 };
 
 const PostItem = ({ post }: Props) => {
+  const pathname = usePathname();
+  const postDetailPath = `${pathname}/posts/${post.id}`;
+
   const [likeCount, setLikeCount] = useState(post.likes);
+  // 콤마로 구분된 숫자
+  const commentCount = (post.replies.length ?? 0).toLocaleString();
 
   const handleLike = useCallback(() => {
     setLikeCount(prev => prev + 1);
@@ -48,10 +54,7 @@ const PostItem = ({ post }: Props) => {
         >
           <HeartIcon />
         </button>
-        <Link
-          className="flex p-2 active:opacity-50"
-          href={`p/${post.id}/comments`}
-        >
+        <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
           <CommentIcon />
         </Link>
       </div>
@@ -60,12 +63,14 @@ const PostItem = ({ post }: Props) => {
       {/* Content */}
       <div className="flex flex-col gap-2 my-1 px-3">
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-bold">{`좋아요 ${likeCount}개`}</span>
-          <div className="text-xs whitespace-pre">
+          <span className="text-sm font-bold">{`좋아요 ${likeCount}개`}</span>
+          <div className="text-sm whitespace-pre">
             {post.content || "본문을 입력하세요"}
           </div>
         </div>
-        <span className="text-xs font-bold">댓글 0개 모두 보기</span>
+        <Link href={postDetailPath} className="flex self-start">
+          <span className="text-xs font-bold">{`댓글 ${commentCount}개 모두 보기`}</span>
+        </Link>
       </div>
       {/* Content */}
     </div>
