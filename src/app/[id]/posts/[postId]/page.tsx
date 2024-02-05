@@ -1,7 +1,8 @@
 "use client";
 
 import InstaHeader from "@/app/[id]/InstaHeader";
-import HeartIcon from "@/foundation/icons/HeartIcon";
+import PostImageViewerV2 from "@/components/PostImageViewerV2";
+import PostLikeIcon from "@/components/PostLikeIcon";
 import MenuIcon from "@/foundation/icons/MenuIcon";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
@@ -60,13 +61,11 @@ const POST_DATA: InstaPost = {
 
 const Page = () => {
   const [likeCount, setLikeCount] = useState(POST_DATA.likes);
-  const [isLiked, setIsLiked] = useState(false);
   const [replies, setReplies] = useState(
     POST_DATA.replies.map(reply => ({ ...reply, id: uid(10, "reply-id") })),
   );
 
   const handleLike = useCallback(() => {
-    setIsLiked(true);
     setLikeCount(prev => prev + 1);
   }, []);
 
@@ -104,38 +103,11 @@ const Page = () => {
       <InstaHeader />
 
       {/* ImageViewer */}
-      <div className="flex-none relative">
-        <div className="w-full" style={{ paddingBottom: "100%" }} />
-        <div className="absolute inset-0">
-          <ul className="flex bg-yellow-50 h-full w-full overflow-x-scroll snap-x snap-mandatory scroll-smooth">
-            {POST_DATA.images.map(image => (
-              <li
-                key={image.id}
-                className="relative flex-none w-full h-full bg-red-300 snap-start"
-              >
-                <Image
-                  src={image.url}
-                  loading="lazy"
-                  alt="게시물 이미지"
-                  fill
-                  sizes="512px"
-                  draggable={false}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <PostImageViewerV2 images={POST_DATA.images} />
       {/* ImageViewer */}
 
       <div className="flex-none py-1">
-        <button type="button" className="p-2 group" onClick={handleLike}>
-          <HeartIcon
-            className={`${
-              isLiked ? "fill-red-400 stroke-red-400" : ""
-            } transition group-active:scale-90 group-active:rotate-12`}
-          />
-        </button>
+        <PostLikeIcon onLike={handleLike} />
         <p className="text-sm font-bold mb-2 px-2">{`좋아요 ${likeCount}개`}</p>
         <p className="text-sm whitespace-pre-line px-2">{POST_DATA.content}</p>
       </div>

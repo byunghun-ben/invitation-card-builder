@@ -1,14 +1,14 @@
 "use client";
 
 import CommentIcon from "@/foundation/icons/CommentIcon";
-import HeartIcon from "@/foundation/icons/HeartIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import PostImageViewerV2 from "./PostImageViewerV2";
-import { usePathname } from "next/navigation";
+import PostLikeIcon from "./PostLikeIcon";
 
 type Props = {
   post: InstaPost;
@@ -43,22 +43,14 @@ const PostItem = ({ post }: Props) => {
       </div>
       {/* Header */}
 
-      <PostImageViewerV2 post={post} />
+      <PostImageViewerV2 images={post.images} />
 
-      {/* Like & ImageIndex */}
       <div className="relative flex items-center my-1">
-        <button
-          type="button"
-          onClick={handleLike}
-          className="flex p-2 active:opacity-50"
-        >
-          <HeartIcon />
-        </button>
+        <PostLikeIcon onLike={handleLike} />
         <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
           <CommentIcon />
         </Link>
       </div>
-      {/* Like & ImageIndex */}
 
       {/* Content */}
       <div className="flex flex-col gap-2 my-1 px-3">
