@@ -3,7 +3,7 @@
 import { InstaImage, InstaStory } from "@/schemas/instagram";
 import { uid } from "radash";
 import { useCallback, useRef } from "react";
-import { useProcessImage } from "./useFile";
+import { useProcessImage } from "../useFile";
 
 type Props = {
   index: number;

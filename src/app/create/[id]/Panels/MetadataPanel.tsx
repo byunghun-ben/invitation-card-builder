@@ -3,21 +3,14 @@
 import { InstaMetadata } from "@/schemas/instagram";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 
 type Props = {
   metadata: InstaMetadata;
-  onGroomNameChange: (name: string) => void;
-  onBrideNameChange: (name: string) => void;
-  onTitleChange: (title: string) => void;
+  setMetadata: Dispatch<SetStateAction<InstaMetadata>>;
 };
 
-const MetadataPanel = ({
-  metadata,
-  onGroomNameChange,
-  onBrideNameChange,
-  onTitleChange,
-}: Props) => {
+const MetadataPanel = ({ metadata, setMetadata }: Props) => {
   const pathname = usePathname();
   const id = pathname.replace("/create/", "");
 
@@ -25,23 +18,32 @@ const MetadataPanel = ({
 
   const handleChangeGroomName = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onGroomNameChange(e.target.value);
+      setMetadata(prev => ({
+        ...prev,
+        groomName: e.target.value,
+      }));
     },
-    [onGroomNameChange],
+    [setMetadata],
   );
 
   const handleChangeBrideName = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onBrideNameChange(e.target.value);
+      setMetadata(prev => ({
+        ...prev,
+        brideName: e.target.value,
+      }));
     },
-    [onBrideNameChange],
+    [setMetadata],
   );
 
   const handleChangeTitle = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onTitleChange(e.target.value);
+      setMetadata(prev => ({
+        ...prev,
+        title: e.target.value,
+      }));
     },
-    [onTitleChange],
+    [setMetadata],
   );
 
   return (

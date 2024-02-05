@@ -2,7 +2,7 @@
 
 import { InstaImage, InstaPost } from "@/schemas/instagram";
 import { ChangeEvent, useCallback, useRef } from "react";
-import { useProcessImage } from "./useFile";
+import { useProcessImage } from "../useFile";
 import { uid } from "radash";
 
 type Props = {

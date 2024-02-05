@@ -1,53 +1,66 @@
 "use client";
 
-import { InstaImage, InstaWeddingHall } from "@/schemas/instagram";
+import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
 import { uid } from "radash";
-import { useCallback, useRef, useState } from "react";
-import LocalSearchModal from "./LocalSearchModal";
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import { useProcessMultipleImages } from "../useFile";
+import LocalSearchModal from "./LocalSearchModal";
 
 type Props = {
   weddingHall: InstaWeddingHall;
-  onChangeName: (name: string) => void;
-  onChangeAddress: (address: string) => void;
-  onChangeContent: (content: string) => void;
-  onChangeImages: (images: InstaImage[]) => void;
+  setWeddingHall: Dispatch<SetStateAction<InstaWeddingHall>>;
+  // onChangeName: (name: string) => void;
+  // onChangeAddress: (address: string) => void;
+  // onChangeContent: (content: string) => void;
+  // onChangeImages: (images: InstaImage[]) => void;
 };
 
-const WeddingHallForm = ({
+const WeddingHallPanel = ({
   weddingHall,
-  onChangeName,
-  onChangeAddress,
-  onChangeImages,
-  onChangeContent,
+  setWeddingHall,
+  // onChangeName,
+  // onChangeAddress,
+  // onChangeImages,
+  // onChangeContent,
 }: Props) => {
   const imageRef = useRef<HTMLInputElement>(null);
 
   const handleChangeContent = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onChangeContent(e.target.value);
+      setWeddingHall(prev => ({
+        ...prev,
+        content: e.target.value,
+      }));
     },
-    [onChangeContent],
+    [setWeddingHall],
   );
 
   const handleImageClick = useCallback(() => {
     imageRef.current?.click();
   }, []);
 
-  const handleProcessImages = useCallback((blobs: Blob[]) => {
-    const newImages = blobs.map(blob => {
-      const id = uid(10, "image-id");
-      const url = URL.createObjectURL(blob);
+  const handleProcessImages = useCallback(
+    (blobs: Blob[]) => {
+      const newImages = blobs.map(blob => {
+        const id = uid(10, "image-id");
+        const url = URL.createObjectURL(blob);
 
-      return {
-        id,
-        url,
-      };
-    });
+        return {
+          id,
+          url,
+        };
+      });
 
-    onChangeImages(newImages);
-  }, []);
+      setWeddingHall(prev => ({
+        ...prev,
+        images: [...prev.images, ...newImages],
+      }));
+
+      // onChangeImages(newImages);
+    },
+    [setWeddingHall],
+  );
 
   const { handleChangeFileInputMultiple } = useProcessMultipleImages({
     onProcessImages: handleProcessImages,
@@ -55,10 +68,16 @@ const WeddingHallForm = ({
 
   const handleRemoveImage = useCallback(
     (id: string) => () => {
-      const newImages = weddingHall.images.filter(image => image.id !== id);
-      onChangeImages(newImages);
+      setWeddingHall(prev => {
+        const newImages = prev.images.filter(image => image.id !== id);
+
+        return {
+          ...prev,
+          images: newImages,
+        };
+      });
     },
-    [weddingHall.images, onChangeImages],
+    [setWeddingHall],
   );
 
   const [isOpenLocalSearchModal, setIsOpenLocalSearchModal] = useState(false);
@@ -66,10 +85,13 @@ const WeddingHallForm = ({
   const handleSelectLocalSearch = useCallback(
     (result: { name: string; address: string }) => {
       console.log("result", result);
-      onChangeName(result.name);
-      onChangeAddress(result.address);
+      setWeddingHall(prev => ({
+        ...prev,
+        name: result.name,
+        address: result.address,
+      }));
     },
-    [onChangeName, onChangeAddress],
+    [setWeddingHall],
   );
 
   return (
@@ -169,4 +191,4 @@ const WeddingHallForm = ({
   );
 };
 
-export default WeddingHallForm;
+export default WeddingHallPanel;
