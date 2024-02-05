@@ -24,13 +24,6 @@ const WeddingHallForm = ({
 }: Props) => {
   const imageRef = useRef<HTMLInputElement>(null);
 
-  const handleChangeName = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChangeName(e.target.value);
-    },
-    [onChangeName],
-  );
-
   const handleChangeContent = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       onChangeContent(e.target.value);

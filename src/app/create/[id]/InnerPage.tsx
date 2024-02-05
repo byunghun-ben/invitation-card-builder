@@ -205,11 +205,11 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
     <div className="flex h-screen">
       <Tab.Group>
         <section className="basis-48 shrink-0 border-r">
-          <div className="w-full flex flex-col gap-4">
-            <Tab.List className="flex flex-col items-start gap-10 py-10 pl-10">
+          <div className="w-full flex flex-col gap-10 py-10">
+            <Tab.List className="flex flex-col gap-4 pl-4">
               <Tab
                 className={({ selected }) =>
-                  `py-2 px-3 ${
+                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
                     selected
                       ? "font-bold text-slate-900 dark:text-white"
                       : "text-slate-400"
@@ -220,7 +220,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `py-2 px-3 ${
+                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
                     selected
                       ? "font-bold text-slate-900 dark:text-white"
                       : "text-slate-400"
@@ -231,7 +231,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `py-2 px-3 ${
+                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
                     selected
                       ? "font-bold text-slate-900 dark:text-white"
                       : "text-slate-400"
@@ -242,7 +242,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `py-2 px-3 ${
+                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
                     selected
                       ? "font-bold text-slate-900 dark:text-white"
                       : "text-slate-400"
@@ -253,9 +253,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
             </Tab.List>
 
-            <div className="h-px bg-slate-700" />
-
-            <div className="px-10 py-10 flex flex-col">
+            <div className="px-4 flex flex-col">
               <SubmitButton
                 meta={metadata}
                 posts={posts}
@@ -277,7 +275,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
               <div className="flex flex-col gap-4">
-                <h2>스토리</h2>
+                <h2 className="text-xl font-bold">스토리</h2>
 
                 {stories.length === 0 && (
                   <>
@@ -318,7 +316,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
               <div className="flex flex-col gap-4">
-                <h2>게시물</h2>
+                <h2 className="text-xl font-bold">게시물</h2>
 
                 {posts.length === 0 && (
                   <>
