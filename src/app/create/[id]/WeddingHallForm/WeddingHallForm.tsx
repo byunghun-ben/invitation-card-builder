@@ -3,8 +3,9 @@
 import { InstaImage, InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
 import { uid } from "radash";
-import { useCallback, useRef } from "react";
-import { useProcessMultipleImages } from "./useFile";
+import { useCallback, useRef, useState } from "react";
+import LocalSearchModal from "./LocalSearchModal";
+import { useProcessMultipleImages } from "../useFile";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -67,27 +68,48 @@ const WeddingHallForm = ({
     [weddingHall.images, onChangeImages],
   );
 
+  const [isOpenLocalSearchModal, setIsOpenLocalSearchModal] = useState(false);
+
+  const handleSelectLocalSearch = useCallback(
+    (result: { name: string; address: string }) => {
+      console.log("result", result);
+      onChangeName(result.name);
+      onChangeAddress(result.address);
+    },
+    [onChangeName, onChangeAddress],
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-bold">결혼식장</h2>
 
       <div className="flex flex-col gap-4">
-        <input
-          type="text"
-          name="wedding-hall-name"
-          id="wedding-hall-name-input"
-          className="px-3 py-2 border rounded dark:bg-slate-900 dark:text-white"
-          placeholder="식장 이름"
-          value={weddingHall.name}
-          onChange={handleChangeName}
-        />
-
-        <button
-          type="button"
-          className="p-2 border rounded hover:bg-slate-50 dark:hover:bg-slate-700"
-        >
-          <span className="text-sm font-bold">식장 위치 검색</span>
-        </button>
+        <div className="flex flex-col gap-2">
+          {weddingHall.name && weddingHall.address && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
+                <span className="text-xs">식장이름</span>
+                <span className="">{weddingHall.name}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs">주소</span>
+                <span className="">{weddingHall.address}</span>
+              </div>
+            </div>
+          )}
+          <button
+            type="button"
+            className="p-2 border rounded hover:bg-slate-50 dark:hover:bg-slate-700"
+            onClick={() => setIsOpenLocalSearchModal(true)}
+          >
+            <span className="text-sm font-bold">식장 위치 검색</span>
+          </button>
+          <LocalSearchModal
+            isOpen={isOpenLocalSearchModal}
+            onClose={() => setIsOpenLocalSearchModal(false)}
+            onSelect={handleSelectLocalSearch}
+          />
+        </div>
 
         <div className="flex flex-col gap-2">
           {weddingHall.images.length === 0 && (

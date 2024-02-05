@@ -1,19 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import PostSection from "./PostSection";
-import StorySection from "./StorySection";
-import useFullHeight from "./useFullHeight";
 import WeddingHallItem from "@/components/WeddingHallItem";
 import { InstaWeddingHall } from "@/schemas/instagram";
 import { uid } from "radash";
-import { Switch } from "@headlessui/react";
 import InstaHeader from "../InstaHeader";
+import PostSection from "./PostSection";
+import StorySection from "./StorySection";
 
 const WEDDING_HALL: InstaWeddingHall = {
-  name: "웨딩홀 이름",
-  address: "웨딩홀 주소",
-  content: "웨딩홀 설명",
+  name: "보타닉파크웨딩",
+  address: "서울 강서구 마곡중앙5로 6 보타닉푸르지오시티 L층(로비층)",
+  content: `마곡나루역 1번 2번 사이 내부연결통로로 연결되어 있어, 대중교통 이용 시 편하게 방문 가능합니다. 주차는 보타닉 푸르지오 시티에 주차 가능합니다.`,
   images: [
     {
       id: uid(10, "image-id"),

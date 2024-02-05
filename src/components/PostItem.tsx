@@ -64,7 +64,7 @@ const PostItem = ({ post }: Props) => {
       <div className="flex flex-col gap-2 my-1 px-3">
         <div className="flex flex-col gap-2">
           <span className="text-sm font-bold">{`좋아요 ${likeCount}개`}</span>
-          <div className="text-sm whitespace-pre">
+          <div className="text-sm whitespace-pre-line">
             {post.content || "본문을 입력하세요"}
           </div>
         </div>

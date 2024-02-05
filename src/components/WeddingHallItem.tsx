@@ -3,6 +3,7 @@
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
+import Link from "next/link";
 import {
   MouseEventHandler,
   useCallback,
@@ -71,6 +72,13 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
   const content = weddingHall.content || "식장 소개가 없습니다.";
   const weddingHallImages = weddingHall.images || [];
   const weddingHallImageCount = weddingHallImages.length;
+
+  const naverMapUrl = encodeURI(
+    `https://map.naver.com/v5/search/${weddingHall.name}`,
+  );
+  const kakaoMapUrl = encodeURI(
+    `https://map.kakao.com/link/search/${weddingHall.name}`,
+  );
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -145,21 +153,25 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
       <div className="flex flex-col gap-2 p-3">
         <span className="font-bold">{weddingHall.name || "식장 이름"}</span>
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Link
+            href={naverMapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 flex items-center justify-center p-2 border border-green-400 rounded"
           >
             <span className="text-xs">네이버 지도로 확인하기</span>
-          </button>
-          <button
-            type="button"
+          </Link>
+          <Link
+            href={kakaoMapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 flex items-center justify-center p-2 border border-yellow-400 rounded"
           >
             <span className="text-xs">카카오 지도로 확인하기</span>
-          </button>
+          </Link>
         </div>
         <div>
-          <p className="text-xs whitespace-pre">{content}</p>
+          <p className="text-xs whitespace-pre-line">{content}</p>
         </div>
       </div>
     </div>

@@ -13,8 +13,9 @@ import MetadataPanel from "./MetadataPanel";
 import PostForm from "./PostForm";
 import StoryForm from "./StoryForm";
 import SubmitButton from "./SubmitButton";
-import WeddingHallForm from "./WeddingHallForm";
+import WeddingHallForm from "./WeddingHallForm/WeddingHallForm";
 import PreviewSection from "./PreviewSection/PreviewSection";
+import { uid } from "radash";
 
 type InnerPageProps = {
   defaultValue: {
@@ -103,10 +104,12 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
     setPosts(posts => [
       ...posts,
       {
-        id: Math.random().toString(36).slice(2),
+        id: uid(10, "post-id"),
         title: "",
         content: "",
         images: [],
+        replies: [],
+        likes: 0,
       },
     ]);
   }, []);
