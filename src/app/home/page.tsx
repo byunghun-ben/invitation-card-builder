@@ -1,22 +1,7 @@
 import Header from "@/components/Header";
 import Link from "next/link";
 
-const getInstagramTemplates = async () => {
-  return fetch(process.env.API_URL + "/instagram-templates")
-    .then(res => {
-      return res.json();
-    })
-    .catch(err => {
-      console.log(err);
-    });
-};
-
 const Page = async () => {
-  const templates = await getInstagramTemplates();
-
-  // 빌드 될 때 콘솔에 보일겁니다요
-  console.log(templates);
-
   return (
     <div className="flex flex-col">
       <Header />
