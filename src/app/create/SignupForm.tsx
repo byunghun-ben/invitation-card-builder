@@ -1,6 +1,5 @@
 "use client";
 
-import { InstagramTemplateAPI } from "@/api";
 import { useRouter } from "next/navigation";
 import {
   ChangeEvent,
@@ -19,7 +18,7 @@ type Props = {
   setIsCreate: Dispatch<SetStateAction<boolean>>;
 };
 
-const CreateForm = ({ setIsCreate }: Props) => {
+const SignupForm = ({ setIsCreate }: Props) => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -57,18 +56,25 @@ const CreateForm = ({ setIsCreate }: Props) => {
       e.preventDefault();
 
       try {
-        await InstagramTemplateAPI.create({
-          id: invitationId,
-          password,
+        const res = await fetch("/auth/signup", {
+          method: "POST",
+          body: JSON.stringify({
+            id: invitationId,
+            password,
+          }),
         });
 
-        router.push(`/create/${invitationId}`);
+        console.log("res", res);
+        if (!res.ok) {
+          const body = await res.json();
+          alert(body.message);
+          return;
+        }
+
+        // router.push(`/create/${invitationId}`);
       } catch (error) {
         console.error("error", error);
         alert("청첩장을 만들지 못했습니다.");
-        // TODO: 에러 처리
-        // 1. 이미 존재하는 청첩장 주소
-        // 2. 서버 에러
       }
     },
     [invitationId, password, router],
@@ -142,4 +148,4 @@ const CreateForm = ({ setIsCreate }: Props) => {
   );
 };
 
-export default CreateForm;
+export default SignupForm;
