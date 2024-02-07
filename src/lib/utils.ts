@@ -14,3 +14,13 @@ export function createErrorResponse(
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export function createSuccessResponse(
+  data: any,
+  statusCode: number,
+): NextResponse {
+  return new NextResponse(JSON.stringify(data), {
+    status: statusCode,
+    headers: { "Content-Type": "application/json" },
+  });
+}
