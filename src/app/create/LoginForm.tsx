@@ -11,10 +11,10 @@ import {
 } from "react";
 
 type Props = {
-  setIsCreate: Dispatch<SetStateAction<boolean>>;
+  setIsSignup: Dispatch<SetStateAction<boolean>>;
 };
 
-const EditForm = ({ setIsCreate }: Props) => {
+const LoginForm = ({ setIsSignup }: Props) => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -64,7 +64,7 @@ const EditForm = ({ setIsCreate }: Props) => {
         }
 
         console.log("success", body);
-        router.push(`/create/${invitationId}`);
+        // router.push(`/create/${invitationId}`);
       } catch (error) {
         console.log("error", error);
       }
@@ -85,10 +85,10 @@ const EditForm = ({ setIsCreate }: Props) => {
             <input
               type="text"
               className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
-              placeholder="주소를 입력하세요"
+              placeholder="아이디를 입력하세요."
               value={invitationId}
               onChange={handleChangeInvitationId}
-              autoComplete="off"
+              autoComplete="one-time-code"
             />
           </div>
 
@@ -114,12 +114,11 @@ const EditForm = ({ setIsCreate }: Props) => {
       </form>
 
       <div className="flex flex-col gap-1 items-center">
-        {/* <p className="text-sm">이미 만들던 청첩장이 있나요?</p> */}
         <button
           type="button"
           className="hover:underline"
           onClick={() => {
-            setIsCreate(true);
+            setIsSignup(true);
           }}
         >
           <span className="text-sm">회원가입</span>
@@ -129,4 +128,4 @@ const EditForm = ({ setIsCreate }: Props) => {
   );
 };
 
-export default EditForm;
+export default LoginForm;

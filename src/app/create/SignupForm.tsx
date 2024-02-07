@@ -15,10 +15,10 @@ import {
 const INVITATION_ID_REGEX = /^[a-zA-Z0-9-_]*$/;
 
 type Props = {
-  setIsCreate: Dispatch<SetStateAction<boolean>>;
+  setIsSignup: Dispatch<SetStateAction<boolean>>;
 };
 
-const SignupForm = ({ setIsCreate }: Props) => {
+const SignupForm = ({ setIsSignup }: Props) => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -138,7 +138,7 @@ const SignupForm = ({ setIsCreate }: Props) => {
           type="button"
           className="hover:underline"
           onClick={() => {
-            setIsCreate(false);
+            setIsSignup(false);
           }}
         >
           로그인하기

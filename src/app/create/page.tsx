@@ -2,19 +2,19 @@
 
 import Header from "@/components/Header";
 import SignupForm from "./SignupForm";
-import EditForm from "./EditForm";
+import LoginForm from "./LoginForm";
 import { useState } from "react";
 
 const Page = () => {
-  const [isCreate, setIsCreate] = useState(true);
+  const [isSignup, setIsSignup] = useState(true);
 
   return (
     <div className="flex flex-col">
       <Header />
       <section className="w-full max-w-sm mx-auto py-20">
-        {isCreate && <SignupForm setIsCreate={setIsCreate} />}
+        {isSignup && <SignupForm setIsSignup={setIsSignup} />}
 
-        {!isCreate && <EditForm setIsCreate={setIsCreate} />}
+        {!isSignup && <LoginForm setIsSignup={setIsSignup} />}
       </section>
     </div>
   );
