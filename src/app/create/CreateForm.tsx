@@ -2,31 +2,45 @@
 
 import { InstagramTemplateAPI } from "@/api";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 // 영어, 숫자, -, _ 만 입력 가능
 const INVITATION_ID_REGEX = /^[a-zA-Z0-9-_]*$/;
 
-const CreateForm = () => {
+type Props = {
+  setIsCreate: Dispatch<SetStateAction<boolean>>;
+};
+
+const CreateForm = ({ setIsCreate }: Props) => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
+  const [isIdError, setIsIdError] = useState<null | string>(null);
+
   const [password, setPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+
+  const isDisabled = useMemo(() => {
+    return invitationId.length === 0 || password.length === 0 || !!isIdError;
+  }, [invitationId, password, isIdError]);
 
   const handleChangeInvitationId = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const isNotValid = !INVITATION_ID_REGEX.test(event.target.value);
-      if (isNotValid) {
-        alert("영어, 숫자, -, _ 만 입력 가능합니다.");
-        return;
-      }
-
       setInvitationId(event.target.value);
 
-      const isDisabled =
-        event.target.value.length === 0 || password.length === 0;
-      setIsDisabled(isDisabled);
+      const isNotValid = !INVITATION_ID_REGEX.test(event.target.value);
+      if (isNotValid) {
+        setIsIdError("영어, 숫자, -, _ 만 입력 가능합니다.");
+      } else {
+        setIsIdError(null);
+      }
     },
     [password],
   );
@@ -34,10 +48,6 @@ const CreateForm = () => {
   const handleChangePassword = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setPassword(event.target.value);
-
-      const isDisabled =
-        event.target.value.length === 0 || invitationId.length === 0;
-      setIsDisabled(isDisabled);
     },
     [invitationId],
   );
@@ -65,52 +75,69 @@ const CreateForm = () => {
   );
 
   return (
-    <div className="px-4 py-10 flex flex-col items-center">
-      <h1 className="text-xl font-bold mb-10">처음 청첩장을 만든다면?</h1>
-      <form className="flex-1 flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex-1 flex flex-col gap-2">
+    <div className="flex-1 px-4 py-10 flex flex-col items-center">
+      <h1 className="text-xl font-bold mb-10">회원가입</h1>
+      <form
+        className="w-full flex-1 flex flex-col gap-4 mb-6"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex-1 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <div className="flex gap-1 items-center">
-              <span className="flex-none">https://bora-n-maria.com/</span>
+            <p>아이디</p>
+            <div className="flex flex-col gap-1">
               <input
                 type="text"
-                className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
-                placeholder="주소를 입력하세요"
+                className={`
+                flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white placeholder:text-sm
+                ${isIdError ? "border-red-500" : ""}
+                `}
+                placeholder="청첩장 주소로 사용할 아이디를 입력하세요."
                 value={invitationId}
                 onChange={handleChangeInvitationId}
                 autoComplete="one-time-code"
               />
+              {isIdError && (
+                <span className="text-xxs text-red-500">{isIdError}</span>
+              )}
             </div>
-            <div className="flex flex-col w-full text-xs">
-              <p>청첩장을 보기 위해 접근하는 주소입니다.</p>
-              <p>(결제 전에는 확인할 수 없어요.)</p>
+            <div className="flex flex-col">
+              <p className="text-xxs">청첩장 주소:</p>
+              <p className="text-xxs">{`https://bora-n-maria.com/${invitationId}`}</p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-1 w-full">
-            <div>
-              <input
-                type="password"
-                className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
-                placeholder="비밀번호를 입력하세요."
-                value={password}
-                onChange={handleChangePassword}
-                autoComplete="one-time-code"
-              />
-            </div>
-            <div className="flex flex-col w-full text-xs">
-              <span>청첩장을 수정할 때, 사용할 비밀번호를 입력하세요.</span>
-            </div>
+          <div className="flex flex-col gap-1">
+            <p>비밀번호</p>
+            <input
+              type="password"
+              className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
+              placeholder="비밀번호를 입력하세요."
+              value={password}
+              onChange={handleChangePassword}
+              autoComplete="one-time-code"
+            />
           </div>
         </div>
         <button
           type="submit"
-          className="flex-none border rounded py-1 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:cursor-not-allowed"
+          className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isDisabled}
         >
-          만들기
+          회원가입
         </button>
       </form>
+      <div className="flex flex-col gap-1 items-center">
+        <p className="text-sm">이미 만들던 청첩장이 있나요?</p>
+        <button
+          type="button"
+          className="hover:underline"
+          onClick={() => {
+            setIsCreate(false);
+          }}
+        >
+          로그인하기
+        </button>
+      </div>
     </div>
   );
 };
