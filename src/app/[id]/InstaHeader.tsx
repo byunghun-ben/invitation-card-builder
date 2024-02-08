@@ -1,11 +1,16 @@
 "use client";
 
 import { useToggleColorScheme } from "@/hooks/useColorScheme";
+import { InstaTemplate } from "@/schemas/instagram";
 import { Switch } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const InstaHeader = () => {
+type Props = {
+  instaTemplate: InstaTemplate;
+};
+
+const InstaHeader = ({ instaTemplate }: Props) => {
   const { isDarkMode, handleToggleColorScheme } = useToggleColorScheme();
 
   const pathname = usePathname();
@@ -14,7 +19,7 @@ const InstaHeader = () => {
   return (
     <div className="flex-none h-10 px-3 flex items-center">
       <Link href={`/${id}`}>
-        <span>정현 & 카리나의 결혼식</span>
+        <span>{instaTemplate.metadata.title}</span>
       </Link>
       <div className="ml-auto flex items-center">
         <button

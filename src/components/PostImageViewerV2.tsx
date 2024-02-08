@@ -40,7 +40,6 @@ const PostImageViewerV2 = ({ images }: Props) => {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const handleMouseDown = useCallback((e: MouseEvent) => {
-    console.log("handleMouseDown");
     const imageContainer = imageContainerRef.current;
     if (!imageContainer) {
       return;
@@ -52,13 +51,10 @@ const PostImageViewerV2 = ({ images }: Props) => {
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    console.log("handleMouseLeave");
-
     setIsMouseDown(false);
   }, []);
 
   const handleMouseUp = useCallback(() => {
-    console.log("handleMouseUp");
     setIsMouseDown(false);
   }, []);
 
@@ -71,26 +67,14 @@ const PostImageViewerV2 = ({ images }: Props) => {
       if (!isMouseDown || !imageContainer) {
         return;
       }
-      // console.log("handleMouseMove");
 
       const endX = e.pageX - imageContainer.offsetLeft;
       const SCROLL_SPEED = 3;
       const distance = (endX - startX) * SCROLL_SPEED;
 
       imageContainer.scrollLeft = scrollLeft - distance;
-      console.log(
-        "scrollLeft",
-        imageContainer.scrollLeft,
-        scrollLeft,
-        distance,
-      );
     },
     [isMouseDown, scrollLeft, startX],
-  );
-
-  const debouncedHandleMouseMove = useMemo(
-    () => debounce({ delay: 0 }, handleMouseMove),
-    [handleMouseMove],
   );
   // MouseDrag Scroll
 

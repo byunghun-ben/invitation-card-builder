@@ -15,7 +15,6 @@ const useFullHeight = ({ divRef }: Props) => {
 
     const setHeight = debounce({ delay: 100 }, () => {
       div.style.height = `${window.innerHeight}px`;
-      console.log("setHeight");
     });
 
     setHeight();

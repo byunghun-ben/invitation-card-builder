@@ -15,7 +15,7 @@ export const revalidate = 1;
 
 const instaTemplateResponseSchema = z.object({
   message: z.string(),
-  data: InstaTemplateSchema,
+  instaTemplate: InstaTemplateSchema,
 });
 
 const getInstaTemplateById = async (id: string) => {
@@ -31,7 +31,7 @@ const getInstaTemplateById = async (id: string) => {
     const data = await res.json();
     const parsedData = instaTemplateResponseSchema.parse(data);
 
-    return parsedData.data;
+    return parsedData.instaTemplate;
   } catch (error) {
     throw new Error("Failed to parse insta template");
   }

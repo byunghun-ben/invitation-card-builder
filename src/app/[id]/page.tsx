@@ -1,6 +1,38 @@
+import { InstaTemplateSchema } from "@/schemas/instagram";
 import ViewSection from "./ViewSection/ViewSection";
+import { z } from "zod";
 
 export const revalidate = 1;
+
+const NEXT_SERVER_URL = process.env.NEXT_SERVER_URL || "";
+
+const instaTemplateResponseSchema = z.object({
+  message: z.string(),
+  instaTemplate: InstaTemplateSchema,
+});
+
+const getInstagramTemplate = async (id: string) => {
+  try {
+    const res = await fetch(`${NEXT_SERVER_URL}/api/instagram-templates/${id}`);
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = await res.json();
+
+    const parsedData = instaTemplateResponseSchema.safeParse(data);
+
+    if (!parsedData.success) {
+      console.error(parsedData.error);
+      return null;
+    }
+
+    return parsedData.data.instaTemplate;
+  } catch (error) {
+    return null;
+  }
+};
 
 type Props = {
   params: {
@@ -8,12 +40,12 @@ type Props = {
   };
 };
 
-const API_URL = process.env.API_URL || "";
-
 const Page = async (props: Props) => {
-  const res = await fetch(`${API_URL}/instagram-templates/${props.params.id}`);
+  const id = props.params.id;
 
-  if (!res.ok) {
+  const instaTemplate = await getInstagramTemplate(id);
+
+  if (!instaTemplate) {
     return (
       <div>
         <h1>Failed to fetch insta template</h1>
@@ -21,19 +53,7 @@ const Page = async (props: Props) => {
     );
   }
 
-  try {
-    const data = await res.json();
-
-    console.log("data", data);
-
-    return <ViewSection />;
-  } catch (error) {
-    return (
-      <div>
-        <h1>Failed to parse insta template</h1>
-      </div>
-    );
-  }
+  return <ViewSection instaTemplate={instaTemplate} />;
 };
 
 export default Page;

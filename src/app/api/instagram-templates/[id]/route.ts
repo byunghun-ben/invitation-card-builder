@@ -52,7 +52,7 @@ export const GET = async (request: NextRequest) => {
   // 1-2. 템플릿 정보가 있다면, 반환한다.
   return NextResponse.json({
     message: "GET /api/instagram-templates/:id",
-    data: templateResponse,
+    instaTemplate: templateResponse,
   });
 };
 
