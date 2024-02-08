@@ -107,6 +107,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
         title: "",
         content: "",
         images: [],
+        likes: 0,
       },
     ]);
   }, []);
