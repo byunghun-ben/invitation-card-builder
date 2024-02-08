@@ -67,3 +67,5 @@ export const InstaTemplateSchema = z.object({
     content: "",
   }),
 });
+
+export type InstaTemplate = z.infer<typeof InstaTemplateSchema>;
