@@ -3,61 +3,12 @@
 import InstaHeader from "@/app/[id]/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
 import PostLikeIcon from "@/components/PostLikeIcon";
+import { DummyInstaTemplate } from "@/foundation/data";
 import MenuIcon from "@/foundation/icons/MenuIcon";
-import { InstaPost } from "@/schemas/instagram";
-import Image from "next/image";
 import { uid } from "radash";
 import { FormEvent, useCallback, useState } from "react";
 
-const POST_DATA: InstaPost = {
-  id: uid(10, "post-id"),
-  title: "포스트 제목",
-  images: [
-    {
-      id: uid(10, "image-id"),
-      url: "https://picsum.photos/id/444/600",
-    },
-    {
-      id: uid(10, "image-id"),
-      url: "https://picsum.photos/id/445/600",
-    },
-    {
-      id: uid(10, "image-id"),
-      url: "https://picsum.photos/id/446/600",
-    },
-  ],
-  content: `⠀
-  세상에서 단 하나뿐인 예쁜 청첩장을
-  오늘카드에서 담아드립니다.🪽
-  ⠀
-  합리적인 비용으로 소량 제작 가능합니다.🩷
-  ⠀
-  포토엽서형 청첩장 50매 70,000원
-  + 50매 추가시 17,000원
-  ⠀
-  오시는길 50매 19,000원
-  + 50매 추가시 9,000원
-  ⠀
-  자세한 상담은 1:1 카카오톡 채널로 문의주세요.🤍
-  
-  #청첩장 #청첩장제작 #청첩장주문제작 #청첩장디자인 #청첩장사진 #포토청첩장 #맞춤청첩장 #청첩장샘플 #청첩장만들기 #결혼식청첩장 #웨딩청첩장 #청첩장추천 #사진청첩장 #청첩장후기 #청첩장준비`,
-  likes: 12,
-  replies: [
-    {
-      name: "김병훈",
-      content:
-        "결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!결혼 축하해요!!",
-    },
-    {
-      name: "손정현",
-      content: "행복하세요!!",
-    },
-    {
-      name: "엄퐁재",
-      content: "축하드려요!!",
-    },
-  ],
-};
+const POST_DATA = DummyInstaTemplate.posts[1];
 
 const Page = () => {
   const [likeCount, setLikeCount] = useState(POST_DATA.likes);
@@ -100,7 +51,7 @@ const Page = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <InstaHeader />
+      <InstaHeader instaTemplate={DummyInstaTemplate} />
 
       {/* ImageViewer */}
       <PostImageViewerV2 images={POST_DATA.images} />
