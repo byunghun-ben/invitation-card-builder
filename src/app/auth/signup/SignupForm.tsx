@@ -1,24 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
 
 // 영어, 숫자, -, _ 만 입력 가능
 const INVITATION_ID_REGEX = /^[a-zA-Z0-9-_]*$/;
 
-type Props = {
-  setIsSignup: Dispatch<SetStateAction<boolean>>;
-};
-
-const SignupForm = ({ setIsSignup }: Props) => {
+const SignupForm = () => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -56,7 +45,7 @@ const SignupForm = ({ setIsSignup }: Props) => {
       e.preventDefault();
 
       try {
-        const res = await fetch("/auth/signup", {
+        const res = await fetch("/api/auth/signup", {
           method: "POST",
           body: JSON.stringify({
             id: invitationId,
@@ -71,7 +60,7 @@ const SignupForm = ({ setIsSignup }: Props) => {
           return;
         }
 
-        // router.push(`/create/${invitationId}`);
+        router.push(`/create`);
       } catch (error) {
         console.error("error", error);
         alert("청첩장을 만들지 못했습니다.");
@@ -134,15 +123,9 @@ const SignupForm = ({ setIsSignup }: Props) => {
       </form>
       <div className="flex flex-col gap-1 items-center">
         <p className="text-sm">이미 만들던 청첩장이 있나요?</p>
-        <button
-          type="button"
-          className="hover:underline"
-          onClick={() => {
-            setIsSignup(false);
-          }}
-        >
+        <Link href="/auth/login" className="hover:underline">
           로그인하기
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,20 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useCallback,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-type Props = {
-  setIsSignup: Dispatch<SetStateAction<boolean>>;
-};
-
-const LoginForm = ({ setIsSignup }: Props) => {
+const LoginForm = () => {
   const router = useRouter();
 
   const [invitationId, setInvitationId] = useState("");
@@ -48,7 +38,7 @@ const LoginForm = ({ setIsSignup }: Props) => {
       e.preventDefault();
 
       try {
-        const response = await fetch("/auth/login", {
+        const response = await fetch("/api/auth/login", {
           method: "POST",
           body: JSON.stringify({
             id: invitationId,
@@ -64,7 +54,7 @@ const LoginForm = ({ setIsSignup }: Props) => {
         }
 
         console.log("success", body);
-        // router.push(`/create/${invitationId}`);
+        router.push(`/create`);
       } catch (error) {
         console.log("error", error);
       }
@@ -114,15 +104,9 @@ const LoginForm = ({ setIsSignup }: Props) => {
       </form>
 
       <div className="flex flex-col gap-1 items-center">
-        <button
-          type="button"
-          className="hover:underline"
-          onClick={() => {
-            setIsSignup(true);
-          }}
-        >
+        <Link href="/auth/signup" className="hover:underline">
           <span className="text-sm">회원가입</span>
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ const getJwtFromRequest = (request: NextRequest) => {
 };
 
 // 유저 권한을 체크하는 함수
-const checkUserPermission = (request: NextRequest, id: string) => {
+const checkUserPermission = async (request: NextRequest) => {
   console.log("checkUserPermission", request.nextUrl.pathname);
   const token = getJwtFromRequest(request);
 
@@ -24,33 +24,44 @@ const checkUserPermission = (request: NextRequest, id: string) => {
   }
 
   try {
-    const isValid = verifyJwt(token, TOKEN_SECRET);
+    const isValid = await verifyJwt(token, TOKEN_SECRET);
 
-    if (!isValid) {
-      return false;
-    }
-
-    const { payload } = decodeJwt(token);
-
-    return payload.id === id;
+    return isValid;
   } catch (error) {
     console.error(error);
     return false;
   }
 };
 
-export const middleware = (request: NextRequest) => {
+const getDecodedJwt = (request: NextRequest) => {
+  const token = getJwtFromRequest(request);
+
+  if (!token) {
+    return null;
+  }
+
+  return decodeJwt(token);
+};
+
+export const middleware = async (request: NextRequest) => {
   console.log("Request URL:", request.nextUrl.pathname);
 
-  const isCreateDetail = request.nextUrl.pathname.includes("/create/");
+  const isCreatePage = request.nextUrl.pathname.includes("/create");
 
-  if (isCreateDetail) {
-    const id = request.nextUrl.pathname.split("/create/")[1];
-    const hasPermission = checkUserPermission(request, id);
+  if (isCreatePage) {
+    const hasPermission = await checkUserPermission(request);
 
-    return hasPermission
-      ? NextResponse.next()
-      : NextResponse.redirect(`${NEXT_SERVER_URL}/create`);
+    if (!hasPermission) {
+      return NextResponse.redirect(`${NEXT_SERVER_URL}/login`);
+    }
+
+    const decodedJwt = getDecodedJwt(request);
+
+    if (!decodedJwt) {
+      return NextResponse.redirect(`${NEXT_SERVER_URL}/login`);
+    }
+
+    return NextResponse.next();
   }
 
   return NextResponse.next();

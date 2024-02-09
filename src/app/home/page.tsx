@@ -17,7 +17,7 @@ const Page = async () => {
             샘플 청첩장 보기
           </Link>
           <Link
-            href="/create"
+            href="/auth/signup"
             className="border border-slate-700 rounded-full py-2 px-4"
           >
             우리 청첩장 만들기
