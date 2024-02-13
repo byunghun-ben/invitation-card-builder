@@ -1,5 +1,3 @@
-const BASE_URL = process.env.API_URL || "";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

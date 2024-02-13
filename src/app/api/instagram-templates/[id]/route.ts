@@ -1,4 +1,7 @@
+import { getInstagramTemplate } from "@/api/serverAPI";
 import { DummyInstaTemplate } from "@/foundation/data";
+import connectDb from "@/lib/mongodb";
+import { createErrorResponse, createSuccessResponse } from "@/lib/utils";
 import { InstaTemplateSchema } from "@/schemas/instagram";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
@@ -141,3 +144,19 @@ export const PATCH = async (request: NextRequest) => {
     message: "PATCH /api/instagram-templates/:id",
   });
 };
+
+// export async function GET(
+//   request: NextRequest,
+//   { params: { id } }: { params: { id: string } },
+// ) {
+//   try {
+//     await connectDb();
+
+//     const instagramTemplate = await getInstagramTemplate(id!);
+
+//     return createSuccessResponse(instagramTemplate, 200);
+//   } catch (error: any) {
+//     console.log(error);
+//     return createErrorResponse(error.message, 500);
+//   }
+// }
