@@ -5,50 +5,71 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
 
 // 영어, 숫자, -, _ 만 입력 가능
-const INVITATION_ID_REGEX = /^[a-zA-Z0-9-_]*$/;
+const INVITATION_CODE_REGEX = /^[a-zA-Z0-9-_]*$/;
 
 const SignupForm = () => {
   const router = useRouter();
 
-  const [invitationId, setInvitationId] = useState("");
-  const [isIdError, setIsIdError] = useState<null | string>(null);
+  // const isDisabled = useMemo(() => {
+  //   return invitationId.length === 0 || password.length === 0 || !!isIdError;
+  // }, [invitationId, password, isIdError]);
 
-  const [password, setPassword] = useState("");
+  // const handleChangeInvitationId = useCallback(
+  //   (event: ChangeEvent<HTMLInputElement>) => {
+  //     setInvitationId(event.target.value);
 
-  const isDisabled = useMemo(() => {
-    return invitationId.length === 0 || password.length === 0 || !!isIdError;
-  }, [invitationId, password, isIdError]);
-
-  const handleChangeInvitationId = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setInvitationId(event.target.value);
-
-      const isNotValid = !INVITATION_ID_REGEX.test(event.target.value);
-      if (isNotValid) {
-        setIsIdError("영어, 숫자, -, _ 만 입력 가능합니다.");
-      } else {
-        setIsIdError(null);
-      }
-    },
-    [password],
-  );
-
-  const handleChangePassword = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setPassword(event.target.value);
-    },
-    [invitationId],
-  );
+  //     const isNotValid = !INVITATION_ID_REGEX.test(event.target.value);
+  //     if (isNotValid) {
+  //       setIsIdError("영어, 숫자, -, _ 만 입력 가능합니다.");
+  //     } else {
+  //       setIsIdError(null);
+  //     }
+  //   },
+  //   [password],
+  // );
 
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
+      const formData = new FormData(e.currentTarget);
+
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
+      const passwordConfirmation = formData.get(
+        "password-confirmation",
+      ) as string;
+      const invitationCode = formData.get("invitation-code") as string;
+
+      // 아이디 확인
+      if (
+        email.length === 0 ||
+        password.length === 0 ||
+        passwordConfirmation.length === 0
+      ) {
+        alert("아이디, 비밀번호를 입력하세요.");
+        return;
+      }
+
+      // 비밀번호 확인
+      if (password !== passwordConfirmation) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+
+      // 청첩장 주소 확인
+      const isCodeNotValid = !INVITATION_CODE_REGEX.test(invitationCode);
+
+      if (isCodeNotValid) {
+        alert("코드는 영어, 숫자, -, _ 만 입력 가능합니다.");
+        return;
+      }
+
       try {
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           body: JSON.stringify({
-            id: invitationId,
+            id: email,
             password,
           }),
         });
@@ -66,7 +87,7 @@ const SignupForm = () => {
         alert("청첩장을 만들지 못했습니다.");
       }
     },
-    [invitationId, password, router],
+    [router],
   );
 
   return (
@@ -78,26 +99,17 @@ const SignupForm = () => {
       >
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <p>아이디</p>
+            <p>이메일</p>
             <div className="flex flex-col gap-1">
               <input
-                type="text"
+                type="email"
+                name="email"
                 className={`
                 flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white placeholder:text-sm
-                ${isIdError ? "border-red-500" : ""}
                 `}
-                placeholder="청첩장 주소로 사용할 아이디를 입력하세요."
-                value={invitationId}
-                onChange={handleChangeInvitationId}
+                placeholder="이메일을 입력하세요."
                 autoComplete="one-time-code"
               />
-              {isIdError && (
-                <span className="text-xxs text-red-500">{isIdError}</span>
-              )}
-            </div>
-            <div className="flex flex-col">
-              <p className="text-xxs">청첩장 주소:</p>
-              <p className="text-xxs">{`https://bora-n-maria.com/${invitationId}`}</p>
             </div>
           </div>
 
@@ -105,18 +117,38 @@ const SignupForm = () => {
             <p>비밀번호</p>
             <input
               type="password"
-              className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
+              name="password"
+              className="flex-1 w-full border px-2 py-1 rounded"
               placeholder="비밀번호를 입력하세요."
-              value={password}
-              onChange={handleChangePassword}
               autoComplete="one-time-code"
+            />
+            <input
+              type="password"
+              name="password-confirmation"
+              className="flex-1 w-full border px-2 py-1 rounded"
+              placeholder="비밀번호를 다시 입력하세요."
+              autoComplete="one-time-code"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <div>
+              <p>모바일 청첩장 주소</p>
+              <p className="text-xxs">
+                https://bora-n-maria.com/ 뒤에 입력한 코드가 붙어서 생성됩니다.
+              </p>
+            </div>
+            <input
+              type="text"
+              name="invitation-code"
+              className="flex-1 w-full border px-2 py-1 rounded"
+              placeholder="청첩장 주소로 사용할 코드를 입력하세요."
             />
           </div>
         </div>
         <button
           type="submit"
           className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isDisabled}
         >
           회원가입
         </button>

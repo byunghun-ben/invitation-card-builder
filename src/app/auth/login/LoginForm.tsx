@@ -2,46 +2,25 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback } from "react";
 
 const LoginForm = () => {
   const router = useRouter();
-
-  const [invitationId, setInvitationId] = useState("");
-  const [password, setPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  const handleChangeInvitationId = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setInvitationId(event.target.value);
-
-      const isDisabled =
-        event.target.value.length === 0 || password.length === 0;
-      setIsDisabled(isDisabled);
-    },
-    [password],
-  );
-
-  const handleChangePassword = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setPassword(event.target.value);
-
-      const isDisabled =
-        event.target.value.length === 0 || invitationId.length === 0;
-      setIsDisabled(isDisabled);
-    },
-    [invitationId],
-  );
 
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
+      const formData = new FormData(e.currentTarget);
+
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
+
       try {
         const response = await fetch("/api/auth/login", {
           method: "POST",
           body: JSON.stringify({
-            id: invitationId,
+            id: email,
             password,
           }),
         });
@@ -59,7 +38,7 @@ const LoginForm = () => {
         console.log("error", error);
       }
     },
-    [invitationId, password, router],
+    [router],
   );
 
   return (
@@ -71,13 +50,12 @@ const LoginForm = () => {
       >
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <p>아이디</p>
+            <p>이메일</p>
             <input
-              type="text"
+              type="email"
+              name="email"
               className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
-              placeholder="아이디를 입력하세요."
-              value={invitationId}
-              onChange={handleChangeInvitationId}
+              placeholder="이메일을 입력하세요."
               autoComplete="one-time-code"
             />
           </div>
@@ -85,11 +63,10 @@ const LoginForm = () => {
           <div className="flex flex-col gap-1">
             <p>비밀번호</p>
             <input
+              type="password"
+              name="password"
               className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
               placeholder="비밀번호를 입력하세요."
-              value={password}
-              onChange={handleChangePassword}
-              type="password"
               autoComplete="one-time-code"
             />
           </div>
@@ -97,7 +74,6 @@ const LoginForm = () => {
         <button
           type="submit"
           className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isDisabled}
         >
           로그인
         </button>
