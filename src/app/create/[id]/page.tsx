@@ -46,7 +46,7 @@ const Page = async (props: PageProps) => {
     return <InnerPage defaultValue={data} />;
   } catch (error) {
     console.log("error", error);
-    redirect("/home");
+    redirect("/");
   }
 };
 
