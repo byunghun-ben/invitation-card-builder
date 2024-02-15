@@ -1,69 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-
-// 영어, 숫자, -, _ 만 입력 가능
-const INVITATION_CODE_REGEX = /^[a-zA-Z0-9-_]*$/;
-
-const handleSubmit = async (formData: FormData) => {
-  "use server";
-
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const passwordConfirmation = formData.get("password-confirmation") as string;
-  const invitationCode = formData.get("invitation-code") as string;
-
-  // 아이디 확인
-  if (
-    email.length === 0 ||
-    password.length === 0 ||
-    passwordConfirmation.length === 0
-  ) {
-    alert("아이디, 비밀번호를 입력하세요.");
-    return;
-  }
-
-  // 비밀번호 확인
-  if (password !== passwordConfirmation) {
-    alert("비밀번호가 일치하지 않습니다.");
-    return;
-  }
-
-  // 청첩장 주소 확인
-  const isCodeNotValid = !INVITATION_CODE_REGEX.test(invitationCode);
-
-  if (isCodeNotValid) {
-    alert("코드는 영어, 숫자, -, _ 만 입력 가능합니다.");
-    return;
-  }
-
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        invitationCode,
-      },
-    },
-  });
-
-  if (error) {
-    redirect("/auth/signup");
-  }
-  revalidatePath("/create", "layout");
-  redirect(`/create`);
-};
+import { signUp } from "../actions";
 
 const SignupForm = () => {
   return (
     <div className="flex-1 px-4 py-10 flex flex-col items-center">
       <h1 className="text-xl font-bold mb-10">회원가입</h1>
-      <form className="w-full flex-1 flex flex-col gap-4 mb-6">
+      <form action={signUp} className="w-full flex-1 flex flex-col gap-4 mb-6">
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <p>이메일</p>
@@ -114,7 +56,7 @@ const SignupForm = () => {
           </div>
         </div>
         <button
-          formAction={handleSubmit}
+          type="submit"
           className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           회원가입
