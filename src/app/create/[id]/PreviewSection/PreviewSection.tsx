@@ -1,15 +1,17 @@
 "use client";
 
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import WeddingHallItem from "@/components/WeddingHallItem";
 import {
   InstaMetadata,
   InstaPost,
   InstaStory,
   InstaWeddingHall,
 } from "@/schemas/instagram";
-import Image from "next/image";
+import { useCallback, useRef, useState } from "react";
+import Stories from "react-insta-stories";
+import { Story } from "react-insta-stories/dist/interfaces";
 import PostItem from "./PostItem";
-import WeddingHallItem from "@/components/WeddingHallItem";
+import StoryItem from "./StoryItem";
 
 type Props = {
   metadata: InstaMetadata;
@@ -20,9 +22,36 @@ type Props = {
 
 const PreviewSection = ({ metadata, posts, stories, weddingHall }: Props) => {
   const title = metadata.title || "청첩장 제목을 입력하세요";
+  const [isOpenStories, setIsOpenStories] = useState(false);
+  const [selectedStory, setSelectedStory] = useState<InstaStory>();
+  const clickStoryCover = useCallback(
+    (story: InstaStory) => () => {
+      setIsOpenStories(!isOpenStories);
+      setSelectedStory(story);
+    },
+    [],
+  );
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  if (isOpenStories) {
+    return (
+      <Stories
+        stories={(selectedStory?.images ?? []) as Story[]}
+        defaultInterval={2000}
+        width={previewRef?.current?.offsetWidth}
+        height={window.innerHeight}
+        onAllStoriesEnd={() => {
+          setIsOpenStories(false);
+        }}
+      />
+    );
+  }
 
   return (
-    <section className="basis-96 max-w-96 flex-1 flex flex-col overflow-y-auto">
+    <section
+      ref={previewRef}
+      className="basis-96 max-w-96 flex-1 flex flex-col overflow-y-auto"
+    >
       {/* Header */}
       <div className="flex-none h-10 px-3 flex items-center">
         <span>{title}</span>
@@ -79,23 +108,11 @@ const PreviewSection = ({ metadata, posts, stories, weddingHall }: Props) => {
       <div className="flex-none flex py-2 px-4">
         <div className="flex gap-3 overflow-x-auto overscroll-contain no-scrollbar">
           {stories.map(story => (
-            <div
+            <StoryItem
               key={story.id}
-              className="flex-none basis-16 flex flex-col gap-1 items-center"
-            >
-              <div>
-                <Image
-                  src={story.images?.[0]?.url || DEFAULT_IMAGE}
-                  alt="스토리 썸네일 이미지"
-                  className="w-16 h-16 rounded-full border object-cover"
-                  width={64}
-                  height={64}
-                />
-              </div>
-              <span className="text-xxs line-clamp-1">
-                {story.title || "스토리"}
-              </span>
-            </div>
+              story={story}
+              clickStoryCover={clickStoryCover}
+            />
           ))}
         </div>
       </div>
