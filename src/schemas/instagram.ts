@@ -1,71 +1,57 @@
-import { z } from "zod";
+import z from "zod";
 
-const InstaImageSchema = z.object({
+const instaImageSchema = z.object({
   id: z.string(),
   url: z.string(),
 });
 
-const InstaReplySchema = z.object({
-  name: z.string().default(""),
-  content: z.string().default(""),
-});
-
-export type InstaImage = z.infer<typeof InstaImageSchema>;
-
-const InstaMetadataSchema = z.object({
-  brideName: z.string(),
-  groomName: z.string(),
-  title: z.string().default(""),
-});
-
-export type InstaMetadata = z.infer<typeof InstaMetadataSchema>;
-
-const InstaStorySchema = z.object({
+const instaStorySchema = z.object({
   id: z.string(),
   title: z.string(),
-  images: InstaImageSchema.array(),
+  images: z.array(instaImageSchema),
 });
 
-export type InstaStory = z.infer<typeof InstaStorySchema>;
-
-const InstaPostSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  content: z.string(),
-  images: InstaImageSchema.array(),
-  likes: z.number().default(0),
-  replies: InstaReplySchema.array().default([]),
-});
-
-export type InstaPost = z.infer<typeof InstaPostSchema>;
-
-const InstaWeddingHallSchema = z.object({
+const weddingHallSchema = z.object({
+  template_id: z.string(),
   name: z.string(),
   address: z.string(),
-  images: InstaImageSchema.array(),
+  content: z.string(),
+  images: z.array(instaImageSchema),
+});
+
+const instaCommentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
   content: z.string(),
 });
 
-export type InstaWeddingHall = z.infer<typeof InstaWeddingHallSchema>;
-
-export const InstaTemplateSchema = z.object({
-  _id: z.string(),
+const instaPostSchema = z.object({
   id: z.string(),
-  password: z.string(),
-  hasPaid: z.boolean(),
-  metadata: InstaMetadataSchema.default({
-    brideName: "",
-    groomName: "",
-    title: "",
-  }),
-  stories: InstaStorySchema.array().default([]),
-  posts: InstaPostSchema.array().default([]),
-  weddingHall: InstaWeddingHallSchema.default({
-    name: "",
-    address: "",
-    images: [],
-    content: "",
-  }),
+  title: z.string(),
+  content: z.string(),
+  images: z.array(instaImageSchema),
+  likes: z.number(),
+  comments: z.array(instaCommentSchema),
 });
 
-export type InstaTemplate = z.infer<typeof InstaTemplateSchema>;
+const instaMetadataSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
+export const instaTemplateSchema = z.object({
+  id: z.string(),
+  code: z.string(),
+  metadata: instaMetadataSchema,
+  posts: z.array(instaPostSchema),
+  stories: z.array(instaStorySchema),
+  wedding_hall: weddingHallSchema,
+});
+
+export type InstaImage = z.infer<typeof instaImageSchema>;
+export type InstaStory = z.infer<typeof instaStorySchema>;
+export type InstaComment = z.infer<typeof instaCommentSchema>;
+export type InstaPost = z.infer<typeof instaPostSchema>;
+export type InstaMetadata = z.infer<typeof instaMetadataSchema>;
+export type InstaWeddingHall = z.infer<typeof weddingHallSchema>;
+export type InstaTemplate = z.infer<typeof instaTemplateSchema>;

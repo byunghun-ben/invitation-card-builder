@@ -1,8 +1,4 @@
-import { getInstagramTemplate } from "@/api/serverAPI";
-import { DummyInstaTemplate } from "@/foundation/data";
-import connectDb from "@/lib/mongodb";
-import { createErrorResponse, createSuccessResponse } from "@/lib/utils";
-import { InstaTemplateSchema } from "@/schemas/instagram";
+import { instaTemplateSchema } from "@/schemas/instagram";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -42,9 +38,7 @@ export const GET = async (request: NextRequest) => {
   // 1. DB에서 템플릿 정보를 가져온다.
   const templateResponse = await new Promise(resolve => {
     setTimeout(() => {
-      // resolve(null);
-
-      resolve(DummyInstaTemplate);
+      resolve(null);
     }, 1000);
   });
 
@@ -63,7 +57,7 @@ const extractUpdateTemplateDto = async (request: NextRequest) => {
   try {
     const body = await request.json();
 
-    const templateSchema = InstaTemplateSchema.partial();
+    const templateSchema = instaTemplateSchema.partial();
 
     const templateData = templateSchema.safeParse(body);
 
