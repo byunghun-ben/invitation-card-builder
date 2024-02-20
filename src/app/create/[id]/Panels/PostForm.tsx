@@ -85,13 +85,13 @@ const PostForm = ({
             className="text-xxs text-red-500"
             onClick={handleRemove}
           >
-            게시물 삭제
+            삭제
           </button>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <input
             type="text"
-            className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
+            className="py-2 px-3 border border-slate-400 rounded"
             placeholder="게시물 제목을 입력하세요."
             value={post.title}
             onChange={handleChangeTitle}
@@ -133,10 +133,10 @@ const PostForm = ({
 
           <button
             type="button"
-            className="border border-slate-700 rounded py-2"
+            className="border border-slate-400 rounded py-2"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="text-sm font-bold">사진 또는 영상 추가</span>
+            <span className="text-sm">사진 또는 영상 추가</span>
           </button>
           <input
             type="file"
@@ -147,14 +147,14 @@ const PostForm = ({
           />
 
           <textarea
-            className="min-h-20 resize-none py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
+            className="min-h-20 py-2 px-3 border border-slate-400 rounded"
             placeholder="본문을 입력하세요."
             value={post.content}
             onChange={handleChangeContent}
-            onKeyUp={e => {
-              e.currentTarget.style.height = "auto";
-              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-            }}
+            // onKeyUp={e => {
+            //   e.currentTarget.style.height = "auto";
+            //   e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+            // }}
           />
         </div>
       </div>

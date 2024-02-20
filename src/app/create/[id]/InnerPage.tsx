@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  InstaMetadata,
-  InstaPost,
-  InstaStory,
-  InstaWeddingHall,
-} from "@/schemas/instagram";
+import { type InstaTemplate, type InstaWeddingHall } from "@/schemas/instagram";
 import { Tab } from "@headlessui/react";
 import { useState } from "react";
 import MetadataPanel from "./Panels/MetadataPanel";
@@ -16,29 +11,24 @@ import PreviewSection from "./PreviewSection/PreviewSection";
 import SubmitButton from "./SubmitButton";
 
 type InnerPageProps = {
-  defaultValue: {
-    metadata: InstaMetadata;
-    stories: InstaStory[];
-    posts: InstaPost[];
-    weddingHall: InstaWeddingHall;
-  };
+  defaultValue: InstaTemplate;
 };
 
 const InnerPage = ({ defaultValue }: InnerPageProps) => {
-  // METADATA
-  const [metadata, setMetadata] = useState<InstaMetadata>(
+  const [metadata, setMetadata] = useState<InstaTemplate["metadata"]>(
     defaultValue.metadata,
   );
 
-  // STORY
-  const [stories, setStories] = useState<InstaStory[]>(defaultValue.stories);
+  const [stories, setStories] = useState<InstaTemplate["stories"]>(
+    defaultValue.stories,
+  );
 
-  // POST
-  const [posts, setPosts] = useState<InstaPost[]>(defaultValue.posts);
+  const [posts, setPosts] = useState<InstaTemplate["posts"]>(
+    defaultValue.posts,
+  );
 
-  // WEDDING HALL
   const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
-    defaultValue.weddingHall,
+    defaultValue.wedding_hall,
   );
 
   return (
@@ -49,10 +39,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
             <Tab.List className="flex flex-col gap-4 pl-4">
               <Tab
                 className={({ selected }) =>
-                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
-                    selected
-                      ? "font-bold text-slate-900 dark:text-white"
-                      : "text-slate-400"
+                  `flex text-left py-3 px-4 hover:bg-slate-50 ${
+                    selected ? "font-bold text-slate-900" : "text-slate-400"
                   }`
                 }
               >
@@ -60,10 +48,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
-                    selected
-                      ? "font-bold text-slate-900 dark:text-white"
-                      : "text-slate-400"
+                  `flex text-left py-3 px-4 hover:bg-slate-50 ${
+                    selected ? "font-bold text-slate-900" : "text-slate-400"
                   }`
                 }
               >
@@ -71,10 +57,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
-                    selected
-                      ? "font-bold text-slate-900 dark:text-white"
-                      : "text-slate-400"
+                  `flex text-left py-3 px-4 hover:bg-slate-50 ${
+                    selected ? "font-bold text-slate-900" : "text-slate-400"
                   }`
                 }
               >
@@ -82,10 +66,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `flex text-left py-3 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 ${
-                    selected
-                      ? "font-bold text-slate-900 dark:text-white"
-                      : "text-slate-400"
+                  `flex text-left py-3 px-4 hover:bg-slate-50 ${
+                    selected ? "font-bold text-slate-900" : "text-slate-400"
                   }`
                 }
               >

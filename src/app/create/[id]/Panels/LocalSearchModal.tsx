@@ -61,11 +61,11 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog className="relative z-10" onClose={handleClose}>
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-lg p-4 rounded border bg-white dark:bg-slate-900">
+          <Dialog.Panel className="w-full max-w-lg p-4 rounded border bg-white">
             <Dialog.Title className="text-xl font-bold mb-4">
               카카오 검색
             </Dialog.Title>
-            <Dialog.Description className="mb-4">
+            <Dialog.Description className="mb-1 text-sm">
               웨딩홀 이름을 입력해주세요.
             </Dialog.Description>
 
@@ -73,14 +73,14 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
               <input
                 type="text"
                 name="keyword"
-                placeholder="검색어를 입력해주세요."
-                className="flex-1 w-full px-3 py-2 border rounded dark:bg-slate-900 dark:text-white"
+                placeholder="ex) 보란말이야 웨딩홀"
+                className="flex-1 w-full px-3 py-2 border rounded"
                 autoComplete="off"
               />
               <button
                 type="submit"
                 disabled={searchLoading}
-                className="px-4 py-2 border rounded hover:bg-slate-50 hover:dark:bg-slate-700"
+                className="px-4 py-2 border rounded hover:bg-slate-50"
               >
                 <span className="text-sm font-bold">검색</span>
               </button>
@@ -91,7 +91,7 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
                 {result.map(local => (
                   <button
                     key={local.id}
-                    className="flex flex-col gap-1 px-2 py-1 hover:bg-slate-50 dark:hover:bg-slate-700"
+                    className="flex flex-col gap-1 px-2 py-1 hover:bg-slate-50"
                     type="button"
                     onClick={handleSelectSearchResult(local)}
                   >
@@ -142,19 +142,19 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
                         type="text"
                         name="wedding-hall-name"
                         placeholder="웨딩홀 이름"
-                        className="px-3 py-1 border dark:bg-slate-900 dark:text-white"
+                        className="px-3 py-1 border"
                         autoComplete="off"
                       />
                       <input
                         type="text"
                         name="wedding-hall-address"
                         placeholder="웨딩홀 주소"
-                        className="px-3 py-1 border dark:bg-slate-900 dark:text-white"
+                        className="px-3 py-1 border"
                         autoComplete="off"
                       />
                       <button
                         type="submit"
-                        className="px-4 py-2 border rounded hover:bg-slate-50 dark:hover:bg-slate-700"
+                        className="px-4 py-2 border rounded hover:bg-slate-50"
                       >
                         <span className="text-sm font-bold">확인</span>
                       </button>

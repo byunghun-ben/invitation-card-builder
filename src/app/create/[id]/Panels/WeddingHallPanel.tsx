@@ -10,20 +10,9 @@ import LocalSearchModal from "./LocalSearchModal";
 type Props = {
   weddingHall: InstaWeddingHall;
   setWeddingHall: Dispatch<SetStateAction<InstaWeddingHall>>;
-  // onChangeName: (name: string) => void;
-  // onChangeAddress: (address: string) => void;
-  // onChangeContent: (content: string) => void;
-  // onChangeImages: (images: InstaImage[]) => void;
 };
 
-const WeddingHallPanel = ({
-  weddingHall,
-  setWeddingHall,
-  // onChangeName,
-  // onChangeAddress,
-  // onChangeImages,
-  // onChangeContent,
-}: Props) => {
+const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
   const imageRef = useRef<HTMLInputElement>(null);
 
   const handleChangeContent = useCallback(
@@ -102,19 +91,21 @@ const WeddingHallPanel = ({
         <div className="flex flex-col gap-2">
           {weddingHall.name && weddingHall.address && (
             <div className="flex flex-col gap-2">
-              <div className="flex flex-col">
-                <span className="text-xs">식장이름</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-bold text-slate-700">
+                  식장이름
+                </span>
                 <span className="">{weddingHall.name}</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs">주소</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-bold text-slate-700">주소</span>
                 <span className="">{weddingHall.address}</span>
               </div>
             </div>
           )}
           <button
             type="button"
-            className="p-2 border rounded hover:bg-slate-50 dark:hover:bg-slate-700"
+            className="p-2 border rounded hover:bg-slate-50"
             onClick={() => setIsOpenLocalSearchModal(true)}
           >
             <span className="text-sm font-bold">식장 위치 검색</span>
@@ -161,7 +152,7 @@ const WeddingHallPanel = ({
 
           <button
             type="button"
-            className="p-2 border rounded hover:bg-slate-50 dark:hover:bg-slate-700"
+            className="p-2 border rounded hover:bg-slate-50"
             onClick={handleImageClick}
           >
             <span className="text-sm font-bold">사진 추가</span>
@@ -179,11 +170,9 @@ const WeddingHallPanel = ({
         </div>
 
         <textarea
-          className="h-auto min-h-14 py-2 px-3 border rounded dark:bg-slate-900 dark:text-white"
+          className="h-auto min-h-20 py-2 px-3 border rounded"
           placeholder="본문을 입력하세요"
-          onKeyUp={e => {
-            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-          }}
+          value={weddingHall.content}
           onChange={handleChangeContent}
         />
       </div>

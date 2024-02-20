@@ -1,6 +1,6 @@
 "use client";
 
-import { InstaImage, InstaStory } from "@/schemas/instagram";
+import { type InstaImage, type InstaStory } from "@/schemas/instagram";
 import { uid } from "radash";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import StoryForm from "./StoryForm";
