@@ -37,6 +37,8 @@ const instaPostSchema = z.object({
 const instaMetadataSchema = z.object({
   title: z.string(),
   description: z.string(),
+  groomName: z.string(),
+  brideName: z.string(),
 });
 
 export const instaTemplateSchema = z.object({
