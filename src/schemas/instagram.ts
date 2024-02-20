@@ -23,9 +23,10 @@ const instaCommentSchema = z.object({
   id: z.string(),
   name: z.string(),
   content: z.string(),
+  created_at: z.string(),
 });
 
-const instaPostSchema = z.object({
+export const instaPostSchema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string(),

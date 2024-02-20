@@ -6,11 +6,11 @@ const Header = () => {
       <Link href="/" className="text-lg font-bold">
         Bora-n-maria
       </Link>
-      <div className="flex items-center gap-2">
-        <Link href="/sample" className="text-sm px-2">
+      <div className="items-center gap-2 hidden md:flex">
+        <Link href="/sample" className="text-sm font-medium px-2">
           샘풀 청첩장 보기
         </Link>
-        <Link href="/auth/signup" className="text-sm px-2">
+        <Link href="/auth/signup" className="text-sm font-medium px-2">
           청첩장 만들기
         </Link>
       </div>

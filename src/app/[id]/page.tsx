@@ -1,8 +1,7 @@
 import WeddingHallItem from "@/components/WeddingHallItem";
 import { instaTemplateSchema } from "@/schemas/instagram";
-import { createClient } from "@/utils/supabase/server";
 import { Metadata, ResolvingMetadata } from "next";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import InstaHeader from "./InstaHeader";
 import PostSection from "./ViewSection/PostSection";
 import StorySection from "./ViewSection/StorySection";
@@ -51,7 +50,10 @@ const Page = async (props: Props) => {
 
   return (
     <div className="h-full w-full flex-1 flex flex-col">
-      <InstaHeader instaTemplate={instaTemplate} />
+      <InstaHeader
+        templateCode={templateCode}
+        metaTitle={instaTemplate.metadata.title}
+      />
 
       <StorySection stories={instaTemplate.stories} />
 

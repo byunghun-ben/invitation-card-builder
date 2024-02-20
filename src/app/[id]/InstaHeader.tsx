@@ -1,17 +1,15 @@
-import { InstaTemplate } from "@/schemas/instagram";
 import Link from "next/link";
 
 type Props = {
-  instaTemplate: InstaTemplate;
+  templateCode: string;
+  metaTitle: string;
 };
 
-const InstaHeader = ({ instaTemplate }: Props) => {
-  const { id } = instaTemplate;
-
+const InstaHeader = ({ templateCode, metaTitle }: Props) => {
   return (
     <div className="flex-none h-10 px-3 flex items-center">
-      <Link href={`/${id}`}>
-        <span className="font-bold">{instaTemplate.metadata.title}</span>
+      <Link href={`/${templateCode}`}>
+        <span className="font-bold">{metaTitle}</span>
       </Link>
     </div>
   );

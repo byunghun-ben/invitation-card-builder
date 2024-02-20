@@ -8,7 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import PostImageViewerV2 from "./PostImageViewerV2";
-import PostLikeIcon from "./PostLikeIcon";
+import PostLikeButton from "./PostLikeButton";
 
 type Props = {
   post: InstaPost;
@@ -44,7 +44,7 @@ const PostItem = ({ post }: Props) => {
       <PostImageViewerV2 images={post.images} />
 
       <div className="relative flex items-center py-1">
-        <PostLikeIcon onLike={handleLike} />
+        <PostLikeButton onLike={handleLike} />
         <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
           <CommentIcon />
         </Link>
