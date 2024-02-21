@@ -1,12 +1,47 @@
 import InstaHeader from "@/app/[id]/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
 import MenuIcon from "@/foundation/icons/MenuIcon";
-import { instaPostSchema } from "@/schemas/instagram";
+import { instaMetadataSchema, instaPostSchema } from "@/schemas/instagram";
 import { headers } from "next/headers";
 import PostLikeSection from "./PostLikeSection";
 import CreateCommentForm from "./CreateCommentForm";
 
 export const revalidate = 1;
+
+const getPost = async (postId: string) => {
+  const host = headers().get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const url = `${protocol}://${host}/api/posts/${postId}`;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch post");
+  }
+
+  const body = await res.json();
+
+  const instaPost = instaPostSchema.parse(body);
+
+  return instaPost;
+};
+
+const getMetadata = async (templateCode: string) => {
+  const host = headers().get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const url = `${protocol}://${host}/api/insta-templates/${templateCode}/metadata`;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch metadata");
+  }
+
+  const body = await res.json();
+  const instaTemplateMetadata = instaMetadataSchema.parse(body);
+
+  return instaTemplateMetadata;
+};
 
 type Props = {
   params: {
@@ -16,25 +51,18 @@ type Props = {
 };
 
 const Page = async (props: Props) => {
+  console.log("Page", props);
   const templateCode = props.params.id;
-  const postId = props.params.postId;
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/api/posts/${postId}`;
 
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    return { notFound: true };
-  }
-
-  const body = await res.json();
-
-  const instaPost = instaPostSchema.parse(body);
+  const instaPost = await getPost(props.params.postId);
+  const instaTemplateMetadata = await getMetadata(templateCode);
 
   return (
     <div className="w-full h-full flex flex-col">
-      <InstaHeader templateCode={templateCode} metaTitle="DUMMY_TITLE" />
+      <InstaHeader
+        templateCode={templateCode}
+        metaTitle={instaTemplateMetadata.title}
+      />
 
       {/* ImageViewer */}
       <PostImageViewerV2 images={instaPost.images} />

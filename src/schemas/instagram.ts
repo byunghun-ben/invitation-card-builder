@@ -35,17 +35,19 @@ export const instaPostSchema = z.object({
   comments: z.array(instaCommentSchema),
 });
 
-const instaMetadataSchema = z.object({
+export const instaMetadataSchema = z.object({
+  template_id: z.string(),
   title: z.string(),
   description: z.string(),
   groomName: z.string(),
   brideName: z.string(),
+  created_at: z.string(),
 });
 
 export const instaTemplateSchema = z.object({
   id: z.string(),
   code: z.string(),
-  metadata: instaMetadataSchema,
+  metadata: instaMetadataSchema.omit({ template_id: true, created_at: true }),
   posts: z.array(instaPostSchema),
   stories: z.array(instaStorySchema),
   wedding_hall: weddingHallSchema,

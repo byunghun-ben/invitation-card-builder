@@ -1,27 +1,11 @@
 import WeddingHallItem from "@/components/WeddingHallItem";
 import { instaTemplateSchema } from "@/schemas/instagram";
-import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
 import InstaHeader from "./InstaHeader";
 import PostSection from "./ViewSection/PostSection";
 import StorySection from "./ViewSection/StorySection";
 
 export const revalidate = 1;
-
-type MetadataProps = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export async function generateMetadata(
-  { params, searchParams }: MetadataProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  return {
-    title: "결혼식 청첩장 메타 타이틀",
-    description: "결혼식 청첩장 메타 설명",
-  };
-}
 
 type Props = {
   params: {
