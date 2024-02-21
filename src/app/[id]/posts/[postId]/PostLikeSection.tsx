@@ -28,10 +28,10 @@ const PostLikeSection = ({ postId, likes }: Props) => {
   }, [likeCount, postId]);
 
   return (
-    <>
+    <div className="flex flex-col">
       <PostLikeButton onLike={handleLike} />
-      <p className="text-sm font-bold mb-2 px-2">{`좋아요 ${likeCount}개`}</p>
-    </>
+      <p className="text-sm font-bold px-2">{`좋아요 ${likeCount}개`}</p>
+    </div>
   );
 };
 

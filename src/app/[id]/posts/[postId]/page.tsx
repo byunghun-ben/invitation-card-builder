@@ -13,7 +13,11 @@ const getPost = async (postId: string) => {
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/posts/${postId}`;
 
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    next: {
+      tags: ["posts", "comments"],
+    },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch post");
@@ -67,12 +71,12 @@ const Page = async (props: Props) => {
       <PostImageViewerV2 images={instaPost.images} />
       {/* ImageViewer */}
 
-      <div className="flex-none py-1">
+      <div className="flex-none flex flex-col gap-2 pt-1 pb-2">
         <PostLikeSection postId={instaPost.id} likes={instaPost.likes} />
         <p className="text-sm whitespace-pre-line px-2">{instaPost.content}</p>
       </div>
 
-      <div className="flex-1 pt-1 pb-4 flex flex-col gap-4 border-t">
+      <div className="flex-1 py-4 flex flex-col gap-4 border-t">
         <ul className="flex-none flex flex-col gap-2">
           {instaPost.comments.map(comment => (
             <li key={comment.id} className="flex items-start">
@@ -82,7 +86,7 @@ const Page = async (props: Props) => {
               </div>
               <button
                 type="button"
-                className="p-2 text-sm rounded active:bg-slate-50 dark:active:bg-slate-900"
+                className="p-2 text-sm rounded active:bg-slate-50"
               >
                 <MenuIcon className="w-4 h-4" />
               </button>
@@ -90,7 +94,7 @@ const Page = async (props: Props) => {
           ))}
         </ul>
 
-        <CreateCommentForm />
+        <CreateCommentForm postId={instaPost.id} />
       </div>
     </div>
   );

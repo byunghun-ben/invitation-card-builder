@@ -1,40 +1,52 @@
 "use client";
 
-import { FormEvent, useCallback } from "react";
+import { useRef } from "react";
+import SubmitButton from "./CreateCommentSubmitButton";
+import { createComment } from "./actions";
 
-const CreateCommentForm = () => {
-  const handleReplySubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+type Props = {
+  postId: string;
+};
 
-    const formData = new FormData(event.currentTarget);
+const CreateCommentForm = ({ postId }: Props) => {
+  const createCommentWithPostId = createComment.bind(null, postId);
 
-    const name = formData.get("name") as string;
-    const content = formData.get("content") as string;
+  const formRef = useRef<HTMLFormElement>(null);
 
-    console.log({ name, content });
-  }, []);
+  const handleAction = async (formData: FormData) => {
+    await createCommentWithPostId(formData);
+    formRef.current?.reset();
+  };
 
   return (
-    <form className="flex flex-col gap-3 px-2" onSubmit={handleReplySubmit}>
+    <form
+      className="flex flex-col gap-3 px-2"
+      action={handleAction}
+      ref={formRef}
+    >
       <div className="flex flex-col gap-2">
         <input
           type="text"
           name="name"
           placeholder="이름"
-          className="p-2 rounded border"
+          className="px-2 py-1 rounded border"
+          autoComplete="off"
+        />
+        <textarea
+          name="content"
+          placeholder="댓글을 입력해주세요."
+          className="px-2 py-1 rounded border"
           autoComplete="off"
         />
         <input
           type="text"
-          name="content"
-          placeholder="댓글 달기..."
-          className="p-2 rounded border"
+          name="password"
+          placeholder="비밀번호"
+          className="px-2 py-1 rounded border"
           autoComplete="off"
         />
       </div>
-      <button type="submit" className="border py-2 rounded">
-        <span className="text-sm font-bold">게시</span>
-      </button>
+      <SubmitButton />
     </form>
   );
 };
