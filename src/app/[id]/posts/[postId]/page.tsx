@@ -51,7 +51,6 @@ type Props = {
 };
 
 const Page = async (props: Props) => {
-  console.log("Page", props);
   const templateCode = props.params.id;
 
   const instaPost = await getPost(props.params.postId);
@@ -69,7 +68,7 @@ const Page = async (props: Props) => {
       {/* ImageViewer */}
 
       <div className="flex-none py-1">
-        <PostLikeSection likes={instaPost.likes} />
+        <PostLikeSection postId={instaPost.id} likes={instaPost.likes} />
         <p className="text-sm whitespace-pre-line px-2">{instaPost.content}</p>
       </div>
 
