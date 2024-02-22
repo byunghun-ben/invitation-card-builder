@@ -22,7 +22,7 @@ const CommentItem = ({ comment }: Props) => {
   };
 
   return (
-    <li key={comment.id} className="flex items-start">
+    <li key={comment.id} className="flex items-start py-2">
       <div className="flex-1 flex flex-col gap-1 pl-2">
         <p className="text-sm font-bold">{comment.name}</p>
         <p className="text-sm whitespace-pre-line">{comment.content}</p>
@@ -37,7 +37,7 @@ const CommentItem = ({ comment }: Props) => {
               <button
                 className={`${
                   active ? "bg-slate-100" : ""
-                } whitespace-pre flex text-sm text-red-500 font-bold px-3 py-1`}
+                } whitespace-pre flex text-sm px-3 py-1`}
                 onClick={() => setShowDeleteDialog(true)}
               >
                 삭제

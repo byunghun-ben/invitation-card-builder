@@ -76,8 +76,8 @@ const Page = async (props: Props) => {
         <p className="text-sm whitespace-pre-line px-2">{instaPost.content}</p>
       </div>
 
-      <div className="flex-1 py-4 flex flex-col gap-4 border-t">
-        <ul className="flex-none flex flex-col gap-2">
+      <div className="flex-1 py-4 flex flex-col gap-10 border-t">
+        <ul className="flex-none flex flex-col gap-1">
           {instaPost.comments.map(comment => (
             <CommentItem key={comment.id} comment={comment} />
           ))}
