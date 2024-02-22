@@ -1,10 +1,10 @@
 import InstaHeader from "@/app/[id]/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
-import MenuIcon from "@/foundation/icons/MenuIcon";
 import { instaMetadataSchema, instaPostSchema } from "@/schemas/instagram";
 import { headers } from "next/headers";
-import PostLikeSection from "./PostLikeSection";
+import CommentItem from "./CommentItem";
 import CreateCommentForm from "./CreateCommentForm";
+import PostLikeSection from "./PostLikeSection";
 
 export const revalidate = 1;
 
@@ -79,18 +79,7 @@ const Page = async (props: Props) => {
       <div className="flex-1 py-4 flex flex-col gap-4 border-t">
         <ul className="flex-none flex flex-col gap-2">
           {instaPost.comments.map(comment => (
-            <li key={comment.id} className="flex items-start">
-              <div className="flex-1 flex flex-col gap-1 pl-2">
-                <p className="text-sm font-bold">{comment.name}</p>
-                <p className="text-sm whitespace-pre-line">{comment.content}</p>
-              </div>
-              <button
-                type="button"
-                className="p-2 text-sm rounded active:bg-slate-50"
-              >
-                <MenuIcon className="w-4 h-4" />
-              </button>
-            </li>
+            <CommentItem key={comment.id} comment={comment} />
           ))}
         </ul>
 
