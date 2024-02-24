@@ -45,54 +45,75 @@ export const login = async (formData: FormData) => {
 // 영어, 숫자, -, _ 만 입력 가능
 const INVITATION_CODE_REGEX = /^[a-zA-Z0-9-_]*$/;
 
+const signupSchema = z.object({
+  email: z.string().email("이메일 형식으로 입력하세요."),
+  password: z.string().min(1, "비밀번호를 입력하세요."),
+  passwordConfirmation: z.string().min(1, "비밀번호를 다시 입력하세요."),
+  invitationCode: z.string().min(1, "청첩장 주소로 사용할 코드를 입력하세요."),
+});
+
 export const signUp = async (formData: FormData) => {
   "use server";
+  console.log("signup function called");
 
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const passwordConfirmation = formData.get("password-confirmation") as string;
-  const invitationCode = formData.get("invitation-code") as string;
+  const parsedSignupDto = signupSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+    passwordConfirmation: formData.get("password-confirmation"),
+    invitationCode: formData.get("invitation-code"),
+  });
 
-  // 아이디 확인
-  if (
-    email.length === 0 ||
-    password.length === 0 ||
-    passwordConfirmation.length === 0
-  ) {
-    alert("아이디, 비밀번호를 입력하세요.");
+  if (!parsedSignupDto.success) {
+    console.error(parsedSignupDto.error);
     return;
   }
 
+  const { email, password, invitationCode } = parsedSignupDto.data;
+
   // 비밀번호 확인
-  if (password !== passwordConfirmation) {
+  if (
+    parsedSignupDto.data.password !== parsedSignupDto.data.passwordConfirmation
+  ) {
     alert("비밀번호가 일치하지 않습니다.");
     return;
   }
-
-  // 청첩장 주소 확인
-  const isCodeNotValid = !INVITATION_CODE_REGEX.test(invitationCode);
-
-  if (isCodeNotValid) {
-    alert("코드는 영어, 숫자, -, _ 만 입력 가능합니다.");
-    return;
-  }
-
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  const { error } = await supabase.auth.signUp({
+  const { data: signupData, error: signupError } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        invitationCode,
-      },
-    },
   });
 
-  if (error) {
-    redirect("/auth/signup");
+  if (signupError) {
+    console.group("========> error");
+    console.error(signupError);
+    console.groupEnd();
+    return;
   }
-  revalidatePath("/create", "layout");
-  redirect(`/create`);
+
+  const { data: newTemplate, error: templateError } = await supabase
+    .schema("insta_template")
+    .from("template")
+    .insert({
+      user_id: signupData?.user?.id,
+      code: invitationCode,
+    });
+
+  if (templateError) {
+    console.group("========> error");
+    console.error(templateError);
+    console.groupEnd();
+    return;
+  }
+
+  console.log(newTemplate);
+  // redirect("/invitations");
+
+  // if (error) {
+  //   console.log(error);
+  //   redirect("/auth/signup");
+  // }
+  // revalidatePath("/create", "layout");
+  // redirect(`/create`);
 };
