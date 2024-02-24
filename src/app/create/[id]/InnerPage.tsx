@@ -2,7 +2,7 @@
 
 import { type InstaTemplate, type InstaWeddingHall } from "@/schemas/instagram";
 import { Tab } from "@headlessui/react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
 import StoryPanel from "./Panels/StoryPanel";
@@ -27,6 +27,7 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
     defaultValue.posts,
   );
 
+  // WEDDING HALL
   const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
     defaultValue.wedding_hall,
   );
