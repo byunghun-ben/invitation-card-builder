@@ -1,13 +1,13 @@
 "use client";
 
-import { InstaMetadata } from "@/schemas/instagram";
+import { InstaTemplate } from "@/schemas/instagram";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 
 type Props = {
-  metadata: InstaMetadata;
-  setMetadata: Dispatch<SetStateAction<InstaMetadata>>;
+  metadata: InstaTemplate["metadata"];
+  setMetadata: Dispatch<SetStateAction<InstaTemplate["metadata"]>>;
 };
 
 const MetadataPanel = ({ metadata, setMetadata }: Props) => {

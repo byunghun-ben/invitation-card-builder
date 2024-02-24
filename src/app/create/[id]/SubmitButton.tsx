@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  InstaMetadata,
   InstaPost,
   InstaStory,
+  InstaTemplate,
   InstaWeddingHall,
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
 
 type Props = {
-  meta: InstaMetadata;
+  meta: InstaTemplate["metadata"];
   stories: InstaStory[];
   posts: InstaPost[];
   weddingHall: InstaWeddingHall;
