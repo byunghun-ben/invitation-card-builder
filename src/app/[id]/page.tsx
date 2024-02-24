@@ -39,7 +39,10 @@ const Page = async (props: Props) => {
         metaTitle={instaTemplate.metadata.title}
       />
 
-      <StorySection stories={instaTemplate.stories} />
+      <StorySection
+        templateCode={templateCode}
+        stories={instaTemplate.stories}
+      />
 
       <PostSection posts={instaTemplate.posts} />
 
