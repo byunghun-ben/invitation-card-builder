@@ -3,7 +3,7 @@
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
 import PostLikeButton from "@/components/PostLikeButton";
 import CommentIcon from "@/foundation/icons/CommentIcon";
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";

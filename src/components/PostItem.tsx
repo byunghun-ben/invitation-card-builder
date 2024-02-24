@@ -1,7 +1,7 @@
 "use client";
 
 import CommentIcon from "@/foundation/icons/CommentIcon";
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import Link from "next/link";
