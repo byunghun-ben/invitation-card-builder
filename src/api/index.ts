@@ -41,11 +41,7 @@ const getById = async (id: string) => {
     },
   });
 
-  console.log("response", response);
-
   const body = await response.json();
-
-  console.log("body", body);
 
   const parsedBody = instagramTemplateSchema.parse(body);
 

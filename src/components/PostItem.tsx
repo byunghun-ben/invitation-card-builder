@@ -1,25 +1,30 @@
 "use client";
 
-import PostImageViewerV2 from "@/components/PostImageViewerV2";
-import PostLikeIcon from "@/components/PostLikeIcon";
 import CommentIcon from "@/foundation/icons/CommentIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
-import { useCallback, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useCallback, useState } from "react";
+import PostImageViewerV2 from "./PostImageViewerV2";
+import PostLikeIcon from "./PostLikeIcon";
 
 type Props = {
   post: InstaPost;
 };
 
 const PostItem = ({ post }: Props) => {
-  const [likeCount, setLikeCount] = useState(0);
+  const pathname = usePathname();
+  const postDetailPath = `${pathname}/posts/${post.id}`;
+
+  const [likeCount, setLikeCount] = useState(post.likes);
+  // 콤마로 구분된 숫자
+  const commentCount = (post.replies.length ?? 0).toLocaleString();
 
   const handleLike = useCallback(() => {
     setLikeCount(prev => prev + 1);
   }, []);
-
-  const contentDivRef = useRef<HTMLDivElement>(null);
 
   return (
     <div key={post.id} className="flex flex-col">
@@ -40,26 +45,24 @@ const PostItem = ({ post }: Props) => {
 
       <PostImageViewerV2 images={post.images} />
 
-      {/* Like & ImageIndex */}
       <div className="relative flex items-center my-1">
         <PostLikeIcon onLike={handleLike} />
-        <button type="button" className="flex p-2 active:opacity-50">
+        <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
           <CommentIcon />
-        </button>
+        </Link>
       </div>
-      {/* Like & ImageIndex */}
 
       {/* Content */}
-      <div className="flex flex-col gap-2 px-2 py-1">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs">{`좋아요 ${likeCount}개`}</span>
-          <div ref={contentDivRef}>
-            <div className="text-xs whitespace-pre-line">
-              {post.content || "본문을 입력하세요"}
-            </div>
+      <div className="flex flex-col gap-2 my-1 px-3">
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-bold">{`좋아요 ${likeCount}개`}</span>
+          <div className="text-sm whitespace-pre-line">
+            {post.content || "본문을 입력하세요"}
           </div>
         </div>
-        <span className="text-xs">댓글 0개 모두 보기</span>
+        <Link href={postDetailPath} className="flex self-start">
+          <span className="text-xs font-bold">{`댓글 ${commentCount}개 모두 보기`}</span>
+        </Link>
       </div>
       {/* Content */}
     </div>

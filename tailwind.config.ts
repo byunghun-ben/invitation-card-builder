@@ -17,6 +17,9 @@ const config: Config = {
       fontSize: {
         xxs: ["0.625rem", { lineHeight: "0.875rem" }],
       },
+      screens: {
+        xs: "576px",
+      },
     },
   },
   plugins: [
@@ -28,6 +31,9 @@ const config: Config = {
         ".no-scrollbar": {
           "-ms-overflow-style": "none",
           "scrollbar-width": "none",
+        },
+        ".scrolling-touch": {
+          "-webkit-overflow-scrolling": "touch",
         },
       };
       addUtilities(newUtilities);
