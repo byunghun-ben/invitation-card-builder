@@ -1,22 +1,15 @@
 "use client";
 
-import { InstaPost } from "@/schemas/instagram";
+import { InstaImage } from "@/schemas/instagram";
 import Image from "next/image";
 import { debounce } from "radash";
-import {
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { MouseEvent, useCallback, useMemo, useRef, useState } from "react";
 
 type Props = {
-  post: InstaPost;
+  images: InstaImage[];
 };
 
-const PostImageViewerV2 = ({ post }: Props) => {
+const PostImageViewerV2 = ({ images }: Props) => {
   const imageContainerRef = useRef<HTMLUListElement>(null);
 
   const [targetIndex, setTargetIndex] = useState(0);
@@ -32,14 +25,14 @@ const PostImageViewerV2 = ({ post }: Props) => {
   }, [targetIndex]);
 
   const handleNext = useCallback(() => {
-    const isLastIndex = targetIndex === post.images.length - 1;
+    const isLastIndex = targetIndex === images.length - 1;
 
     if (isLastIndex) {
       return;
     }
 
     setTargetIndex(prev => prev + 1);
-  }, [post.images.length, targetIndex]);
+  }, [images.length, targetIndex]);
 
   // MouseDrag Scroll
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -47,7 +40,6 @@ const PostImageViewerV2 = ({ post }: Props) => {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const handleMouseDown = useCallback((e: MouseEvent) => {
-    console.log("handleMouseDown");
     const imageContainer = imageContainerRef.current;
     if (!imageContainer) {
       return;
@@ -59,13 +51,10 @@ const PostImageViewerV2 = ({ post }: Props) => {
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    console.log("handleMouseLeave");
-
     setIsMouseDown(false);
   }, []);
 
   const handleMouseUp = useCallback(() => {
-    console.log("handleMouseUp");
     setIsMouseDown(false);
   }, []);
 
@@ -78,26 +67,14 @@ const PostImageViewerV2 = ({ post }: Props) => {
       if (!isMouseDown || !imageContainer) {
         return;
       }
-      // console.log("handleMouseMove");
 
       const endX = e.pageX - imageContainer.offsetLeft;
       const SCROLL_SPEED = 3;
       const distance = (endX - startX) * SCROLL_SPEED;
 
       imageContainer.scrollLeft = scrollLeft - distance;
-      console.log(
-        "scrollLeft",
-        imageContainer.scrollLeft,
-        scrollLeft,
-        distance,
-      );
     },
     [isMouseDown, scrollLeft, startX],
-  );
-
-  const debouncedHandleMouseMove = useMemo(
-    () => debounce({ delay: 0 }, handleMouseMove),
-    [handleMouseMove],
   );
   // MouseDrag Scroll
 
@@ -114,14 +91,14 @@ const PostImageViewerV2 = ({ post }: Props) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
           >
-            {post.images.map(image => (
+            {images.map(image => (
               <li
                 key={image.id}
                 className="relative flex-none h-full w-full snap-start"
               >
                 <Image
                   src={image.url}
-                  alt="게시물 이미지"
+                  alt="이미지"
                   className="object-cover h-full w-full"
                   fill
                   sizes="573px"

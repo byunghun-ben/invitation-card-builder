@@ -17,6 +17,9 @@ const config: Config = {
       fontSize: {
         xxs: ["0.625rem", { lineHeight: "0.875rem" }],
       },
+      screens: {
+        xs: "576px",
+      },
     },
   },
   plugins: [

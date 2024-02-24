@@ -5,6 +5,11 @@ const InstaImageSchema = z.object({
   url: z.string(),
 });
 
+const InstaReplySchema = z.object({
+  name: z.string().default(""),
+  content: z.string().default(""),
+});
+
 export type InstaImage = z.infer<typeof InstaImageSchema>;
 
 const InstaMetadataSchema = z.object({
@@ -29,6 +34,7 @@ const InstaPostSchema = z.object({
   content: z.string(),
   images: InstaImageSchema.array(),
   likes: z.number().default(0),
+  replies: InstaReplySchema.array().default([]),
 });
 
 export type InstaPost = z.infer<typeof InstaPostSchema>;
@@ -61,3 +67,5 @@ export const InstaTemplateSchema = z.object({
     content: "",
   }),
 });
+
+export type InstaTemplate = z.infer<typeof InstaTemplateSchema>;
