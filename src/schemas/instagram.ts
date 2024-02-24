@@ -28,6 +28,7 @@ const InstaPostSchema = z.object({
   title: z.string(),
   content: z.string(),
   images: InstaImageSchema.array(),
+  likes: z.number().default(0),
 });
 
 export type InstaPost = z.infer<typeof InstaPostSchema>;

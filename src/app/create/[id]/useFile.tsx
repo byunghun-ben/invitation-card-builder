@@ -15,6 +15,7 @@ const readFileAsDataURL = (file: File) => {
       const dataUrl = reader.result;
 
       if (!dataUrl || typeof dataUrl !== "string") {
+        reject(new Error("Invalid data URL"));
         return;
       }
 
@@ -30,21 +31,17 @@ const readFileAsDataURL = (file: File) => {
 export const useChangeImage = ({ onChangeImage }: Props) => {
   const handleChangeFileInput = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-
-      if (!files) {
+      if (!e.target.files || !e.target.files[0]) {
+        e.target.value = "";
         return;
       }
 
-      const file = files[0];
-
-      if (!file) {
-        return;
-      }
+      const file = e.target.files[0];
 
       const id = Math.random().toString(36).slice(2);
       const dataUrl = await readFileAsDataURL(file);
 
+      e.target.value = "";
       onChangeImage({ id, url: dataUrl });
     },
     [onChangeImage],
@@ -65,6 +62,7 @@ export const useChangeImages = ({ onChangeImages }: UseChangeImagesProps) => {
       const files = e.target.files;
 
       if (!files) {
+        e.target.value = "";
         return;
       }
 
@@ -82,6 +80,7 @@ export const useChangeImages = ({ onChangeImages }: UseChangeImagesProps) => {
         return { id, url: dataUrl };
       });
 
+      e.target.value = "";
       onChangeImages(images);
     },
     [onChangeImages],

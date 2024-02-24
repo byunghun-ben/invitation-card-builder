@@ -29,6 +29,9 @@ const config: Config = {
           "-ms-overflow-style": "none",
           "scrollbar-width": "none",
         },
+        ".scrolling-touch": {
+          "-webkit-overflow-scrolling": "touch",
+        },
       };
       addUtilities(newUtilities);
     }),
