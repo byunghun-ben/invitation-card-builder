@@ -7,7 +7,7 @@ import {
   InstaWeddingHall,
 } from "@/schemas/instagram";
 import { Tab } from "@headlessui/react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
 import StoryPanel from "./Panels/StoryPanel";
@@ -35,6 +35,62 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
 
   // POST
   const [posts, setPosts] = useState<InstaPost[]>(defaultValue.posts);
+
+  const addPost = useCallback(() => {
+    setPosts(posts => [
+      ...posts,
+      {
+        id: Math.random().toString(36).slice(2),
+        title: "",
+        content: "",
+        images: [],
+        likes: 0,
+      },
+    ]);
+  }, []);
+
+  const onRemovePost = useCallback((postId: string) => {
+    setPosts(posts => posts.filter(post => post.id !== postId));
+  }, []);
+
+  const onChangePostTitle = useCallback((id: string, title: string) => {
+    setPosts(posts =>
+      posts.map(post =>
+        post.id === id
+          ? {
+              ...post,
+              title,
+            }
+          : post,
+      ),
+    );
+  }, []);
+
+  const onChangePostContent = useCallback((id: string, content: string) => {
+    setPosts(posts =>
+      posts.map(post =>
+        post.id === id
+          ? {
+              ...post,
+              content,
+            }
+          : post,
+      ),
+    );
+  }, []);
+
+  const onChangePostImage = useCallback((id: string, images: InstaImage[]) => {
+    setPosts(posts =>
+      posts.map(post =>
+        post.id === id
+          ? {
+              ...post,
+              images,
+            }
+          : post,
+      ),
+    );
+  }, []);
 
   // WEDDING HALL
   const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
