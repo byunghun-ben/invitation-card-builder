@@ -28,7 +28,7 @@ export const login = async (formData: FormData) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  const { error, data } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: result.data.email,
     password: result.data.password,
   });
@@ -38,7 +38,6 @@ export const login = async (formData: FormData) => {
     return;
   }
 
-  console.log(data);
   revalidatePath("/create", "layout");
   redirect(`/create`);
 };
