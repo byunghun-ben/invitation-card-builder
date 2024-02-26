@@ -8,7 +8,7 @@ type PageProps = {
   };
 };
 
-export const revalidate = 1;
+// export const revalidate = 1;
 
 const Page = async (props: PageProps) => {
   const templateCode = props.params.id;
@@ -17,12 +17,18 @@ const Page = async (props: PageProps) => {
   const url = `${protocol}://${host}/api/insta-templates/${templateCode}`;
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      next: {
+        tags: ["metadata", "posts", "stories", "wedding_hall"],
+      },
+    });
 
     const body = await res.json();
-    const data = instaTemplateSchema.parse(body);
+    const template = instaTemplateSchema.parse(body);
 
-    return <InnerPage defaultValue={data} />;
+    console.log("data revalidate");
+
+    return <InnerPage template={template} />;
   } catch (error) {
     return (
       <div>

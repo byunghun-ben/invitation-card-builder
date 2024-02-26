@@ -12,25 +12,23 @@ import PreviewSection from "./PreviewSection/PreviewSection";
 import SubmitButton from "./SubmitButton";
 
 type InnerPageProps = {
-  defaultValue: InstaTemplate;
+  template: InstaTemplate;
 };
 
-const InnerPage = ({ defaultValue }: InnerPageProps) => {
+const InnerPage = ({ template }: InnerPageProps) => {
   const [metadata, setMetadata] = useState<InstaTemplate["metadata"]>(
-    defaultValue.metadata,
+    template.metadata,
   );
 
   const [stories, setStories] = useState<InstaTemplate["stories"]>(
-    defaultValue.stories,
+    template.stories,
   );
 
-  const [posts, setPosts] = useState<InstaTemplate["posts"]>(
-    defaultValue.posts,
-  );
+  const [posts, setPosts] = useState<InstaTemplate["posts"]>(template.posts);
 
   // WEDDING HALL
   const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
-    defaultValue.wedding_hall,
+    template.wedding_hall,
   );
 
   return (
@@ -79,7 +77,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
 
             <div className="px-4 flex flex-col gap-2">
               <SubmitButton
-                meta={metadata}
+                templateId={template.id}
+                metadata={metadata}
                 posts={posts}
                 stories={stories}
                 weddingHall={weddingHall}

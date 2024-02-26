@@ -8,29 +8,45 @@ import {
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
+import { updateMetadata } from "../action";
 
 type Props = {
-  meta: InstaTemplate["metadata"];
+  templateId: string;
+  metadata: InstaTemplate["metadata"];
   stories: InstaStory[];
   posts: InstaPost[];
   weddingHall: InstaWeddingHall;
 };
 
-const SubmitButton = ({ meta, stories, posts, weddingHall }: Props) => {
+const SubmitButton = ({
+  templateId,
+  metadata,
+  stories,
+  posts,
+  weddingHall,
+}: Props) => {
   const pathname = usePathname();
-  const templateCode = pathname.split("/").pop();
+  const templateCode = pathname.split("/").pop() as string;
 
   const handleSubmit = useCallback(async () => {
     const data = {
-      meta,
+      metadata,
       stories,
       posts,
       weddingHall,
     };
 
-    console.log("data", data);
+    await updateMetadata({
+      templateId,
+      dto: {
+        title: metadata.title,
+        description: metadata.description,
+        brideName: metadata.brideName,
+        groomName: metadata.groomName,
+      },
+    });
     alert("저장되었습니다.");
-  }, [meta, stories, posts, weddingHall, pathname]);
+  }, [metadata, stories, posts, weddingHall, pathname]);
 
   return (
     <button
