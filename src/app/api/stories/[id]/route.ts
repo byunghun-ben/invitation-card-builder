@@ -1,21 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-export const GetStorySchema = z.object({
-  id: z.string(),
-  template_id: z.string(),
-  title: z.string(),
-  created_at: z.string(),
-  images: z.array(
-    z.object({
-      id: z.string(),
-      url: z.string(),
-      created_at: z.string(),
-    }),
-  ),
-});
+import { StoryResponseSchema } from "./schema";
 
 export const GET = async (request: NextRequest) => {
   // path: /api/stories/:id
@@ -49,7 +35,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ message: "Not found" }, { status: 404 });
   }
 
-  const response = GetStorySchema.safeParse(story);
+  const response = StoryResponseSchema.safeParse(story);
 
   if (!response.success) {
     // Parsing 실패
