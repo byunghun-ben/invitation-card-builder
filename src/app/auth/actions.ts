@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -10,7 +12,6 @@ const loginSchema = z.object({
 });
 
 export const login = async (formData: FormData) => {
-  "use server";
   const email = formData.get("email");
   const password = formData.get("password");
 
@@ -53,7 +54,6 @@ const signupSchema = z.object({
 });
 
 export const signUp = async (formData: FormData) => {
-  "use server";
   console.log("signup function called");
 
   const parsedSignupDto = signupSchema.safeParse({
@@ -74,46 +74,57 @@ export const signUp = async (formData: FormData) => {
   if (
     parsedSignupDto.data.password !== parsedSignupDto.data.passwordConfirmation
   ) {
-    alert("비밀번호가 일치하지 않습니다.");
-    return;
+    throw new Error("비밀번호가 일치하지 않습니다.");
   }
+
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  const { data: signupData, error: signupError } = await supabase.auth.signUp({
+  // 이메일 중복 확인
+  const { error: emailError, count: emailCount } = await supabase.rpc(
+    "get_email_from_auth_users",
+    { user_email: email },
+    { count: "exact" },
+  );
+
+  if (emailError) {
+    throw new Error("이메일 중복 확인 중 오류가 발생했습니다.");
+  }
+
+  if (typeof emailCount === "number" && emailCount > 0) {
+    throw new Error("이미 가입된 이메일입니다.");
+  }
+
+  // 청첩장 주소 중복 확인
+  const { error: codeError, count: codeCount } = await supabase
+    .schema("insta_template")
+    .from("template")
+    .select("code", { count: "exact" })
+    .eq("code", invitationCode);
+
+  if (codeError) {
+    throw new Error("청첩장 주소 중복 확인 중 오류가 발생했습니다.");
+  }
+
+  if (typeof codeCount === "number" && codeCount > 0) {
+    throw new Error("이미 사용 중인 청첩장 주소입니다.");
+  }
+
+  // 회원가입
+  const { error: signupError } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        invitationCode,
+      },
+    },
   });
 
   if (signupError) {
-    console.group("========> error");
-    console.error(signupError);
-    console.groupEnd();
-    return;
+    throw new Error("회원가입 중 오류가 발생했습니다.");
   }
 
-  const { data: newTemplate, error: templateError } = await supabase
-    .schema("insta_template")
-    .from("template")
-    .insert({
-      user_id: signupData?.user?.id,
-      code: invitationCode,
-    });
-
-  if (templateError) {
-    console.group("========> error");
-    console.error(templateError);
-    console.groupEnd();
-    return;
-  }
-
-  console.log(newTemplate);
-  // redirect("/invitations");
-
-  // if (error) {
-  //   console.log(error);
-  //   redirect("/auth/signup");
-  // }
-  // revalidatePath("/create", "layout");
-  // redirect(`/create`);
+  revalidatePath("/create", "layout");
+  redirect(`/create/${invitationCode}`);
 };
