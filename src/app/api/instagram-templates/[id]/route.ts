@@ -138,19 +138,3 @@ export const PATCH = async (request: NextRequest) => {
     message: "PATCH /api/instagram-templates/:id",
   });
 };
-
-// export async function GET(
-//   request: NextRequest,
-//   { params: { id } }: { params: { id: string } },
-// ) {
-//   try {
-//     await connectDb();
-
-//     const instagramTemplate = await getInstagramTemplate(id!);
-
-//     return createSuccessResponse(instagramTemplate, 200);
-//   } catch (error: any) {
-//     console.log(error);
-//     return createErrorResponse(error.message, 500);
-//   }
-// }
