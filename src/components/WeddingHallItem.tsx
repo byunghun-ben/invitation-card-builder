@@ -5,6 +5,7 @@ import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
 import Link from "next/link";
 import PostImageViewerV2 from "./PostImageViewerV2";
+import { useMemo } from "react";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -21,6 +22,10 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
     `https://map.kakao.com/link/search/${weddingHall.name}`,
   );
 
+  const sortedImages = useMemo(() => {
+    return weddingHall.images.sort((a, b) => a.display_order - b.display_order);
+  }, [weddingHall.images]);
+
   return (
     <div className="flex-none flex flex-col">
       <div className="flex items-center gap-1 p-3">
@@ -34,7 +39,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
         <span className="text-sm font-bold">오시는 길</span>
       </div>
 
-      <PostImageViewerV2 images={weddingHall.images} />
+      <PostImageViewerV2 images={sortedImages} />
 
       <div className="flex flex-col gap-2 p-3">
         <span className="font-bold">{name}</span>

@@ -103,6 +103,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
                   fill
                   sizes="573px"
                   draggable={true}
+                  priority
                 />
               </li>
             ))}

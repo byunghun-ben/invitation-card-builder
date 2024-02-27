@@ -1,8 +1,9 @@
 import z from "zod";
 
-const instaImageSchema = z.object({
+export const instaImageSchema = z.object({
   id: z.string(),
   url: z.string(),
+  display_order: z.number().default(0),
 });
 
 const instaStorySchema = z.object({

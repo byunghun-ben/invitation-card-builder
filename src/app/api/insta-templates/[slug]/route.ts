@@ -54,7 +54,8 @@ export const GET = async (request: NextRequest) => {
           content,
           images (
             id,
-            url
+            url,
+            display_order
           )
         )
       `,

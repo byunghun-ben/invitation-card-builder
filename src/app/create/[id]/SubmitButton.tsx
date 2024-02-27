@@ -8,7 +8,11 @@ import {
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
-import { updateMetadata } from "../action";
+import {
+  updateMetadata,
+  updateWeddingHall,
+  updateWeddingHallImages,
+} from "../action";
 
 type Props = {
   templateId: string;
@@ -36,6 +40,8 @@ const SubmitButton = ({
       weddingHall,
     };
 
+    console.log("data", data);
+
     await updateMetadata({
       templateId,
       dto: {
@@ -45,6 +51,21 @@ const SubmitButton = ({
         groomName: metadata.groomName,
       },
     });
+
+    await updateWeddingHall({
+      templateId,
+      dto: {
+        name: weddingHall.name,
+        address: weddingHall.address,
+        content: weddingHall.content,
+      },
+    });
+
+    await updateWeddingHallImages(
+      templateId,
+      weddingHall.images.map(image => image.id),
+    );
+
     alert("저장되었습니다.");
   }, [metadata, stories, posts, weddingHall, pathname]);
 

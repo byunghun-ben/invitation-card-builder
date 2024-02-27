@@ -26,10 +26,12 @@ const InnerPage = ({ template }: InnerPageProps) => {
 
   const [posts, setPosts] = useState<InstaTemplate["posts"]>(template.posts);
 
-  // WEDDING HALL
-  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
-    template.wedding_hall,
-  );
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
+    ...template.wedding_hall,
+    images: template.wedding_hall.images.sort(
+      (a, b) => a.display_order - b.display_order,
+    ),
+  });
 
   return (
     <div className="flex h-screen">
