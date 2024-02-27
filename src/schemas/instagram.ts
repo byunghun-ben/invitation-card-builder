@@ -8,6 +8,7 @@ export const instaImageSchema = z.object({
 
 const instaStorySchema = z.object({
   id: z.string(),
+  template_id: z.string(),
   title: z.string(),
   images: z.array(instaImageSchema),
 });
@@ -29,6 +30,7 @@ const instaCommentSchema = z.object({
 
 export const instaPostSchema = z.object({
   id: z.string(),
+  template_id: z.string(),
   title: z.string(),
   content: z.string(),
   images: z.array(instaImageSchema),
@@ -47,8 +49,9 @@ export const instaMetadataSchema = z.object({
 
 export const instaTemplateSchema = z.object({
   id: z.string(),
+  user_id: z.string(),
   code: z.string(),
-  metadata: instaMetadataSchema.omit({ template_id: true, created_at: true }),
+  metadata: instaMetadataSchema,
   posts: z.array(instaPostSchema),
   stories: z.array(instaStorySchema),
   wedding_hall: weddingHallSchema,

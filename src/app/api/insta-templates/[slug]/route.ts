@@ -15,37 +15,19 @@ export const GET = async (request: NextRequest) => {
     .from("template")
     .select(
       `
-        id,
-        code,
-        metadata (
-          title,
-          description,
-          groomName,
-          brideName
-        ),
+        *,
+        metadata (*),
         posts (
-          id,
-          title,
-          content,
-          likes,
+          *,
           images (*),
-          comments (
-            id,
-            name,
-            content,
-            created_at
-          )
+          comments (*)
         ),
         stories (
-          id,
-          title,
+          *,
           images (*)
         ),
         wedding_hall (
-          template_id,
-          name,
-          address,
-          content,
+          *,
           images (*)
         )
       `,

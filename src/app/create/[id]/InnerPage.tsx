@@ -102,10 +102,18 @@ const InnerPage = ({ template }: InnerPageProps) => {
               <MetadataPanel metadata={metadata} setMetadata={setMetadata} />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
-              <StoryPanel stories={stories} setStories={setStories} />
+              <StoryPanel
+                templateId={template.id}
+                stories={stories}
+                setStories={setStories}
+              />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
-              <PostPanel posts={posts} setPosts={setPosts} />
+              <PostPanel
+                templateId={template.id}
+                posts={posts}
+                setPosts={setPosts}
+              />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
               <WeddingHallPanel

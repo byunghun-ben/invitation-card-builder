@@ -11,7 +11,7 @@ import { useCallback } from "react";
 import {
   updateMetadata,
   updatePosts,
-  updateStory,
+  updateStories,
   updateWeddingHall,
   updateWeddingHallImages,
 } from "../action";
@@ -43,38 +43,15 @@ const SubmitButton = ({
 
     console.log("data", data);
 
-    // upload story
-    await updateStory({
-      templateId,
-      dto: stories,
-    });
+    await updateStories(templateId, stories);
 
-    // upload post
     await updatePosts(templateId, posts);
 
-    await updateMetadata({
-      templateId,
-      dto: {
-        title: metadata.title,
-        description: metadata.description,
-        brideName: metadata.brideName,
-        groomName: metadata.groomName,
-      },
-    });
+    await updateMetadata(templateId, metadata);
 
-    await updateWeddingHall({
-      templateId,
-      dto: {
-        name: weddingHall.name,
-        address: weddingHall.address,
-        content: weddingHall.content,
-      },
-    });
+    await updateWeddingHall(templateId, weddingHall);
 
-    await updateWeddingHallImages(
-      templateId,
-      weddingHall.images.map(image => image.id),
-    );
+    await updateWeddingHallImages(templateId, weddingHall.images);
 
     alert("저장되었습니다.");
   }, [metadata, stories, posts, weddingHall, pathname]);

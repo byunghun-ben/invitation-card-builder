@@ -1,6 +1,13 @@
 "use server";
 
-import { instaImageSchema, instaPostSchema } from "@/schemas/instagram";
+import {
+  InstaImage,
+  InstaMetadata,
+  InstaStory,
+  InstaWeddingHall,
+  instaImageSchema,
+  instaPostSchema,
+} from "@/schemas/instagram";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -17,21 +24,7 @@ export const logout = async () => {
   redirect("/");
 };
 
-const updateStoryDto = z.array(
-  z.object({
-    id: z.string(),
-    title: z.string(),
-    images: z.array(instaImageSchema),
-  }),
-);
-type UpdateStoryDto = z.infer<typeof updateStoryDto>;
-export const updateStory = async ({
-  templateId,
-  dto,
-}: {
-  templateId: string;
-  dto: UpdateStoryDto;
-}) => {
+export const updateStories = async (templateId: string, dto: InstaStory[]) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -90,22 +83,21 @@ export const updateStory = async ({
             }
           });
 
-        await Promise.all(
-          story.images.map(async (image, index) => {
-            return supabase
-              .schema("insta_template")
-              .from("images")
-              .update({ display_order: index })
-              .eq("id", image.id)
-              .then(({ data, error }) => {
-                if (error) {
-                  throw new Error(error.message);
-                }
-
-                return data;
-              });
-          }),
-        );
+        await supabase
+          .schema("insta_template")
+          .from("images")
+          .upsert(
+            story.images.map(({ id, url }, index) => ({
+              id,
+              url,
+              display_order: index,
+            })),
+          )
+          .then(({ error }) => {
+            if (error) {
+              throw new Error(error.message);
+            }
+          });
       }),
     );
   }
@@ -147,9 +139,9 @@ export const updateStory = async ({
               : [];
           });
 
-        const imagesToInsert = story.images.filter(image => {
-          return !existingImageIds.includes(image.id);
-        });
+        const imagesToInsert = story.images.filter(
+          image => !existingImageIds.includes(image.id),
+        );
 
         if (imagesToInsert.length > 0) {
           await supabase
@@ -186,23 +178,21 @@ export const updateStory = async ({
             });
         }
 
-        await Promise.all(
-          story.images.map(async (image, index) => {
-            return supabase
-              .schema("insta_template")
-              .from("images")
-              .update({ display_order: index })
-              .eq("id", image.id)
-              .select(`*`)
-              .then(({ data, error }) => {
-                if (error) {
-                  throw new Error(error.message);
-                }
-
-                return data;
-              });
-          }),
-        );
+        await supabase
+          .schema("insta_template")
+          .from("images")
+          .upsert(
+            story.images.map(({ id, url }, index) => ({
+              id,
+              url,
+              display_order: index,
+            })),
+          )
+          .then(({ error }) => {
+            if (error) {
+              throw new Error(error.message);
+            }
+          });
       }),
     );
   }
@@ -305,9 +295,9 @@ export const updatePosts = async (templateId: string, dto: UpdatePostsDto) => {
           .schema("insta_template")
           .from("images")
           .upsert(
-            post.images.map((image, index) => ({
-              id: image.id,
-              url: image.url,
+            post.images.map(({ id, url }, index) => ({
+              id,
+              url,
               display_order: index,
             })),
           )
@@ -394,9 +384,9 @@ export const updatePosts = async (templateId: string, dto: UpdatePostsDto) => {
           .schema("insta_template")
           .from("images")
           .upsert(
-            post.images.map((image, index) => ({
-              id: image.id,
-              url: image.url,
+            post.images.map(({ id, url }, index) => ({
+              id,
+              url,
               display_order: index,
             })),
           )
@@ -426,21 +416,10 @@ export const updatePosts = async (templateId: string, dto: UpdatePostsDto) => {
 };
 // posts
 
-const updateMetadataDto = z.object({
-  title: z.string(),
-  description: z.string(),
-  groomName: z.string(),
-  brideName: z.string(),
-});
-type UpdateMetadataDto = z.infer<typeof updateMetadataDto>;
-
-export const updateMetadata = async ({
-  templateId,
-  dto,
-}: {
-  templateId: string;
-  dto: UpdateMetadataDto;
-}) => {
+export const updateMetadata = async (
+  templateId: string,
+  dto: InstaMetadata,
+) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -457,28 +436,21 @@ export const updateMetadata = async ({
   revalidateTag("metadata");
 };
 
-const updateWeddingHallDto = z.object({
-  name: z.string(),
-  address: z.string(),
-  content: z.string(),
-});
-
-type UpdateWeddingHallDto = z.infer<typeof updateWeddingHallDto>;
-
-export const updateWeddingHall = async ({
-  templateId,
-  dto,
-}: {
-  templateId: string;
-  dto: UpdateWeddingHallDto;
-}) => {
+export const updateWeddingHall = async (
+  templateId: string,
+  dto: InstaWeddingHall,
+) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   const { error } = await supabase
     .schema("insta_template")
     .from("wedding_hall")
-    .update(dto)
+    .update({
+      name: dto.name,
+      address: dto.address,
+      content: dto.content,
+    })
     .eq("template_id", templateId);
 
   if (error) {
@@ -490,7 +462,7 @@ export const updateWeddingHall = async ({
 
 export const updateWeddingHallImages = async (
   weddingHallId: string,
-  imageIds: string[],
+  images: InstaImage[],
 ) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -518,16 +490,18 @@ export const updateWeddingHallImages = async (
       return parsedData.data.map(({ image_id }) => image_id);
     });
 
-  const imagesToAdd = imageIds.filter(id => !existingImageIds.includes(id));
-  const imagesToRemove = existingImageIds.filter(id => !imageIds.includes(id));
+  const imagesToAdd = images.filter(({ id }) => !existingImageIds.includes(id));
+  const imageIdsToRemove = existingImageIds.filter(
+    id => !images.some(image => image.id === id),
+  );
 
-  if (imagesToRemove.length > 0) {
+  if (imageIdsToRemove.length > 0) {
     await supabase
       .schema("insta_template")
       .from("wedding_hall_image_link")
       .delete()
       .eq("wedding_hall_id", weddingHallId)
-      .in("image_id", imagesToRemove)
+      .in("image_id", imageIdsToRemove)
       .then(({ error }) => {
         if (error) {
           console.error(error);
@@ -540,31 +514,33 @@ export const updateWeddingHallImages = async (
       wedding_hall_id: weddingHallId,
       image_id: imageId,
     }));
+
     await supabase
       .schema("insta_template")
       .from("wedding_hall_image_link")
       .insert(newImages)
       .then(({ error }) => {
         if (error) {
-          console.error(error);
+          throw new Error(error.message);
         }
       });
   }
 
-  await Promise.all(
-    imageIds.map(async (imageId, index) => {
-      return supabase
-        .schema("insta_template")
-        .from("images")
-        .update({ display_order: index })
-        .eq("id", imageId)
-        .then(({ error }) => {
-          if (error) {
-            console.error(error);
-          }
-        });
-    }),
-  );
+  await supabase
+    .schema("insta_template")
+    .from("images")
+    .upsert(
+      images.map(({ id, url }, index) => ({
+        id,
+        url,
+        display_order: index,
+      })),
+    )
+    .then(({ error }) => {
+      if (error) {
+        console.error(error);
+      }
+    });
 
   revalidateTag("wedding_hall");
 };
