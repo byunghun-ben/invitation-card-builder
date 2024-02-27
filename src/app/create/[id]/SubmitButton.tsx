@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { useCallback } from "react";
 import {
   updateMetadata,
+  updatePosts,
   updateStory,
   updateWeddingHall,
   updateWeddingHallImages,
@@ -31,7 +32,6 @@ const SubmitButton = ({
   weddingHall,
 }: Props) => {
   const pathname = usePathname();
-  const templateCode = pathname.split("/").pop() as string;
 
   const handleSubmit = useCallback(async () => {
     const data = {
@@ -50,6 +50,7 @@ const SubmitButton = ({
     });
 
     // upload post
+    await updatePosts(templateId, posts);
 
     await updateMetadata({
       templateId,
