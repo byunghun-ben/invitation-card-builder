@@ -42,7 +42,7 @@ const PostForm = ({
           id,
           url,
         },
-      ];
+      ].map((image, index) => ({ ...image, display_order: index }));
       onChangeImages(post.id, newImages);
     },
     [post.id, post.images, onChangeImages],

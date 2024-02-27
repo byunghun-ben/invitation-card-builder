@@ -49,7 +49,7 @@ const StoryForm = ({
           id,
           url,
         },
-      ];
+      ].map((image, index) => ({ ...image, display_order: index }));
 
       onChangeImages(story.id, newImages);
     },
