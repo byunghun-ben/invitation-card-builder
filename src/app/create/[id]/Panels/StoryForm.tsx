@@ -1,9 +1,10 @@
 "use client";
 
-import { InstaImage, InstaStory } from "@/schemas/instagram";
+import { InstaImage, InstaStory, instaImageSchema } from "@/schemas/instagram";
 import { uid } from "radash";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useProcessImage } from "../useFile";
+import { createClient } from "@/utils/supabase/client";
 
 type Props = {
   index: number;
@@ -40,16 +41,44 @@ const StoryForm = ({
   );
 
   const handleChangeImage = useCallback(
-    (blob: Blob) => {
-      const id = uid(10, "image-id");
-      const url = URL.createObjectURL(blob);
-      const newImages = [
-        ...story.images,
-        {
-          id,
-          url,
-        },
-      ].map((image, index) => ({ ...image, display_order: index }));
+    async (blob: Blob) => {
+      // supabase client
+      const supabase = createClient();
+
+      // upload image to supabase storage
+      const fileName = uid(10, "image");
+      const { path: uploadImagePath } = await supabase.storage
+        .from("images")
+        .upload(fileName, blob)
+        .then(({ data, error }) => {
+          if (error) {
+            throw new Error(error.message);
+          }
+
+          return data;
+        });
+
+      // insert to images table
+      const BASE_URL =
+        "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images";
+      const instaImage = await supabase
+        .schema("insta_template")
+        .from("images")
+        .insert({ url: `${BASE_URL}/${uploadImagePath}` })
+        .select(`*`)
+        .single()
+        .then(({ data, error }) => {
+          if (error) {
+            throw new Error(error.message);
+          }
+
+          return instaImageSchema.parse(data);
+        });
+
+      const newImages = [...story.images, instaImage].map((image, index) => ({
+        ...image,
+        display_order: index,
+      }));
 
       onChangeImages(story.id, newImages);
     },
@@ -59,6 +88,10 @@ const StoryForm = ({
   const { handleChangeFileInput } = useProcessImage({
     onProcessImages: handleChangeImage,
   });
+
+  const sortedStoryImages = useMemo(() => {
+    return story.images.sort((a, b) => a.display_order - b.display_order);
+  }, [story.images]);
 
   return (
     <>
@@ -98,7 +131,7 @@ const StoryForm = ({
           {!isImageEmpty && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {story.images.map(image => (
+              {sortedStoryImages.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <div
                     className="h-16 w-16 bg-cover bg-center border rounded"

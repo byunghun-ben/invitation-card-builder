@@ -28,10 +28,7 @@ export const GET = async (request: NextRequest) => {
           title,
           content,
           likes,
-          images (
-            id,
-            url
-          ),
+          images (*),
           comments (
             id,
             name,
@@ -42,21 +39,14 @@ export const GET = async (request: NextRequest) => {
         stories (
           id,
           title,
-          images (
-            id,
-            url
-          )
+          images (*)
         ),
         wedding_hall (
           template_id,
           name,
           address,
           content,
-          images (
-            id,
-            url,
-            display_order
-          )
+          images (*)
         )
       `,
     )

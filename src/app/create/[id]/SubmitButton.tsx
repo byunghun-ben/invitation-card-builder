@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { useCallback } from "react";
 import {
   updateMetadata,
+  updateStory,
   updateWeddingHall,
   updateWeddingHallImages,
 } from "../action";
@@ -41,6 +42,14 @@ const SubmitButton = ({
     };
 
     console.log("data", data);
+
+    // upload story
+    await updateStory({
+      templateId,
+      dto: stories,
+    });
+
+    // upload post
 
     await updateMetadata({
       templateId,
