@@ -1,21 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-export const GetStorySchema = z.object({
-  id: z.string(),
-  template_id: z.string(),
-  title: z.string(),
-  created_at: z.string(),
-  images: z.array(
-    z.object({
-      id: z.string(),
-      url: z.string(),
-      created_at: z.string(),
-    }),
-  ),
-});
+import { GetStorySchema } from "./schema";
 
 export const GET = async (request: NextRequest) => {
   // path: /api/stories/:id
