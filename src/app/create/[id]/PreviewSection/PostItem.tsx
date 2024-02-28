@@ -1,9 +1,9 @@
 "use client";
 
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
-import PostLikeIcon from "@/components/PostLikeIcon";
+import PostLikeButton from "@/components/PostLikeButton";
 import CommentIcon from "@/foundation/icons/CommentIcon";
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
@@ -42,7 +42,7 @@ const PostItem = ({ post }: Props) => {
 
       {/* Like & ImageIndex */}
       <div className="relative flex items-center my-1">
-        <PostLikeIcon onLike={handleLike} />
+        <PostLikeButton onLike={handleLike} />
         <button type="button" className="flex p-2 active:opacity-50">
           <CommentIcon />
         </button>

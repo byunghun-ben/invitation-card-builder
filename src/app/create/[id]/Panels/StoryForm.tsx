@@ -65,19 +65,19 @@ const StoryForm = ({
       {/* Story */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3>{FORM_TITLE}</h3>
+          <h3 className="text-sm font-bold text-slate-700">{FORM_TITLE}</h3>
           <button
             type="button"
             className="flex items-center justify-center"
             onClick={handleRemove}
           >
-            <span className="text-xs text-red-500">스토리 삭제</span>
+            <span className="text-xs text-red-500">삭제</span>
           </button>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <input
             type="text"
-            className="py-2 px-3 border border-slate-400 rounded dark:bg-slate-900 dark:text-white"
+            className="py-2 px-3 border border-slate-400 rounded"
             placeholder="스토리 제목을 입력하세요."
             value={story.title}
             onChange={e => onChangeTitle(story.id, e.target.value)}
@@ -119,10 +119,10 @@ const StoryForm = ({
 
           <button
             type="button"
-            className="border border-slate-700 rounded py-2"
+            className="border border-slate-400 rounded py-1"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="text-sm font-bold">사진 또는 영상 추가</span>
+            <span className="text-sm">사진 또는 영상 추가</span>
           </button>
           <input
             type="file"

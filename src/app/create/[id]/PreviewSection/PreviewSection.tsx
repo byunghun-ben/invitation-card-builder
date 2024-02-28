@@ -1,12 +1,7 @@
 "use client";
 
 import WeddingHallItem from "@/components/WeddingHallItem";
-import {
-  InstaMetadata,
-  InstaPost,
-  InstaStory,
-  InstaWeddingHall,
-} from "@/schemas/instagram";
+import { InstaStory, InstaTemplate } from "@/schemas/instagram";
 import { useCallback, useRef, useState } from "react";
 import Stories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
@@ -14,23 +9,26 @@ import PostItem from "./PostItem";
 import StoryItem from "./StoryItem";
 
 type Props = {
-  metadata: InstaMetadata;
-  posts: InstaPost[];
-  stories: InstaStory[];
-  weddingHall: InstaWeddingHall;
+  metadata: InstaTemplate["metadata"];
+  posts: InstaTemplate["posts"];
+  stories: InstaTemplate["stories"];
+  weddingHall: InstaTemplate["wedding_hall"];
 };
 
 const PreviewSection = ({ metadata, posts, stories, weddingHall }: Props) => {
   const title = metadata.title || "청첩장 제목을 입력하세요";
+
   const [isOpenStories, setIsOpenStories] = useState(false);
   const [selectedStory, setSelectedStory] = useState<InstaStory>();
+
   const clickStoryCover = useCallback(
     (story: InstaStory) => () => {
       setIsOpenStories(!isOpenStories);
       setSelectedStory(story);
     },
-    [],
+    [isOpenStories],
   );
+
   const previewRef = useRef<HTMLDivElement>(null);
 
   if (isOpenStories) {

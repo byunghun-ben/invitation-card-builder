@@ -1,30 +1,17 @@
 import { InstaStory } from "@/schemas/instagram";
-import Image from "next/image";
+import StoryItem from "./StoryItem";
 
 type Props = {
+  templateCode: string;
   stories: InstaStory[];
 };
 
-const StorySection = ({ stories }: Props) => {
+const StorySection = ({ stories, templateCode }: Props) => {
   return (
     <div className="flex-none flex py-2 px-4">
       <div className="flex gap-3 overflow-x-auto overscroll-contain no-scrollbar">
         {stories.map(story => (
-          <div
-            key={story.id}
-            className="flex-none basis-16 flex flex-col gap-1 items-center"
-          >
-            <Image
-              src={story.images?.[0]?.url}
-              alt="스토리 썸네일 이미지"
-              className="w-16 h-16 rounded-full border object-cover"
-              width={64}
-              height={64}
-            />
-            <span className="text-xxs line-clamp-1">
-              {story.title || "스토리"}
-            </span>
-          </div>
+          <StoryItem key={story.id} story={story} templateCode={templateCode} />
         ))}
       </div>
     </div>

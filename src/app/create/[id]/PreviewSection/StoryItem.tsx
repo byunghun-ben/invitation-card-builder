@@ -1,4 +1,4 @@
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaStory } from "@/schemas/instagram";
 import Image from "next/image";
 

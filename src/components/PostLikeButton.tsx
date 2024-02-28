@@ -7,7 +7,7 @@ type Props = {
   onLike: () => void;
 };
 
-const PostLikeIcon = ({ onLike }: Props) => {
+const PostLikeButton = ({ onLike }: Props) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = useCallback(() => {
@@ -26,4 +26,4 @@ const PostLikeIcon = ({ onLike }: Props) => {
   );
 };
 
-export default PostLikeIcon;
+export default PostLikeButton;

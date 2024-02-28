@@ -1,6 +1,6 @@
 "use client";
 
-import DEFAULT_IMAGE from "@/foundation/images/img_unicorn.png";
+import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,7 @@ type Props = {
 };
 
 const WeddingHallItem = ({ weddingHall }: Props) => {
+  const name = weddingHall.name || "식장 이름";
   const content = weddingHall.content || "식장 소개가 없습니다.";
 
   const naverMapUrl = encodeURI(
@@ -22,23 +23,21 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
 
   return (
     <div className="flex-none flex flex-col">
-      <div className="py-3 px-2">
-        <div className="flex items-center gap-1">
-          <Image
-            src={DEFAULT_IMAGE}
-            alt="프로필 이미지"
-            width={24}
-            height={24}
-            className="rounded-full border object-cover"
-          />
-          <span className="text-xxs">오시는 길</span>
-        </div>
+      <div className="flex items-center gap-1 p-3">
+        <Image
+          src={DEFAULT_IMAGE}
+          alt="프로필 이미지"
+          width={32}
+          height={32}
+          className="rounded-full border object-cover"
+        />
+        <span className="text-sm font-bold">오시는 길</span>
       </div>
 
       <PostImageViewerV2 images={weddingHall.images} />
 
       <div className="flex flex-col gap-2 p-3">
-        <span className="font-bold">{weddingHall.name || "식장 이름"}</span>
+        <span className="font-bold">{name}</span>
         <div className="flex gap-2">
           <Link
             href={naverMapUrl}
@@ -57,9 +56,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
             <span className="text-xs">카카오 지도로 확인하기</span>
           </Link>
         </div>
-        <div>
-          <p className="text-xs whitespace-pre-line">{content}</p>
-        </div>
+        <p className="text-sm whitespace-pre-line">{content}</p>
       </div>
     </div>
   );

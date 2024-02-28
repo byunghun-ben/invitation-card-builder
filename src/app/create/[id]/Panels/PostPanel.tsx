@@ -1,4 +1,4 @@
-import { InstaImage, InstaPost } from "@/schemas/instagram";
+import { type InstaImage, type InstaPost } from "@/schemas/instagram";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import PostForm from "./PostForm";
 import { uid } from "radash";
@@ -17,7 +17,7 @@ const PostPanel = ({ posts, setPosts }: Props) => {
         title: "",
         content: "",
         images: [],
-        replies: [],
+        comments: [],
         likes: 0,
       },
     ]);

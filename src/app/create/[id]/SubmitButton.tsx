@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  InstaMetadata,
   InstaPost,
   InstaStory,
+  InstaTemplate,
   InstaWeddingHall,
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
 
 type Props = {
-  meta: InstaMetadata;
+  meta: InstaTemplate["metadata"];
   stories: InstaStory[];
   posts: InstaPost[];
   weddingHall: InstaWeddingHall;
@@ -18,19 +18,15 @@ type Props = {
 
 const SubmitButton = ({ meta, stories, posts, weddingHall }: Props) => {
   const pathname = usePathname();
-  const id = pathname.replace("/create/", "");
+  const templateCode = pathname.split("/").pop();
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     const data = {
       meta,
       stories,
       posts,
       weddingHall,
     };
-
-    const stringifiedData = JSON.stringify(data);
-    const key = `data-${id}`;
-    localStorage.setItem(key, stringifiedData);
 
     console.log("data", data);
     alert("저장되었습니다.");
@@ -39,7 +35,7 @@ const SubmitButton = ({ meta, stories, posts, weddingHall }: Props) => {
   return (
     <button
       type="button"
-      className="border py-2 px-4 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900"
+      className="border py-2 px-4 rounded-full hover:bg-slate-100"
       onClick={handleSubmit}
     >
       <span className="font-bold">저장하기</span>

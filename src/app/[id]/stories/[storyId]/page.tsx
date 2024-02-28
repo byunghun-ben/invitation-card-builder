@@ -1,12 +1,8 @@
-import WeddingHallItem from "@/components/WeddingHallItem";
-import { instaMetadataSchema, instaTemplateSchema } from "@/schemas/instagram";
+import { instaMetadataSchema } from "@/schemas/instagram";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
-import InstaHeader from "./InstaHeader";
-import PostSection from "./ViewSection/PostSection";
-import StorySection from "./ViewSection/StorySection";
-
-export const revalidate = 1;
+import InstaStories from "./InstaStories";
+import { GetStorySchema } from "@/app/api/stories/[id]/schema";
 
 type MetadataProps = {
   params: { id: string };
@@ -43,45 +39,35 @@ export async function generateMetadata(
 type Props = {
   params: {
     id: string;
+    storyId: string;
   };
+  searchParams: Record<string, any>;
 };
 
-const Page = async (props: Props) => {
-  const templateCode = props.params.id;
+const StoriesPage = async ({ params, searchParams }: Props) => {
+  // :id/stories/:storyId
+  const invitationId = params.id;
+  const storyId = params.storyId;
   const host = headers().get("host") || "localhost:3000";
   const protocol = host.includes("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/api/insta-templates/${templateCode}`;
+  const url = `${protocol}://${host}/api/stories/${storyId}`;
 
   const res = await fetch(url);
 
   if (!res.ok) {
-    return (
-      <div>
-        <h1>Failed to fetch insta template</h1>
-      </div>
-    );
+    return <div>Internal server error</div>;
   }
 
   const body = await res.json();
-  const instaTemplate = instaTemplateSchema.parse(body);
+  const story = GetStorySchema.parse(body);
 
   return (
-    <div className="h-full w-full flex-1 flex flex-col">
-      <InstaHeader
-        templateCode={templateCode}
-        metaTitle={instaTemplate.metadata.title}
-      />
-
-      <StorySection
-        templateCode={templateCode}
-        stories={instaTemplate.stories}
-      />
-
-      <PostSection posts={instaTemplate.posts} />
-
-      <WeddingHallItem weddingHall={instaTemplate.wedding_hall} />
-    </div>
+    <InstaStories
+      images={story.images}
+      invitationId={invitationId}
+      storyId={storyId}
+    />
   );
 };
 
-export default Page;
+export default StoriesPage;
