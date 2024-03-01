@@ -80,6 +80,7 @@ const InnerPage = ({ template }: InnerPageProps) => {
             <div className="px-4 flex flex-col gap-2">
               <SubmitButton
                 templateId={template.id}
+                templateCode={template.code}
                 metadata={metadata}
                 posts={posts}
                 stories={stories}

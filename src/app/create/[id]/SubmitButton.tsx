@@ -8,16 +8,10 @@ import {
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
-import {
-  updateMetadata,
-  updatePosts,
-  updateStories,
-  updateWeddingHall,
-  updateWeddingHallImages,
-} from "../action";
 
 type Props = {
   templateId: string;
+  templateCode: string;
   metadata: InstaTemplate["metadata"];
   stories: InstaStory[];
   posts: InstaPost[];
@@ -26,6 +20,7 @@ type Props = {
 
 const SubmitButton = ({
   templateId,
+  templateCode,
   metadata,
   stories,
   posts,
@@ -43,15 +38,13 @@ const SubmitButton = ({
 
     console.log("data", data);
 
-    await updateStories(templateId, stories);
-
-    await updatePosts(templateId, posts);
-
-    await updateMetadata(templateId, metadata);
-
-    await updateWeddingHall(templateId, weddingHall);
-
-    await updateWeddingHallImages(templateId, weddingHall.images);
+    await fetch(`/api/insta-templates/${templateCode}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
     alert("저장되었습니다.");
   }, [metadata, stories, posts, weddingHall, pathname]);
