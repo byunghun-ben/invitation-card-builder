@@ -2,7 +2,7 @@
 
 import { InstaImage } from "@/schemas/instagram";
 import Image from "next/image";
-import { MouseEvent, useCallback, useMemo, useRef, useState } from "react";
+import { MouseEvent, useCallback, useRef, useState } from "react";
 
 type Props = {
   images: InstaImage[];
@@ -10,10 +10,6 @@ type Props = {
 
 const PostImageViewerV2 = ({ images }: Props) => {
   const imageContainerRef = useRef<HTMLUListElement>(null);
-
-  const sortedImages = useMemo(() => {
-    return images.sort((a, b) => a.display_order - b.display_order);
-  }, [images]);
 
   // MouseDrag Scroll
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -72,7 +68,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
           >
-            {sortedImages.map(image => (
+            {images.map(image => (
               <li
                 key={image.id}
                 className="relative flex-none h-full w-full snap-start"

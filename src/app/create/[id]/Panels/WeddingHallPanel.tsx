@@ -2,14 +2,7 @@
 
 import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import { useProcessMultipleImages } from "../useFile";
 import LocalSearchModal from "./LocalSearchModal";
 import { insertImages, uploadFiles } from "./helpers";
@@ -65,9 +58,10 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
 
       setWeddingHall(prev => {
         // update display_order
-        const images = [...prev.images, ...newImages].map((image, index) => ({
+        const images = [...prev.images, ...newImages].map(image => ({
           ...image,
-          display_order: index,
+          display_order:
+            Math.max(...prev.images.map(i => i.display_order), 0) + 1,
         }));
 
         return {
@@ -111,10 +105,6 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
     },
     [setWeddingHall],
   );
-
-  const sortedImages = useMemo(() => {
-    return weddingHall.images.sort((a, b) => a.display_order - b.display_order);
-  }, [weddingHall.images]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -161,7 +151,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
           {weddingHall.images.length > 0 && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {sortedImages.map(image => (
+              {weddingHall.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <Image
                     src={image.url}

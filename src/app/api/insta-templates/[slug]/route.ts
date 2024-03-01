@@ -42,7 +42,10 @@ export const PATCH = async (request: NextRequest) => {
   const validationResult = updateRequestSchema.safeParse(body);
 
   if (!validationResult.success) {
-    return NextResponse.json({ message: "Bad Request" }, { status: 400 });
+    return NextResponse.json(
+      { message: JSON.stringify(validationResult.error) },
+      { status: 400 },
+    );
   }
 
   const updateData = validationResult.data;

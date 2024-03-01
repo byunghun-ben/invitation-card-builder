@@ -10,6 +10,7 @@ const instaStorySchema = z.object({
   id: z.string(),
   template_id: z.string(),
   title: z.string(),
+  display_order: z.number(),
   images: z.array(instaImageSchema),
 });
 
@@ -36,6 +37,7 @@ export const instaPostSchema = z.object({
   images: z.array(instaImageSchema),
   likes: z.number(),
   comments: z.array(instaCommentSchema),
+  display_order: z.number(),
 });
 
 export const instaMetadataSchema = z.object({

@@ -77,7 +77,8 @@ const StoryForm = ({
 
       const newImages = [...story.images, instaImage].map((image, index) => ({
         ...image,
-        display_order: index,
+        display_order:
+          Math.max(...story.images.map(i => i.display_order), 0) + 1,
       }));
 
       onChangeImages(story.id, newImages);
@@ -88,10 +89,6 @@ const StoryForm = ({
   const { handleChangeFileInput } = useProcessImage({
     onProcessImages: handleChangeImage,
   });
-
-  const sortedStoryImages = useMemo(() => {
-    return story.images.sort((a, b) => a.display_order - b.display_order);
-  }, [story.images]);
 
   return (
     <>
@@ -131,7 +128,7 @@ const StoryForm = ({
           {!isImageEmpty && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {sortedStoryImages.map(image => (
+              {story.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <div
                     className="h-16 w-16 bg-cover bg-center border rounded"

@@ -20,6 +20,8 @@ const StoryPanel = ({ templateId, stories, setStories }: Props) => {
         title: "",
         images: [],
         template_id: templateId,
+        display_order:
+          Math.max(...stories.map(story => story.display_order), 0) + 1,
       },
     ]);
   }, [templateId, setStories]);

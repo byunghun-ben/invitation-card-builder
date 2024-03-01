@@ -13,10 +13,21 @@ import {
   instaTemplateResponseSchema,
 } from "./schema";
 
+const updateDisplayOrder = <T extends { display_order: number }[]>(
+  data: T,
+): T => {
+  return data.map((item, index) => ({
+    ...item,
+    display_order: index,
+  })) as T;
+};
+
 export const updateStories = async (
   templateId: string,
   updateData: UpdateStories,
 ) => {
+  const reorderedUpdateData = updateDisplayOrder(updateData);
+
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -35,9 +46,19 @@ export const updateStories = async (
     });
 
   // Insert new stories
-  const storiesToInsert = updateData.filter(
+  const storiesToInsert = reorderedUpdateData.filter(
     story => !existingStoryIds.includes(story.id),
   );
+
+  // Update existing stories
+  const storiesToUpdate = reorderedUpdateData.filter(story =>
+    existingStoryIds.includes(story.id),
+  );
+
+  // Remove stories
+  const storyIdsToRemove = existingStoryIds.filter(id => {
+    return !reorderedUpdateData.some(story => story.id === id);
+  });
 
   if (storiesToInsert.length > 0) {
     await Promise.all(
@@ -48,6 +69,7 @@ export const updateStories = async (
           .insert({
             title: story.title,
             template_id: templateId,
+            display_order: story.display_order,
           })
           .select(`*`)
           .single()
@@ -94,19 +116,14 @@ export const updateStories = async (
     );
   }
 
-  // Update existing stories
-  const storiesToUpdate = updateData.filter(story =>
-    existingStoryIds.includes(story.id),
-  );
-
   if (storiesToUpdate.length > 0) {
     await Promise.all(
-      storiesToUpdate.map(async story => {
+      storiesToUpdate.map(async ({ id, title, display_order, images }) => {
         await supabase
           .schema("insta_template")
           .from("stories")
-          .update({ title: story.title })
-          .eq("id", story.id)
+          .update({ title, display_order })
+          .eq("id", id)
           .then(({ error }) => {
             if (error) {
               throw new Error(error.message);
@@ -117,7 +134,7 @@ export const updateStories = async (
           .schema("insta_template")
           .from("story_image_link")
           .select("image_id")
-          .eq("story_id", story.id)
+          .eq("story_id", id)
           .then(({ data, error }) => {
             if (error) {
               return [];
@@ -131,7 +148,7 @@ export const updateStories = async (
               : [];
           });
 
-        const imagesToInsert = story.images.filter(
+        const imagesToInsert = images.filter(
           image => !existingImageIds.includes(image.id),
         );
 
@@ -141,7 +158,7 @@ export const updateStories = async (
             .from("story_image_link")
             .insert(
               imagesToInsert.map(image => ({
-                story_id: story.id,
+                story_id: id,
                 image_id: image.id,
               })),
             )
@@ -153,7 +170,7 @@ export const updateStories = async (
         }
 
         const imageIdsToRemove = existingImageIds.filter(id => {
-          return !story.images.some(image => image.id === id);
+          return !images.some(image => image.id === id);
         });
 
         if (imageIdsToRemove.length > 0) {
@@ -161,7 +178,7 @@ export const updateStories = async (
             .schema("insta_template")
             .from("story_image_link")
             .delete()
-            .eq("story_id", story.id)
+            .eq("story_id", id)
             .in("image_id", imageIdsToRemove)
             .then(({ error }) => {
               if (error) {
@@ -174,7 +191,7 @@ export const updateStories = async (
           .schema("insta_template")
           .from("images")
           .upsert(
-            story.images.map(({ id, url }, index) => ({
+            images.map(({ id, url }, index) => ({
               id,
               url,
               display_order: index,
@@ -188,11 +205,6 @@ export const updateStories = async (
       }),
     );
   }
-
-  // Remove stories
-  const storyIdsToRemove = existingStoryIds.filter(id => {
-    return !updateData.some(story => story.id === id);
-  });
 
   if (storyIdsToRemove.length > 0) {
     await supabase
@@ -213,6 +225,8 @@ export const updatePosts = async (
   templateId: string,
   updateData: UpdatePosts,
 ) => {
+  const reorderedUpdateData = updateDisplayOrder(updateData);
+
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -232,27 +246,28 @@ export const updatePosts = async (
     });
 
   // 2. 새로운 posts / 수정할 posts / 삭제할 posts를 구분한다.
-  const postsToInsert = updateData.filter(
+  const postsToInsert = reorderedUpdateData.filter(
     post => !existingPostIds.includes(post.id),
   );
-  const postsToUpdate = updateData.filter(post =>
+  const postsToUpdate = reorderedUpdateData.filter(post =>
     existingPostIds.includes(post.id),
   );
   const postIdsToRemove = existingPostIds.filter(
-    id => !updateData.some(post => post.id === id),
+    id => !reorderedUpdateData.some(post => post.id === id),
   );
 
   // 3. 새로운 posts를 추가한다.
   if (postsToInsert.length > 0) {
     await Promise.all(
-      postsToInsert.map(async post => {
+      postsToInsert.map(async ({ title, content, display_order, images }) => {
         const newPost = await supabase
           .schema("insta_template")
           .from("posts")
           .insert({
             template_id: templateId,
-            title: post.title,
-            content: post.content,
+            title,
+            content,
+            display_order,
           })
           .select(`*`)
           .single()
@@ -269,7 +284,7 @@ export const updatePosts = async (
           .schema("insta_template")
           .from("post_image_link")
           .insert(
-            post.images.map(image => ({
+            images.map(image => ({
               post_id: newPost.id,
               image_id: image.id,
             })),
@@ -284,7 +299,7 @@ export const updatePosts = async (
           .schema("insta_template")
           .from("images")
           .upsert(
-            post.images.map(({ id, url }, index) => ({
+            images.map(({ id, url }, index) => ({
               id,
               url,
               display_order: index,
@@ -302,89 +317,92 @@ export const updatePosts = async (
   // 4. 수정할 posts를 수정한다.
   if (postsToUpdate.length > 0) {
     await Promise.all(
-      postsToUpdate.map(async post => {
-        await supabase
-          .schema("insta_template")
-          .from("posts")
-          .update({
-            title: post.title,
-            content: post.content,
-          })
-          .eq("id", post.id)
-          .then(({ error }) => {
-            if (error) {
-              throw new Error(error.message);
-            }
+      postsToUpdate.map(
+        async ({ id, content, display_order, title, images }) => {
+          await supabase
+            .schema("insta_template")
+            .from("posts")
+            .update({
+              title,
+              content,
+              display_order,
+            })
+            .eq("id", id)
+            .then(({ error }) => {
+              if (error) {
+                throw new Error(error.message);
+              }
+            });
+
+          const existingImageIds = await supabase
+            .schema("insta_template")
+            .from("post_image_link")
+            .select("*")
+            .eq("post_id", id)
+            .then(({ data, error }) => {
+              if (error) {
+                return [];
+              }
+
+              const parsedData = z
+                .array(z.object({ image_id: z.string() }))
+                .safeParse(data);
+              return parsedData.success
+                ? parsedData.data.map(({ image_id }) => image_id)
+                : [];
+            });
+
+          const imagesToInsert = images.filter(image => {
+            return !existingImageIds.includes(image.id);
+          });
+          const imageIdsToRemove = existingImageIds.filter(id => {
+            return !images.some(image => image.id === id);
           });
 
-        const existingImageIds = await supabase
-          .schema("insta_template")
-          .from("post_image_link")
-          .select("*")
-          .eq("post_id", post.id)
-          .then(({ data, error }) => {
-            if (error) {
-              return [];
-            }
+          await supabase
+            .schema("insta_template")
+            .from("post_image_link")
+            .insert(
+              imagesToInsert.map(image => ({
+                post_id: id,
+                image_id: image.id,
+              })),
+            )
+            .then(({ error }) => {
+              if (error) {
+                throw new Error(error.message);
+              }
+            });
 
-            const parsedData = z
-              .array(z.object({ image_id: z.string() }))
-              .safeParse(data);
-            return parsedData.success
-              ? parsedData.data.map(({ image_id }) => image_id)
-              : [];
-          });
+          await supabase
+            .schema("insta_template")
+            .from("post_image_link")
+            .delete()
+            .eq("post_id", id)
+            .in("image_id", imageIdsToRemove)
+            .then(({ error }) => {
+              if (error) {
+                throw new Error(error.message);
+              }
+            });
 
-        const imagesToInsert = post.images.filter(image => {
-          return !existingImageIds.includes(image.id);
-        });
-        const imageIdsToRemove = existingImageIds.filter(id => {
-          return !post.images.some(image => image.id === id);
-        });
-
-        await supabase
-          .schema("insta_template")
-          .from("post_image_link")
-          .insert(
-            imagesToInsert.map(image => ({
-              post_id: post.id,
-              image_id: image.id,
-            })),
-          )
-          .then(({ error }) => {
-            if (error) {
-              throw new Error(error.message);
-            }
-          });
-
-        await supabase
-          .schema("insta_template")
-          .from("post_image_link")
-          .delete()
-          .eq("post_id", post.id)
-          .in("image_id", imageIdsToRemove)
-          .then(({ error }) => {
-            if (error) {
-              throw new Error(error.message);
-            }
-          });
-
-        await supabase
-          .schema("insta_template")
-          .from("images")
-          .upsert(
-            post.images.map(({ id, url }, index) => ({
-              id,
-              url,
-              display_order: index,
-            })),
-          )
-          .then(({ error }) => {
-            if (error) {
-              throw new Error(error.message);
-            }
-          });
-      }),
+          await supabase
+            .schema("insta_template")
+            .from("images")
+            .upsert(
+              images.map(({ id, url }, index) => ({
+                id,
+                url,
+                display_order: index,
+              })),
+            )
+            .then(({ error }) => {
+              if (error) {
+                throw new Error(error.message);
+              }
+            });
+        },
+      ),
     );
   }
 
@@ -561,8 +579,24 @@ export const getInstaTemplate = async (templateCode: string) => {
   const validationResult = instaTemplateResponseSchema.safeParse(responseData);
 
   if (!validationResult.success) {
-    throw new Error("Invalid response data");
+    throw new Error(JSON.stringify(validationResult.error));
   }
+
+  validationResult.data.posts.sort((a, b) => a.display_order - b.display_order);
+  validationResult.data.posts.forEach(post => {
+    post.images.sort((a, b) => a.display_order - b.display_order);
+  });
+
+  validationResult.data.stories.sort(
+    (a, b) => a.display_order - b.display_order,
+  );
+  validationResult.data.stories.forEach(story => {
+    story.images.sort((a, b) => a.display_order - b.display_order);
+  });
+
+  validationResult.data.wedding_hall.images.sort(
+    (a, b) => a.display_order - b.display_order,
+  );
 
   return validationResult.data;
 };

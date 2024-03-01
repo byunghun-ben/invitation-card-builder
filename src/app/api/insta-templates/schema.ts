@@ -24,6 +24,7 @@ const updateStoriesSchema = z.array(
   z.object({
     id: z.string(),
     title: z.string(),
+    display_order: z.number(),
     images: z.array(
       z.object({
         id: z.string(),
@@ -39,6 +40,7 @@ const updatePostsSchema = z.array(
     id: z.string(),
     title: z.string(),
     content: z.string(),
+    display_order: z.number(),
     images: z.array(
       z.object({
         id: z.string(),
@@ -60,6 +62,7 @@ export type UpdateMetadata = z.infer<typeof updateMetadataSchema>;
 export type UpdateWeddingHall = z.infer<typeof updateWeddingHallSchema>;
 export type UpdateStories = z.infer<typeof updateStoriesSchema>;
 export type UpdatePosts = z.infer<typeof updatePostsSchema>;
+export type UpdateRequest = z.infer<typeof updateRequestSchema>;
 
 // get
 const getInstaImageSchema = z.object({
@@ -73,6 +76,7 @@ const getInstaStorySchema = z.object({
   template_id: z.string(),
   title: z.string(),
   images: z.array(getInstaImageSchema),
+  display_order: z.number(),
 });
 
 const getWeddingHallSchema = z.object({
@@ -98,6 +102,7 @@ const getInstaPostSchema = z.object({
   images: z.array(getInstaImageSchema),
   likes: z.number(),
   comments: z.array(getInstaCommentSchema),
+  display_order: z.number(),
 });
 
 const getInstaMetadataSchema = z.object({

@@ -21,6 +21,8 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
         comments: [],
         likes: 0,
         template_id: templateId,
+        display_order:
+          Math.max(...posts.map(post => post.display_order), 0) + 1,
       },
     ]);
   }, [templateId, setPosts]);

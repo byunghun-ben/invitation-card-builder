@@ -8,6 +8,7 @@ import {
 } from "@/schemas/instagram";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
+import { updateTemplate } from "../action";
 
 type Props = {
   templateId: string;
@@ -38,13 +39,7 @@ const SubmitButton = ({
 
     console.log("data", data);
 
-    await fetch(`/api/insta-templates/${templateCode}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    await updateTemplate(templateCode, data);
 
     alert("저장되었습니다.");
   }, [metadata, stories, posts, weddingHall, pathname]);

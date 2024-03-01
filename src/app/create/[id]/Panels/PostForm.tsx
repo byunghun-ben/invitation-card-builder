@@ -62,7 +62,8 @@ const PostForm = ({
 
       const newImages = [...post.images, uploadImage].map((image, index) => ({
         ...image,
-        display_order: index,
+        display_order:
+          Math.max(...post.images.map(i => i.display_order), 0) + 1,
       }));
 
       onChangeImages(post.id, newImages);
