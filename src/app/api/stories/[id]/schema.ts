@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const GetStorySchema = z.object({
+export const StoryResponseSchema = z.object({
   id: z.string(),
   template_id: z.string(),
   title: z.string(),

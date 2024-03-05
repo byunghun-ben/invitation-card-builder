@@ -24,7 +24,6 @@ const Page = async (props: PageProps) => {
 
     return <InnerPage defaultValue={data} />;
   } catch (error) {
-    console.log("error", error);
     return (
       <div>
         <h1>InstaTemplate</h1>

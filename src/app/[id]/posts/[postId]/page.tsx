@@ -33,11 +33,18 @@ export async function generateMetadata(
   }
 
   const body = await res.json();
-  const instaTemplateMetadata = instaMetadataSchema.parse(body);
+  const instaTemplateMetadata = instaMetadataSchema.safeParse(body);
+
+  if (!instaTemplateMetadata.success) {
+    return {
+      title: "결혼식 청첩장",
+      description: "결혼식에 초대합니다.",
+    };
+  }
 
   return {
-    title: instaTemplateMetadata.title,
-    description: instaTemplateMetadata.description,
+    title: instaTemplateMetadata.data.title,
+    description: instaTemplateMetadata.data.description,
   };
 }
 

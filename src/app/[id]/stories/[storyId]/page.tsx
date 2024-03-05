@@ -1,8 +1,8 @@
+import { StoryResponseSchema } from "@/app/api/stories/[id]/schema";
 import { instaMetadataSchema } from "@/schemas/instagram";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
 import InstaStories from "./InstaStories";
-import { GetStorySchema } from "@/app/api/stories/[id]/schema";
 
 type MetadataProps = {
   params: { id: string };
@@ -28,11 +28,18 @@ export async function generateMetadata(
   }
 
   const body = await res.json();
-  const instaTemplateMetadata = instaMetadataSchema.parse(body);
+  const instaTemplateMetadata = instaMetadataSchema.safeParse(body);
+
+  if (!instaTemplateMetadata.success) {
+    return {
+      title: "결혼식 청첩장",
+      description: "결혼식에 초대합니다.",
+    };
+  }
 
   return {
-    title: instaTemplateMetadata.title,
-    description: instaTemplateMetadata.description,
+    title: instaTemplateMetadata.data.title,
+    description: instaTemplateMetadata.data.description,
   };
 }
 
@@ -59,7 +66,7 @@ const StoriesPage = async ({ params, searchParams }: Props) => {
   }
 
   const body = await res.json();
-  const story = GetStorySchema.parse(body);
+  const story = StoryResponseSchema.parse(body);
 
   return (
     <InstaStories

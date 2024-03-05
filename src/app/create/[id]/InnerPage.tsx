@@ -2,7 +2,8 @@
 
 import { type InstaTemplate, type InstaWeddingHall } from "@/schemas/instagram";
 import { Tab } from "@headlessui/react";
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { logout } from "../action";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
 import StoryPanel from "./Panels/StoryPanel";
@@ -76,13 +77,21 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               </Tab>
             </Tab.List>
 
-            <div className="px-4 flex flex-col">
+            <div className="px-4 flex flex-col gap-2">
               <SubmitButton
                 meta={metadata}
                 posts={posts}
                 stories={stories}
                 weddingHall={weddingHall}
               />
+              <button
+                onClick={() => {
+                  logout();
+                }}
+                className="text-sm text-slate-700 self-center"
+              >
+                로그아웃
+              </button>
             </div>
           </div>
         </section>

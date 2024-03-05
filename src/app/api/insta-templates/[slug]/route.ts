@@ -1,4 +1,3 @@
-import { instaTemplateSchema } from "@/schemas/instagram";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -68,14 +67,5 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }
 
-  const parsedData = instaTemplateSchema.safeParse(data);
-
-  if (!parsedData.success) {
-    console.log(data);
-    return NextResponse.json({ message: "Not Found" }, { status: 404 });
-  }
-
-  return NextResponse.json({
-    ...parsedData.data,
-  });
+  return NextResponse.json(data);
 };
