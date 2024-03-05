@@ -1,6 +1,6 @@
-import { instaTemplateSchema } from "@/schemas/instagram";
-import InnerPage from "./InnerPage";
+import { instaTemplateResponseSchema } from "@/app/api/insta-templates/schema";
 import { headers } from "next/headers";
+import InnerPage from "./InnerPage";
 
 type PageProps = {
   params: {
@@ -24,7 +24,7 @@ const Page = async (props: PageProps) => {
     });
 
     const body = await res.json();
-    const template = instaTemplateSchema.parse(body);
+    const template = instaTemplateResponseSchema.parse(body);
 
     console.log("data revalidate");
 

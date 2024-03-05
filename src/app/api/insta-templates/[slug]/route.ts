@@ -1,44 +1,70 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  getInstaTemplate,
+  updateMetadata,
+  updatePosts,
+  updateStories,
+  updateWeddingHall,
+} from "../action";
+import { updateRequestSchema } from "../schema";
 
 export const GET = async (request: NextRequest) => {
   const pathname = request.nextUrl.pathname;
   const templateCode = pathname.split("/").pop() || "";
 
-  const cookieStore = cookies();
+  try {
+    const data = await getInstaTemplate(templateCode);
 
-  const supabase = createClient(cookieStore);
+    return NextResponse.json(data);
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
 
-  const { error, data } = await supabase
-    .schema("insta_template")
-    .from("template")
-    .select(
-      `
-        *,
-        metadata (*),
-        posts (
-          *,
-          images (*),
-          comments (*)
-        ),
-        stories (
-          *,
-          images (*)
-        ),
-        wedding_hall (
-          *,
-          images (*)
-        )
-      `,
-    )
-    .eq("code", templateCode)
-    .single();
+    return NextResponse.json({ message: "Unknown Error" }, { status: 500 });
+  }
+};
 
-  if (error) {
-    console.log("error", error);
+export const PATCH = async (request: NextRequest) => {
+  const pathname = request.nextUrl.pathname;
+  const templateCode = pathname.split("/").pop() || "";
+
+  if (!templateCode || templateCode === ":slug") {
     return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }
 
-  return NextResponse.json(data);
+  const template = await getInstaTemplate(templateCode);
+
+  // TODO: template.userId === request.userId
+
+  const body = await request.json();
+
+  const validationResult = updateRequestSchema.safeParse(body);
+
+  if (!validationResult.success) {
+    return NextResponse.json(
+      { message: JSON.stringify(validationResult.error) },
+      { status: 400 },
+    );
+  }
+
+  const updateData = validationResult.data;
+
+  if (updateData.stories) {
+    await updateStories(template.id, updateData.stories);
+  }
+
+  if (updateData.posts) {
+    await updatePosts(template.id, updateData.posts);
+  }
+
+  if (updateData.metadata) {
+    await updateMetadata(template.id, updateData.metadata);
+  }
+
+  if (updateData.weddingHall) {
+    await updateWeddingHall(template.id, updateData.weddingHall);
+  }
+
+  return NextResponse.json({ message: "OK" });
 };

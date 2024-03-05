@@ -2,7 +2,7 @@
 
 import { type InstaTemplate, type InstaWeddingHall } from "@/schemas/instagram";
 import { Tab } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "../action";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
@@ -20,18 +20,31 @@ const InnerPage = ({ template }: InnerPageProps) => {
     template.metadata,
   );
 
+  useEffect(() => {
+    setMetadata(template.metadata);
+  }, [template.metadata]);
+
   const [stories, setStories] = useState<InstaTemplate["stories"]>(
     template.stories,
   );
 
+  useEffect(() => {
+    setStories(template.stories);
+  }, [template.stories]);
+
   const [posts, setPosts] = useState<InstaTemplate["posts"]>(template.posts);
 
-  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
-    ...template.wedding_hall,
-    images: template.wedding_hall.images.sort(
-      (a, b) => a.display_order - b.display_order,
-    ),
-  });
+  useEffect(() => {
+    setPosts(template.posts);
+  }, [template.posts]);
+
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
+    template.wedding_hall,
+  );
+
+  useEffect(() => {
+    setWeddingHall(template.wedding_hall);
+  }, [template.wedding_hall]);
 
   return (
     <div className="flex h-screen">
@@ -80,6 +93,7 @@ const InnerPage = ({ template }: InnerPageProps) => {
             <div className="px-4 flex flex-col gap-2">
               <SubmitButton
                 templateId={template.id}
+                templateCode={template.code}
                 metadata={metadata}
                 posts={posts}
                 stories={stories}
