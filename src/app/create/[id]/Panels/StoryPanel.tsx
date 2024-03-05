@@ -6,11 +6,12 @@ import { Dispatch, SetStateAction, useCallback } from "react";
 import StoryForm from "./StoryForm";
 
 type Props = {
+  templateId: string;
   stories: InstaStory[];
   setStories: Dispatch<SetStateAction<InstaStory[]>>;
 };
 
-const StoryPanel = ({ stories, setStories }: Props) => {
+const StoryPanel = ({ templateId, stories, setStories }: Props) => {
   const addStory = useCallback(() => {
     setStories(stories => [
       ...stories,
@@ -18,9 +19,10 @@ const StoryPanel = ({ stories, setStories }: Props) => {
         id: uid(10, "story-id"),
         title: "",
         images: [],
+        template_id: templateId,
       },
     ]);
-  }, [setStories]);
+  }, [templateId, setStories]);
 
   const onRemoveStory = useCallback(
     (storyId: string) => {

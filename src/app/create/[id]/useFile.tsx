@@ -119,7 +119,7 @@ type UseProcessMultipleImages = {
 };
 
 export const useProcessMultipleImages = ({
-  onProcessImages,
+  onProcessImages, // TODO: onProcessImages 보다는 afterProcessImages 같은 이름이 더 좋을 것 같다.
 }: UseProcessMultipleImages) => {
   const handleChangeFileInputMultiple = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {

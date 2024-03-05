@@ -2,10 +2,17 @@
 
 import { InstaWeddingHall } from "@/schemas/instagram";
 import Image from "next/image";
-import { uid } from "radash";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useProcessMultipleImages } from "../useFile";
 import LocalSearchModal from "./LocalSearchModal";
+import { insertImages, uploadFiles } from "./helpers";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -14,6 +21,7 @@ type Props = {
 
 const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
   const imageRef = useRef<HTMLInputElement>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const handleChangeContent = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -29,30 +37,51 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
     imageRef.current?.click();
   }, []);
 
-  const handleProcessImages = useCallback(
-    (blobs: Blob[]) => {
-      const newImages = blobs.map(blob => {
-        const id = uid(10, "image-id");
-        const url = URL.createObjectURL(blob);
-
-        return {
-          id,
-          url,
-        };
+  const handleAfterProcessImages = useCallback(
+    async (blobs: Blob[]) => {
+      // convert blob to file
+      const files = blobs.map((blob, index) => {
+        const fileName = `${Date.now()}-${index}`;
+        return new File([blob], fileName, { type: blob.type });
       });
 
-      setWeddingHall(prev => ({
-        ...prev,
-        images: [...prev.images, ...newImages],
-      }));
+      // upload to supabase storage
+      const uploadRes = await uploadFiles(files);
 
-      // onChangeImages(newImages);
+      if (!uploadRes) {
+        alert("이미지 업로드에 실패했습니다");
+        setIsImageUploading(false);
+        return;
+      }
+
+      // insert to images table
+      const newImages = await insertImages(uploadRes);
+
+      if (!newImages) {
+        alert("이미지 업로드에 실패했습니다");
+        setIsImageUploading(false);
+        return;
+      }
+
+      setWeddingHall(prev => {
+        // update display_order
+        const images = [...prev.images, ...newImages].map((image, index) => ({
+          ...image,
+          display_order: index,
+        }));
+
+        return {
+          ...prev,
+          images,
+        };
+      });
+      setIsImageUploading(false);
     },
     [setWeddingHall],
   );
 
   const { handleChangeFileInputMultiple } = useProcessMultipleImages({
-    onProcessImages: handleProcessImages,
+    onProcessImages: handleAfterProcessImages,
   });
 
   const handleRemoveImage = useCallback(
@@ -82,6 +111,10 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
     },
     [setWeddingHall],
   );
+
+  const sortedImages = useMemo(() => {
+    return weddingHall.images.sort((a, b) => a.display_order - b.display_order);
+  }, [weddingHall.images]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -128,7 +161,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
           {weddingHall.images.length > 0 && (
             <div className="flex gap-2 flex-wrap p-2 border border-slate-400 rounded">
               {/* Image */}
-              {weddingHall.images.map(image => (
+              {sortedImages.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
                   <Image
                     src={image.url}
@@ -152,10 +185,13 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
 
           <button
             type="button"
-            className="p-2 border rounded hover:bg-slate-50"
+            className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50"
             onClick={handleImageClick}
+            disabled={isImageUploading}
           >
-            <span className="text-sm font-bold">사진 추가</span>
+            <span className="text-sm font-bold">
+              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
+            </span>
           </button>
           <input
             type="file"
@@ -164,7 +200,10 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
             className="hidden"
             accept="image/*"
             ref={imageRef}
-            onChange={handleChangeFileInputMultiple}
+            onChange={e => {
+              setIsImageUploading(true);
+              handleChangeFileInputMultiple(e);
+            }}
             multiple
           />
         </div>

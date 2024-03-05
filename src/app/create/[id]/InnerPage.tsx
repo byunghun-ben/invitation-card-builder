@@ -12,26 +12,26 @@ import PreviewSection from "./PreviewSection/PreviewSection";
 import SubmitButton from "./SubmitButton";
 
 type InnerPageProps = {
-  defaultValue: InstaTemplate;
+  template: InstaTemplate;
 };
 
-const InnerPage = ({ defaultValue }: InnerPageProps) => {
+const InnerPage = ({ template }: InnerPageProps) => {
   const [metadata, setMetadata] = useState<InstaTemplate["metadata"]>(
-    defaultValue.metadata,
+    template.metadata,
   );
 
   const [stories, setStories] = useState<InstaTemplate["stories"]>(
-    defaultValue.stories,
+    template.stories,
   );
 
-  const [posts, setPosts] = useState<InstaTemplate["posts"]>(
-    defaultValue.posts,
-  );
+  const [posts, setPosts] = useState<InstaTemplate["posts"]>(template.posts);
 
-  // WEDDING HALL
-  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>(
-    defaultValue.wedding_hall,
-  );
+  const [weddingHall, setWeddingHall] = useState<InstaWeddingHall>({
+    ...template.wedding_hall,
+    images: template.wedding_hall.images.sort(
+      (a, b) => a.display_order - b.display_order,
+    ),
+  });
 
   return (
     <div className="flex h-screen">
@@ -79,7 +79,8 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
 
             <div className="px-4 flex flex-col gap-2">
               <SubmitButton
-                meta={metadata}
+                templateId={template.id}
+                metadata={metadata}
                 posts={posts}
                 stories={stories}
                 weddingHall={weddingHall}
@@ -101,10 +102,18 @@ const InnerPage = ({ defaultValue }: InnerPageProps) => {
               <MetadataPanel metadata={metadata} setMetadata={setMetadata} />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
-              <StoryPanel stories={stories} setStories={setStories} />
+              <StoryPanel
+                templateId={template.id}
+                stories={stories}
+                setStories={setStories}
+              />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
-              <PostPanel posts={posts} setPosts={setPosts} />
+              <PostPanel
+                templateId={template.id}
+                posts={posts}
+                setPosts={setPosts}
+              />
             </Tab.Panel>
             <Tab.Panel className="flex-1 flex flex-col p-10">
               <WeddingHallPanel

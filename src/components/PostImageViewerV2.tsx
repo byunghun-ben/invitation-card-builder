@@ -2,7 +2,6 @@
 
 import { InstaImage } from "@/schemas/instagram";
 import Image from "next/image";
-import { debounce } from "radash";
 import { MouseEvent, useCallback, useMemo, useRef, useState } from "react";
 
 type Props = {
@@ -12,27 +11,9 @@ type Props = {
 const PostImageViewerV2 = ({ images }: Props) => {
   const imageContainerRef = useRef<HTMLUListElement>(null);
 
-  const [targetIndex, setTargetIndex] = useState(0);
-
-  const handlePrev = useCallback(() => {
-    const isLastIndex = targetIndex === 0;
-
-    if (isLastIndex) {
-      return;
-    }
-
-    setTargetIndex(prev => prev - 1);
-  }, [targetIndex]);
-
-  const handleNext = useCallback(() => {
-    const isLastIndex = targetIndex === images.length - 1;
-
-    if (isLastIndex) {
-      return;
-    }
-
-    setTargetIndex(prev => prev + 1);
-  }, [images.length, targetIndex]);
+  const sortedImages = useMemo(() => {
+    return images.sort((a, b) => a.display_order - b.display_order);
+  }, [images]);
 
   // MouseDrag Scroll
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -91,7 +72,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
           >
-            {images.map(image => (
+            {sortedImages.map(image => (
               <li
                 key={image.id}
                 className="relative flex-none h-full w-full snap-start"
@@ -103,6 +84,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
                   fill
                   sizes="573px"
                   draggable={true}
+                  priority
                 />
               </li>
             ))}

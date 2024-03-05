@@ -4,11 +4,12 @@ import PostForm from "./PostForm";
 import { uid } from "radash";
 
 type Props = {
+  templateId: string;
   posts: InstaPost[];
   setPosts: Dispatch<SetStateAction<InstaPost[]>>;
 };
 
-const PostPanel = ({ posts, setPosts }: Props) => {
+const PostPanel = ({ templateId, posts, setPosts }: Props) => {
   const addPost = useCallback(() => {
     setPosts(posts => [
       ...posts,
@@ -19,9 +20,10 @@ const PostPanel = ({ posts, setPosts }: Props) => {
         images: [],
         comments: [],
         likes: 0,
+        template_id: templateId,
       },
     ]);
-  }, [setPosts]);
+  }, [templateId, setPosts]);
 
   const onRemovePost = useCallback(
     (postId: string) => {

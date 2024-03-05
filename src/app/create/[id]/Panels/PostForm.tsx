@@ -1,9 +1,9 @@
 "use client";
 
-import { InstaImage, InstaPost } from "@/schemas/instagram";
+import { InstaImage, InstaPost, instaImageSchema } from "@/schemas/instagram";
 import { ChangeEvent, useCallback, useRef } from "react";
 import { useProcessImage } from "../useFile";
-import { uid } from "radash";
+import { createClient } from "@/utils/supabase/client";
 
 type Props = {
   index: number;
@@ -33,16 +33,38 @@ const PostForm = ({
   }, [post.id]);
 
   const handleChangeImage = useCallback(
-    (blob: Blob) => {
-      const id = uid(10, "image-id");
-      const url = URL.createObjectURL(blob);
-      const newImages = [
-        ...post.images,
-        {
-          id,
-          url,
-        },
-      ];
+    async (blob: Blob) => {
+      const fileName = `${Date.now()}`;
+      const file = new File([blob], fileName, { type: blob.type });
+
+      // https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images/1708965807062?t=2024-02-27T11%3A21%3A15.478Z
+      const supabase = createClient();
+      await supabase.storage.from("images").upload(fileName, file);
+
+      const BASE_URL =
+        "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images";
+
+      const uploadImage = await supabase
+        .schema("insta_template")
+        .from("images")
+        .insert({
+          url: `${BASE_URL}/${fileName}`,
+        })
+        .select("*")
+        .single()
+        .then(({ data, error }) => {
+          if (error) {
+            throw new Error(error.message);
+          }
+
+          return instaImageSchema.parse(data);
+        });
+
+      const newImages = [...post.images, uploadImage].map((image, index) => ({
+        ...image,
+        display_order: index,
+      }));
+
       onChangeImages(post.id, newImages);
     },
     [post.id, post.images, onChangeImages],
