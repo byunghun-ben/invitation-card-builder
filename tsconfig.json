@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "incremental": true, // 증분 컴파일: 변경된 파일만 컴파일
     "plugins": [
       {
         "name": "next"
