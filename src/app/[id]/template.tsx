@@ -2,7 +2,7 @@
 
 import useFullHeight from "@/hooks/useFullHeight";
 import { ReactNode, useRef } from "react";
-import { ContainerWidthProvider } from "./ContainerWidthContext/ContainerWidthContext";
+import { ContainerWidthProvider } from "./model/ContainerWidthContext/ContainerWidthContext";
 
 const InstaViewTemplate = (props: { children: ReactNode }) => {
   const templateRef = useRef<HTMLDivElement>(null);

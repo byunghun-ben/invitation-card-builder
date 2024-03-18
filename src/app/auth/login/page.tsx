@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Link from "next/link";
-import { login } from "../actions";
+import { login } from "../action";
 
 const Page = () => {
   return (

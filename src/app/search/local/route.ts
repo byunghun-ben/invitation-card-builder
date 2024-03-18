@@ -1,15 +1,9 @@
-import KakaoMapSchema from "@/schemas/kakaoMap";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { getLocalSearchResponseSchema } from "../schema";
 
 const KAKAO_API_KEY = process.env.KAKAO_API_KEY;
 
 const BASE_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
-
-const responseDataSchema = z.object({
-  documents: KakaoMapSchema.LocalSearchKeywordDocument.array(),
-  meta: KakaoMapSchema.LocalSearchKeywordMeta,
-});
 
 const GET = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
@@ -35,7 +29,7 @@ const GET = async (req: NextRequest) => {
 
   const data = await response.json();
 
-  const parsedData = responseDataSchema.parse(data);
+  const parsedData = getLocalSearchResponseSchema.parse(data);
 
   return NextResponse.json({ message: "검색 성공", ...parsedData });
 };

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const LocalSearchKeywordDocument = z.object({
+const localSearchKeywordDocument = z.object({
   address_name: z.string(),
   category_group_code: z.string(),
   category_group_name: z.string(),
@@ -15,7 +15,7 @@ const LocalSearchKeywordDocument = z.object({
   y: z.string(),
 });
 
-const LocalSearchKeywordMeta = z.object({
+const localSearchKeywordMeta = z.object({
   is_end: z.boolean(),
   pageable_count: z.number(),
   same_name: z.object({
@@ -26,14 +26,21 @@ const LocalSearchKeywordMeta = z.object({
   total_count: z.number(),
 });
 
+const searchLocalByKeywordSchema = z.object({
+  message: z.string(),
+  documents: localSearchKeywordDocument.array(),
+  meta: localSearchKeywordMeta,
+});
+
 const KakaoMapSchema = {
-  LocalSearchKeywordDocument,
-  LocalSearchKeywordMeta,
+  localSearchKeywordDocument,
+  localSearchKeywordMeta,
+  searchLocalByKeywordSchema,
 };
 
 export type LocalSearchKeywordDocumentType = z.infer<
-  typeof LocalSearchKeywordDocument
+  typeof localSearchKeywordDocument
 >;
-export type LocalSearchKeywordMetaType = z.infer<typeof LocalSearchKeywordMeta>;
+export type LocalSearchKeywordMetaType = z.infer<typeof localSearchKeywordMeta>;
 
 export default KakaoMapSchema;

@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "../actions";
+import { signUp } from "../action";
 
 const SignupForm = () => {
   const handleAction = async (formData: FormData) => {

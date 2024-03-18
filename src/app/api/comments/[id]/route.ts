@@ -1,6 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { deleteComment } from "./action";
+import { deleteCommentRequestSchema } from "./schema";
 
 export const PATCH = async (request: NextRequest) => {
   return NextResponse.json({ status: 501, body: "Not implemented" });
@@ -15,31 +15,28 @@ export const DELETE = async (request: NextRequest) => {
   const commentId = request.nextUrl.pathname.split("/").pop();
   const password = request.nextUrl.searchParams.get("password") || "";
 
-  if (!commentId || commentId === ":id") {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
-  }
+  const deleteCommentRequestParseReturn = deleteCommentRequestSchema.safeParse({
+    id: commentId,
+    password,
+  });
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const { error, count } = await supabase
-    .schema("insta_template")
-    .from("comments")
-    .delete({ count: "exact" })
-    .eq("id", commentId)
-    .eq("password", password);
-
-  if (error) {
+  if (!deleteCommentRequestParseReturn.success) {
     return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
+      { message: "잘못된 요청입니다." },
+      { status: 400 },
     );
   }
 
-  if (count === 0) {
-    // 비밀번호가 틀렸을 때
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
+  try {
+    const count = await deleteComment(deleteCommentRequestParseReturn.data);
 
-  return NextResponse.json({ message: "Deleted" }, { status: 200 });
+    if (count === 0) {
+      // 비밀번호가 틀렸을 때
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    return NextResponse.json({ message: "삭제되었습니다." }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 });
+  }
 };

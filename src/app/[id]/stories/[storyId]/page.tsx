@@ -1,5 +1,4 @@
-import { StoryResponseSchema } from "@/app/api/stories/[id]/schema";
-import { instaMetadataSchema } from "@/schemas/instagram";
+import { instaMetadataSchema, instaStorySchema } from "@/schemas/instaTemplate";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
 import InstaStories from "./InstaStories";
@@ -66,7 +65,7 @@ const StoriesPage = async ({ params, searchParams }: Props) => {
   }
 
   const body = await res.json();
-  const story = StoryResponseSchema.parse(body);
+  const story = instaStorySchema.parse(body);
 
   return (
     <InstaStories

@@ -8,11 +8,7 @@ type Props = {
 };
 
 const InstaViewLayout = ({ children, params }: Props) => {
-  return (
-    <div data-component="InstaViewLayout" className="w-full max-w-lg mx-auto">
-      {children}
-    </div>
-  );
+  return <div className="w-full max-w-lg mx-auto">{children}</div>;
 };
 
 export default InstaViewLayout;

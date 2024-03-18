@@ -1,7 +1,7 @@
 "use client";
 
 import MenuIcon from "@/foundation/icons/MenuIcon";
-import { InstaComment } from "@/schemas/instagram";
+import { InstaComment } from "@/schemas/instaTemplate";
 import { Dialog, Menu } from "@headlessui/react";
 import { useState } from "react";
 import { deleteComment } from "./actions";
