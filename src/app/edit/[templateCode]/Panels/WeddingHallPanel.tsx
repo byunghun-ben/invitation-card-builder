@@ -1,11 +1,18 @@
 "use client";
 
-import { InstaWeddingHall } from "@/schemas/instaTemplate";
+import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
-import { useProcessMultipleImages } from "../useFile";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
+import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
-import { insertImages, uploadFiles } from "./helpers";
+import { max } from "radash";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -30,53 +37,38 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
     imageRef.current?.click();
   }, []);
 
-  const handleAfterProcessImages = useCallback(
-    async (blobs: Blob[]) => {
-      // convert blob to file
-      const files = blobs.map((blob, index) => {
-        const fileName = `${Date.now()}-${index}`;
-        return new File([blob], fileName, { type: blob.type });
-      });
+  const handleChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.target.files?.[0];
+      e.target.value = "";
 
-      // upload to supabase storage
-      const uploadRes = await uploadFiles(files);
-
-      if (!uploadRes) {
-        alert("이미지 업로드에 실패했습니다");
-        setIsImageUploading(false);
+      if (!file) {
         return;
       }
 
-      // insert to images table
-      const newImages = await insertImages(uploadRes);
+      const compressedFile = await compressImage(file);
+      const newImage = await uploadImageFile(compressedFile);
+      const newImageDisplayOrder =
+        max(weddingHall.images.map(i => i.displayOrder)) ?? 0 + 1;
 
-      if (!newImages) {
-        alert("이미지 업로드에 실패했습니다");
-        setIsImageUploading(false);
-        return;
-      }
+      const newImages: InstaImage[] = [
+        ...weddingHall.images,
+        {
+          ...newImage,
+          displayOrder: newImageDisplayOrder,
+        },
+      ];
 
-      setWeddingHall(prev => {
-        // update display_order
-        const images = [...prev.images, ...newImages].map(image => ({
-          ...image,
-          displayOrder:
-            Math.max(...prev.images.map(i => i.displayOrder), 0) + 1,
-        }));
-
-        return {
-          ...prev,
-          images,
-        };
-      });
+      setWeddingHall(prev => ({
+        ...prev,
+        images: newImages,
+      }));
+    } catch (error) {
+      console.error("error", error);
+    } finally {
       setIsImageUploading(false);
-    },
-    [setWeddingHall],
-  );
-
-  const { handleChangeFileInputMultiple } = useProcessMultipleImages({
-    onProcessImages: handleAfterProcessImages,
-  });
+    }
+  };
 
   const handleRemoveImage = useCallback(
     (id: string) => () => {
@@ -192,9 +184,8 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
             ref={imageRef}
             onChange={e => {
               setIsImageUploading(true);
-              handleChangeFileInputMultiple(e);
+              handleChangeFileInput(e);
             }}
-            multiple
           />
         </div>
 

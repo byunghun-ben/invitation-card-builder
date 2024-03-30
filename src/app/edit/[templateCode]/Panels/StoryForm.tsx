@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  InstaImage,
-  InstaStory,
-  instaImageSchema,
-} from "@/schemas/instaTemplate";
-import { ChangeEvent, useCallback, useRef } from "react";
+import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { compressImage, uploadImageFile } from "../../helpers";
+import { max } from "radash";
 
 type Props = {
   index: number;
@@ -28,6 +25,7 @@ const StoryForm = ({
   const isImageEmpty = story.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const handleRemove = useCallback(() => {
     onRemove(story.id);
@@ -45,26 +43,34 @@ const StoryForm = ({
   const handleChangeFileInput = async (
     event: ChangeEvent<HTMLInputElement>,
   ) => {
-    const file = event.target.files?.[0];
-    event.target.value = "";
+    try {
+      const file = event.target.files?.[0];
+      event.target.value = "";
 
-    if (!file) {
-      return;
+      if (!file) {
+        return;
+      }
+
+      const compressedFile = await compressImage(file);
+
+      const newImage = await uploadImageFile(compressedFile);
+      const newImageDisplayOrder =
+        max(story.images.map(i => i.displayOrder)) ?? 0 + 1;
+
+      const newImages: InstaImage[] = [
+        ...story.images,
+        {
+          ...newImage,
+          displayOrder: newImageDisplayOrder,
+        },
+      ];
+
+      onChangeImages(story.id, newImages);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsImageUploading(false);
     }
-
-    const compressedFile = await compressImage(file);
-
-    const newImage = await uploadImageFile(compressedFile);
-
-    const newImages: InstaImage[] = [
-      ...story.images,
-      {
-        ...newImage,
-        displayOrder: Math.max(...story.images.map(i => i.displayOrder), 0) + 1,
-      },
-    ];
-
-    onChangeImages(story.id, newImages);
   };
 
   return (
@@ -129,14 +135,19 @@ const StoryForm = ({
             className="border border-slate-400 rounded py-1"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="text-sm">사진 추가</span>
+            <span className="text-sm">
+              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
+            </span>
           </button>
           <input
             type="file"
             className="hidden"
             ref={fileInputRef}
             accept="image/jpeg, image/png, image/webp"
-            onChange={handleChangeFileInput}
+            onChange={event => {
+              setIsImageUploading(true);
+              handleChangeFileInput(event);
+            }}
           />
         </div>
       </div>

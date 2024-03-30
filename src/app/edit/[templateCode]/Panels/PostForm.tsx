@@ -1,8 +1,9 @@
 "use client";
 
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
-import { ChangeEvent, useCallback, useRef } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { compressImage, uploadImageFile } from "../../helpers";
+import { max } from "radash";
 
 type Props = {
   index: number;
@@ -26,28 +27,40 @@ const PostForm = ({
   const isImageEmpty = post.images.length === 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const handleRemove = useCallback(() => {
     onRemove(post.id);
   }, [post.id]);
 
   const handleChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
+    try {
+      const file = e.target.files?.[0];
+      e.target.value = "";
 
-    if (!file) {
-      return;
+      if (!file) {
+        return;
+      }
+
+      const compressedFile = await compressImage(file);
+      const newImageDisplayOrder =
+        max(post.images.map(i => i.displayOrder)) ?? 0 + 1;
+      const newImage = await uploadImageFile(compressedFile);
+
+      const newImages: InstaImage[] = [
+        ...post.images,
+        {
+          ...newImage,
+          displayOrder: newImageDisplayOrder,
+        },
+      ];
+
+      onChangeImages(post.id, newImages);
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setIsImageUploading(false);
     }
-
-    const compressedFile = await compressImage(file);
-    const newImage = await uploadImageFile(compressedFile);
-
-    const newImages: InstaImage[] = [...post.images, newImage].map(image => ({
-      ...image,
-      displayOrder: Math.max(...post.images.map(i => i.displayOrder), 0) + 1,
-    }));
-
-    onChangeImages(post.id, newImages);
   };
 
   const removeImage = useCallback(
@@ -134,14 +147,19 @@ const PostForm = ({
             className="border border-slate-400 rounded py-2"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="text-sm">사진 또는 영상 추가</span>
+            <span className="text-sm">
+              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
+            </span>
           </button>
           <input
             type="file"
             className="hidden"
             ref={fileInputRef}
             accept="image/jpeg, image/png, image/webp"
-            onChange={handleChangeFileInput}
+            onChange={event => {
+              setIsImageUploading(true);
+              handleChangeFileInput(event);
+            }}
           />
 
           <textarea
@@ -149,10 +167,6 @@ const PostForm = ({
             placeholder="본문을 입력하세요."
             value={post.content}
             onChange={handleChangeContent}
-            // onKeyUp={e => {
-            //   e.currentTarget.style.height = "auto";
-            //   e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-            // }}
           />
         </div>
       </div>

@@ -23,7 +23,10 @@ export const getInstaTemplateByCode = async (
 };
 
 export const searchLocalByKeyword = async (query: string) => {
-  const response = await fetch(`/search/local?query=${query}`);
+  const host = headers().get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const url = `${protocol}://${host}/api/search/local?query=${query}`;
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("검색에 실패했습니다.");

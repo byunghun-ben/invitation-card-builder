@@ -514,9 +514,9 @@ export const updateWeddingHall = async (
   }
 
   if (imagesToAdd.length > 0) {
-    const newImages = imagesToAdd.map(imageId => ({
+    const newImages = imagesToAdd.map(image => ({
       wedding_hall_id: weddingHallId,
-      image_id: imageId,
+      image_id: image.id,
     }));
 
     await supabase
