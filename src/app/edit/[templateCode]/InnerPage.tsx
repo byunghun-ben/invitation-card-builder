@@ -25,21 +25,18 @@ const InnerPage = ({ template }: InnerPageProps) => {
   const [metadata, setMetadata] = useState<InstaMetadata>(template.metadata);
 
   useEffect(() => {
-    console.log("update metadata", template.metadata);
     setMetadata(template.metadata);
   }, [template.metadata]);
 
   const [stories, setStories] = useState<InstaStory[]>(template.stories);
 
   useEffect(() => {
-    console.log("update stories", template.stories);
     setStories(template.stories);
   }, [template.stories]);
 
   const [posts, setPosts] = useState<InstaPost[]>(template.posts);
 
   useEffect(() => {
-    console.log("update posts", template.posts);
     setPosts(template.posts);
   }, [template.posts]);
 
@@ -48,7 +45,6 @@ const InnerPage = ({ template }: InnerPageProps) => {
   );
 
   useEffect(() => {
-    console.log("update weddingHall", template.weddingHall);
     setWeddingHall(template.weddingHall);
   }, [template.weddingHall]);
 
@@ -59,8 +55,6 @@ const InnerPage = ({ template }: InnerPageProps) => {
       posts,
       weddingHall,
     };
-
-    console.log("data", data);
 
     await updateTemplate(template.code, data);
 

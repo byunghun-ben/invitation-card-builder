@@ -126,8 +126,6 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
                           return;
                         }
 
-                        console.log({ name, address });
-
                         onSelect({
                           name,
                           address,

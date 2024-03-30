@@ -429,8 +429,6 @@ export const updateMetadata = async (
 ) => {
   const supabase = createClient();
 
-  console.log("updateData", updateData);
-
   const { error } = await supabase
     .schema("insta_template")
     .from("metadata")

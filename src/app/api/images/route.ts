@@ -6,10 +6,8 @@ const BASE_URL =
   "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images";
 
 export const POST = async (request: NextRequest) => {
-  console.log("API - POST /api/images");
   const formData = await request.formData();
 
-  console.log("formData", formData);
   const file = formData.get("file");
   const fileName = formData.get("fileName");
 
@@ -21,8 +19,6 @@ export const POST = async (request: NextRequest) => {
   const fileUploadRes = await supabase.storage
     .from("images")
     .upload(fileName as string, file);
-
-  console.log("fileUploadRes", fileUploadRes);
 
   if (fileUploadRes.error) {
     return NextResponse.json(
@@ -41,8 +37,6 @@ export const POST = async (request: NextRequest) => {
     .select(`*`)
     .single();
 
-  console.log("uploadTemplateImageRes", uploadTemplateImageRes);
-
   if (uploadTemplateImageRes.error) {
     return NextResponse.json(
       { message: uploadTemplateImageRes.error.message },
@@ -54,8 +48,6 @@ export const POST = async (request: NextRequest) => {
     ...uploadTemplateImageRes.data,
     displayOrder: uploadTemplateImageRes.data.display_order,
   });
-
-  console.log("instaImage", instaImage);
 
   return NextResponse.json(instaImage);
 };

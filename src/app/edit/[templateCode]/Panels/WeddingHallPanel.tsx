@@ -2,6 +2,7 @@
 
 import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
 import Image from "next/image";
+import { max } from "radash";
 import {
   ChangeEvent,
   Dispatch,
@@ -12,7 +13,6 @@ import {
 } from "react";
 import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
-import { max } from "radash";
 
 type Props = {
   weddingHall: InstaWeddingHall;
@@ -88,7 +88,6 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
 
   const handleSelectLocalSearch = useCallback(
     (result: { name: string; address: string }) => {
-      console.log("result", result);
       setWeddingHall(prev => ({
         ...prev,
         name: result.name,

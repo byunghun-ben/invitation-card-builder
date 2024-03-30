@@ -27,12 +27,9 @@ const InstaStories = ({ images, invitationId }: Props) => {
     }));
   }, [images]);
 
-  const handleStoryEnd = useCallback((index: number) => {
-    console.log("handleStoryEnd", index);
-  }, []);
+  const handleStoryEnd = useCallback((index: number) => {}, []);
 
   const handleAllStoriesEnd = useCallback((lastIndex: number) => {
-    console.log("handleAllStoriesEnd", lastIndex);
     const invitationDetailHref = `/${invitationId}`;
 
     router.push(invitationDetailHref);

@@ -42,7 +42,6 @@ const parseUpdateRequestBody = (responseBody: unknown): UpdateTemplateDto => {
 export const PATCH = async (request: NextRequest) => {
   const pathname = request.nextUrl.pathname;
   const templateCode = pathname.split("/").pop() || "";
-  console.log("templateCode", templateCode);
 
   if (!templateCode || templateCode === ":slug") {
     return NextResponse.json({ message: "Not Found" }, { status: 404 });
