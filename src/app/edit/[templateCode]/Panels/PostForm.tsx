@@ -2,8 +2,7 @@
 
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
 import { ChangeEvent, useCallback, useRef } from "react";
-import { uploadFile, uploadImage } from "../../action";
-import { useProcessImage } from "../useFile";
+import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
   index: number;
@@ -32,33 +31,24 @@ const PostForm = ({
     onRemove(post.id);
   }, [post.id]);
 
-  const handleChangeImage = useCallback(
-    async (blob: Blob) => {
-      const fileName = `${Date.now()}`;
-      const file = new File([blob], fileName, { type: blob.type });
+  const handleChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
 
-      const { path: filePath } = await uploadFile(file);
+    if (!file) {
+      return;
+    }
 
-      const newImage = await uploadImage({
-        path: filePath,
-      });
+    const compressedFile = await compressImage(file);
+    const newImage = await uploadImageFile(compressedFile);
 
-      const newImages: InstaImage[] = [...post.images, newImage].map(
-        (image, index) => ({
-          ...image,
-          displayOrder:
-            Math.max(...post.images.map(i => i.displayOrder), 0) + 1,
-        }),
-      );
+    const newImages: InstaImage[] = [...post.images, newImage].map(image => ({
+      ...image,
+      displayOrder: Math.max(...post.images.map(i => i.displayOrder), 0) + 1,
+    }));
 
-      onChangeImages(post.id, newImages);
-    },
-    [post.id, post.images, onChangeImages],
-  );
-
-  const { handleChangeFileInput } = useProcessImage({
-    onProcessImages: handleChangeImage,
-  });
+    onChangeImages(post.id, newImages);
+  };
 
   const removeImage = useCallback(
     (id: string) => () => {

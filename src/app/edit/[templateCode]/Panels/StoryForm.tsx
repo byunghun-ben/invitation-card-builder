@@ -6,7 +6,7 @@ import {
   instaImageSchema,
 } from "@/schemas/instaTemplate";
 import { ChangeEvent, useCallback, useRef } from "react";
-import { compressImage } from "../../helpers";
+import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
   index: number;
@@ -41,27 +41,6 @@ const StoryForm = ({
     },
     [story.images, story.id, onChangeImages],
   );
-
-  const uploadImageFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("fileName", file.name);
-
-    const res = await fetch("http://localhost:3000/api/images", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!res.ok) {
-      console.error("res", res);
-      throw new Error("Cannot upload image");
-    }
-
-    const resBody = await res.json();
-    const newImage = instaImageSchema.parse(resBody);
-
-    return newImage;
-  };
 
   const handleChangeFileInput = async (
     event: ChangeEvent<HTMLInputElement>,

@@ -1,3 +1,4 @@
+import { instaImageSchema } from "@/schemas/instaTemplate";
 import { uid } from "radash";
 
 export const readFileAsDataURL = (file: File): Promise<string> => {
@@ -84,4 +85,25 @@ export const compressImage = async (file: File): Promise<File> => {
   const compressedFile = new File([blob], fileName, { type: blob.type });
 
   return compressedFile;
+};
+
+export const uploadImageFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("fileName", file.name);
+
+  const res = await fetch("/api/images", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    console.error("res", res);
+    throw new Error("Cannot upload image");
+  }
+
+  const resBody = await res.json();
+  const newImage = instaImageSchema.parse(resBody);
+
+  return newImage;
 };
