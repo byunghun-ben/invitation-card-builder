@@ -1,7 +1,7 @@
 "use client";
 
 import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
-import { InstaWeddingHall } from "@/schemas/instagram";
+import { InstaWeddingHall } from "@/schemas/instaTemplate";
 import Image from "next/image";
 import Link from "next/link";
 import PostImageViewerV2 from "./PostImageViewerV2";

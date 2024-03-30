@@ -1,8 +1,7 @@
-import InstaHeader from "@/app/[id]/InstaHeader";
+import InstaHeader from "@/app/[id]/ui/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
-import { instaMetadataSchema, instaPostSchema } from "@/schemas/instagram";
 import { Metadata, ResolvingMetadata } from "next";
-import { headers } from "next/headers";
+import { getInstaPost, getMetadataByTemplateCode } from "../../api";
 import CommentItem from "./CommentItem";
 import CreateCommentForm from "./CreateCommentForm";
 import PostLikeSection from "./PostLikeSection";
@@ -19,73 +18,21 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const templateCode = params.id;
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/api/insta-templates/${templateCode}/metadata`;
 
-  const res = await fetch(url);
+  try {
+    const instaTemplateMetadata = await getMetadataByTemplateCode(templateCode);
 
-  if (!res.ok) {
+    return {
+      title: instaTemplateMetadata.title,
+      description: instaTemplateMetadata.description,
+    };
+  } catch (error) {
     return {
       title: "결혼식 청첩장",
       description: "결혼식에 초대합니다.",
     };
   }
-
-  const body = await res.json();
-  const instaTemplateMetadata = instaMetadataSchema.safeParse(body);
-
-  if (!instaTemplateMetadata.success) {
-    return {
-      title: "결혼식 청첩장",
-      description: "결혼식에 초대합니다.",
-    };
-  }
-
-  return {
-    title: instaTemplateMetadata.data.title,
-    description: instaTemplateMetadata.data.description,
-  };
 }
-
-const getPost = async (postId: string) => {
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/api/posts/${postId}`;
-
-  const res = await fetch(url, {
-    next: {
-      tags: ["posts", "comments"],
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch post");
-  }
-
-  const body = await res.json();
-
-  const instaPost = instaPostSchema.parse(body);
-
-  return instaPost;
-};
-
-const getMetadata = async (templateCode: string) => {
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/api/insta-templates/${templateCode}/metadata`;
-
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch metadata");
-  }
-
-  const body = await res.json();
-  const instaTemplateMetadata = instaMetadataSchema.parse(body);
-
-  return instaTemplateMetadata;
-};
 
 type Props = {
   params: {
@@ -97,8 +44,8 @@ type Props = {
 const Page = async (props: Props) => {
   const templateCode = props.params.id;
 
-  const instaPost = await getPost(props.params.postId);
-  const instaTemplateMetadata = await getMetadata(templateCode);
+  const instaPost = await getInstaPost(props.params.postId);
+  const instaTemplateMetadata = await getMetadataByTemplateCode(templateCode);
 
   return (
     <div className="w-full h-full flex flex-col">

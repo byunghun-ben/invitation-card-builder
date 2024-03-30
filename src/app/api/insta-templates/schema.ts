@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 const updateMetadataSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  groomName: z.string(),
-  brideName: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  groomName: z.string().optional(),
+  brideName: z.string().optional(),
 });
 
 const updateWeddingHallSchema = z.object({
@@ -51,7 +51,7 @@ const updatePostsSchema = z.array(
   }),
 );
 
-export const updateRequestSchema = z.object({
+export const updateTemplateSchema = z.object({
   metadata: updateMetadataSchema.optional(),
   weddingHall: updateWeddingHallSchema.optional(),
   stories: updateStoriesSchema.optional(),
@@ -62,7 +62,7 @@ export type UpdateMetadata = z.infer<typeof updateMetadataSchema>;
 export type UpdateWeddingHall = z.infer<typeof updateWeddingHallSchema>;
 export type UpdateStories = z.infer<typeof updateStoriesSchema>;
 export type UpdatePosts = z.infer<typeof updatePostsSchema>;
-export type UpdateRequest = z.infer<typeof updateRequestSchema>;
+export type UpdateTemplateDto = z.infer<typeof updateTemplateSchema>;
 
 // get
 const getInstaImageSchema = z.object({
@@ -105,21 +105,38 @@ const getInstaPostSchema = z.object({
   display_order: z.number(),
 });
 
-const getInstaMetadataSchema = z.object({
+export const dbInstaMetadataSchema = z.object({
   template_id: z.string(),
   title: z.string(),
   description: z.string(),
-  groomName: z.string(),
-  brideName: z.string(),
+  groom_name: z.string(),
+  bride_name: z.string(),
   created_at: z.string(),
 });
 
-export const instaTemplateResponseSchema = z.object({
+export const baseInstaTemplateResponseSchema = z.object({
   id: z.string(),
   user_id: z.string(),
   code: z.string(),
-  metadata: getInstaMetadataSchema,
-  posts: z.array(getInstaPostSchema),
-  stories: z.array(getInstaStorySchema),
-  wedding_hall: getWeddingHallSchema,
 });
+
+export const instaTemplateResponseSchema =
+  baseInstaTemplateResponseSchema.merge(
+    z.object({
+      metadata: dbInstaMetadataSchema,
+      posts: z.array(getInstaPostSchema),
+      stories: z.array(getInstaStorySchema),
+      wedding_hall: getWeddingHallSchema,
+    }),
+  );
+
+export type InstaMetadataResponse = z.infer<typeof dbInstaMetadataSchema>;
+export type InstaImageResponse = z.infer<typeof getInstaImageSchema>;
+export type InstaCommentResponse = z.infer<typeof getInstaCommentSchema>;
+export type InstaPostResponse = z.infer<typeof getInstaPostSchema>;
+export type InstaStoryResponse = z.infer<typeof getInstaStorySchema>;
+export type InstaWeddingHallResponse = z.infer<typeof getWeddingHallSchema>;
+export type BaseInstaTemplateResponse = z.infer<
+  typeof baseInstaTemplateResponseSchema
+>;
+export type InstaTemplateResponse = z.infer<typeof instaTemplateResponseSchema>;

@@ -1,40 +1,27 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-const createCommentDto = z.object({
-  post_id: z.string(),
-  name: z.string(),
-  content: z.string(),
-  password: z.string(),
-});
+import { createComment } from "./action";
+import { createCommentRequestSchema } from "./schema";
 
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
 
-  const parsedBody = createCommentDto.safeParse(body);
+  const createCommentRequestSafeParseReturn =
+    createCommentRequestSchema.safeParse(body);
 
-  if (!parsedBody.success) {
+  if (!createCommentRequestSafeParseReturn.success) {
     return NextResponse.json(
-      { message: "Invalid request body" },
+      { message: "잘못된 요청입니다." },
       { status: 400 },
     );
   }
 
-  const comment = parsedBody.data;
+  const createCommentDto = createCommentRequestSafeParseReturn.data;
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  try {
+    const data = await createComment(createCommentDto);
 
-  const { data, error } = await supabase
-    .schema("insta_template")
-    .from("comments")
-    .insert(comment);
-
-  if (error) {
+    return NextResponse.json(data, { status: 201 });
+  } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
-
-  return NextResponse.json(data, { status: 201 });
 };

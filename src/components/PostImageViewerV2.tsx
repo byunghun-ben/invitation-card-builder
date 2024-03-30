@@ -1,6 +1,6 @@
 "use client";
 
-import { InstaImage } from "@/schemas/instagram";
+import { InstaImage } from "@/schemas/instaTemplate";
 import Image from "next/image";
 import { MouseEvent, useCallback, useRef, useState } from "react";
 

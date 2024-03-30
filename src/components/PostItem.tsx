@@ -2,13 +2,13 @@
 
 import CommentIcon from "@/foundation/icons/CommentIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
-import { InstaPost } from "@/schemas/instagram";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import PostImageViewerV2 from "./PostImageViewerV2";
 import PostLikeButton from "./PostLikeButton";
+import { InstaPost } from "@/schemas/instaTemplate";
 
 type Props = {
   post: InstaPost;

@@ -8,7 +8,8 @@
     "start": "next build && next start",
     "lint": "next lint",
     "format": "prettier --check .",
-    "format:fix": "prettier --write --list-different ."
+    "format:fix": "prettier --write --list-different .",
+    "type-check": "tsc --noEmit --incremental --watch"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -21,7 +22,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-insta-stories": "^2.6.2",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",

@@ -1,35 +1,37 @@
 "use server";
 
-import { instaPostSchema } from "@/schemas/instagram";
 import { createClient } from "@/utils/supabase/server";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
+import { dbInstaPostSchema } from "../schema";
 import {
-  UpdateMetadata,
-  UpdatePosts,
-  UpdateStories,
-  UpdateWeddingHall,
+  InstaTemplateResponse,
+  baseInstaTemplateResponseSchema,
   instaTemplateResponseSchema,
 } from "./schema";
+import {
+  UpdateMetadataDto,
+  UpdatePostsDto,
+  UpdateStoriesDto,
+  UpdateWeddingHallDto,
+} from "./schemas/update";
 
-const updateDisplayOrder = <T extends { display_order: number }[]>(
+const updateDisplayOrder = <T extends { displayOrder: number }[]>(
   data: T,
 ): T => {
   return data.map((item, index) => ({
     ...item,
-    display_order: index,
+    displayOrder: index,
   })) as T;
 };
 
 export const updateStories = async (
   templateId: string,
-  updateData: UpdateStories,
+  updateData: UpdateStoriesDto,
 ) => {
   const reorderedUpdateData = updateDisplayOrder(updateData);
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   const existingStoryIds = await supabase
     .schema("insta_template")
@@ -69,11 +71,12 @@ export const updateStories = async (
           .insert({
             title: story.title,
             template_id: templateId,
-            display_order: story.display_order,
+            display_order: story.displayOrder,
           })
           .select(`*`)
           .single()
           .then(({ data, error }) => {
+            console.error(error);
             if (error) {
               throw new Error(error.message);
             }
@@ -118,11 +121,11 @@ export const updateStories = async (
 
   if (storiesToUpdate.length > 0) {
     await Promise.all(
-      storiesToUpdate.map(async ({ id, title, display_order, images }) => {
+      storiesToUpdate.map(async ({ id, title, displayOrder, images }) => {
         await supabase
           .schema("insta_template")
           .from("stories")
-          .update({ title, display_order })
+          .update({ title, display_order: displayOrder })
           .eq("id", id)
           .then(({ error }) => {
             if (error) {
@@ -223,12 +226,11 @@ export const updateStories = async (
 
 export const updatePosts = async (
   templateId: string,
-  updateData: UpdatePosts,
+  updateData: UpdatePostsDto,
 ) => {
   const reorderedUpdateData = updateDisplayOrder(updateData);
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   // 1. 기존에 있는 posts를 가져온다.
   const existingPostIds = await supabase
@@ -259,7 +261,7 @@ export const updatePosts = async (
   // 3. 새로운 posts를 추가한다.
   if (postsToInsert.length > 0) {
     await Promise.all(
-      postsToInsert.map(async ({ title, content, display_order, images }) => {
+      postsToInsert.map(async ({ title, content, displayOrder, images }) => {
         const newPost = await supabase
           .schema("insta_template")
           .from("posts")
@@ -267,7 +269,7 @@ export const updatePosts = async (
             template_id: templateId,
             title,
             content,
-            display_order,
+            display_order: displayOrder,
           })
           .select(`*`)
           .single()
@@ -275,9 +277,8 @@ export const updatePosts = async (
             if (error) {
               throw new Error(error.message);
             }
-            return instaPostSchema
-              .omit({ images: true, comments: true })
-              .parse(data);
+
+            return dbInstaPostSchema.parse(data);
           });
 
         await supabase
@@ -318,14 +319,14 @@ export const updatePosts = async (
   if (postsToUpdate.length > 0) {
     await Promise.all(
       postsToUpdate.map(
-        async ({ id, content, display_order, title, images }) => {
+        async ({ id, content, displayOrder, title, images }) => {
           await supabase
             .schema("insta_template")
             .from("posts")
             .update({
               title,
               content,
-              display_order,
+              display_order: displayOrder,
             })
             .eq("id", id)
             .then(({ error }) => {
@@ -424,15 +425,19 @@ export const updatePosts = async (
 
 export const updateMetadata = async (
   templateId: string,
-  updateData: UpdateMetadata,
+  updateData: UpdateMetadataDto,
 ) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   const { error } = await supabase
     .schema("insta_template")
     .from("metadata")
-    .update(updateData)
+    .update({
+      title: updateData.title,
+      description: updateData.description,
+      groom_name: updateData.groomName,
+      bride_name: updateData.brideName,
+    })
     .eq("template_id", templateId);
 
   if (error) {
@@ -444,13 +449,12 @@ export const updateMetadata = async (
 
 export const updateWeddingHall = async (
   templateId: string,
-  updateData: UpdateWeddingHall,
+  updateData: UpdateWeddingHallDto,
 ) => {
   const weddingHallId = templateId;
   const { images, name, address, content } = updateData;
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   await supabase
     .schema("insta_template")
@@ -508,9 +512,9 @@ export const updateWeddingHall = async (
   }
 
   if (imagesToAdd.length > 0) {
-    const newImages = imagesToAdd.map(imageId => ({
+    const newImages = imagesToAdd.map(image => ({
       wedding_hall_id: weddingHallId,
-      image_id: imageId,
+      image_id: image.id,
     }));
 
     await supabase
@@ -543,9 +547,10 @@ export const updateWeddingHall = async (
   revalidateTag("wedding_hall");
 };
 
-export const getInstaTemplate = async (templateCode: string) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getInstaTemplate = async (
+  templateCode: string,
+): Promise<InstaTemplateResponse> => {
+  const supabase = createClient();
 
   const { error, data: responseData } = await supabase
     .schema("insta_template")
@@ -576,27 +581,32 @@ export const getInstaTemplate = async (templateCode: string) => {
     throw new Error(error.message);
   }
 
-  const validationResult = instaTemplateResponseSchema.safeParse(responseData);
+  const validationResult = instaTemplateResponseSchema.parse(responseData);
 
-  if (!validationResult.success) {
-    throw new Error(JSON.stringify(validationResult.error));
-  }
+  return validationResult;
+};
 
-  validationResult.data.posts.sort((a, b) => a.display_order - b.display_order);
-  validationResult.data.posts.forEach(post => {
-    post.images.sort((a, b) => a.display_order - b.display_order);
-  });
+export const getInstaTemplates = async () => {
+  const supabase = createClient();
 
-  validationResult.data.stories.sort(
-    (a, b) => a.display_order - b.display_order,
-  );
-  validationResult.data.stories.forEach(story => {
-    story.images.sort((a, b) => a.display_order - b.display_order);
-  });
+  // const {
+  //   data: { user },
+  //   error: getUserError,
+  // } = await supabase.auth.getUser();
 
-  validationResult.data.wedding_hall.images.sort(
-    (a, b) => a.display_order - b.display_order,
-  );
+  // if (getUserError || !user) {
+  //   return NextResponse.json({ message: "권한이 없습니다" }, { status: 401 });
+  // }
 
-  return validationResult.data;
+  const { error: templatesError, data: templatesResponseData } = await supabase
+    .schema("insta_template")
+    .from("template")
+    .select("*");
+  // .eq("user_id", user.id);
+
+  const templatesResponse = baseInstaTemplateResponseSchema
+    .array()
+    .parse(templatesResponseData);
+
+  return templatesResponse;
 };

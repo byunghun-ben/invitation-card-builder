@@ -1,11 +1,11 @@
 "use client";
 
-import { InstaImage } from "@/schemas/instagram";
+import { InstaImage } from "@/schemas/instaTemplate";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import ReactInstaStories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
-import { useContainerWidth } from "../../ContainerWidthContext/ContainerWidthContext";
+import { useContainerWidth } from "../../model/ContainerWidthContext/ContainerWidthContext";
 
 const DEFAULT_STORY_DURATION = 3000;
 
@@ -27,12 +27,9 @@ const InstaStories = ({ images, invitationId }: Props) => {
     }));
   }, [images]);
 
-  const handleStoryEnd = useCallback((index: number) => {
-    console.log("handleStoryEnd", index);
-  }, []);
+  const handleStoryEnd = useCallback((index: number) => {}, []);
 
   const handleAllStoriesEnd = useCallback((lastIndex: number) => {
-    console.log("handleAllStoriesEnd", lastIndex);
     const invitationDetailHref = `/${invitationId}`;
 
     router.push(invitationDetailHref);
