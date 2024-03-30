@@ -11,11 +11,9 @@ const Header = async () => {
       </Link>
       <div className="items-center gap-2 hidden md:flex">
         {user ? (
-          <>
-            <Link href="/edit" className="text-sm font-medium px-2">
-              청첩장 수정하기
-            </Link>
-          </>
+          <Link href="/edit" className="text-sm font-medium px-2">
+            청첩장 수정하기
+          </Link>
         ) : (
           <>
             <Link href="/sample" className="text-sm font-medium px-2">

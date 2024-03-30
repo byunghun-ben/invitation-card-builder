@@ -7,7 +7,7 @@ function StoryItem({
   clickStoryCover,
 }: {
   story: InstaStory;
-  clickStoryCover: Function;
+  clickStoryCover: (story: InstaStory) => () => void;
 }) {
   return (
     <div

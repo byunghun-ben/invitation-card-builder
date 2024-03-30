@@ -2,8 +2,8 @@
 
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
-import { compressImage, uploadImageFile } from "../../helpers";
 import { max } from "radash";
+import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
   index: number;

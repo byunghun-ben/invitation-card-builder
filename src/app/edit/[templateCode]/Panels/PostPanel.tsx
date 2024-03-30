@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { Dispatch, SetStateAction, useCallback } from "react";
-import PostForm from "./PostForm";
 import { uid } from "radash";
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
+import PostForm from "./PostForm";
 
 type Props = {
   templateId: string;

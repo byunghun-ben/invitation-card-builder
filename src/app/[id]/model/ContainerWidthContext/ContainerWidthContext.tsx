@@ -15,9 +15,9 @@ export const ContainerWidthProvider = (props: { children: ReactNode }) => {
 
   useEffect(() => {
     const updateWidth = () => {
-      const containerWidth =
+      const width =
         document.querySelector("[data-component=Container]")?.clientWidth || 0;
-      setContainerWidth(containerWidth);
+      setContainerWidth(width);
     };
 
     window.addEventListener("resize", updateWidth);

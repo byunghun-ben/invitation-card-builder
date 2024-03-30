@@ -47,7 +47,7 @@ type Props = {
     id: string;
     storyId: string;
   };
-  searchParams: Record<string, any>;
+  searchParams: Record<string, never>;
 };
 
 const StoriesPage = async ({ params, searchParams }: Props) => {
@@ -67,13 +67,7 @@ const StoriesPage = async ({ params, searchParams }: Props) => {
   const body = await res.json();
   const story = instaStorySchema.parse(body);
 
-  return (
-    <InstaStories
-      images={story.images}
-      invitationId={invitationId}
-      storyId={storyId}
-    />
-  );
+  return <InstaStories images={story.images} invitationId={invitationId} />;
 };
 
 export default StoriesPage;

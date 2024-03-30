@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 "use client";
 
 import PostImageViewerV2 from "@/components/PostImageViewerV2";

@@ -12,7 +12,6 @@ const DEFAULT_STORY_DURATION = 3000;
 type Props = {
   images: InstaImage[];
   invitationId: string;
-  storyId: string;
 };
 
 const InstaStories = ({ images, invitationId }: Props) => {

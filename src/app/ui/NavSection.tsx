@@ -10,14 +10,12 @@ const NavSection = ({ user }: Props) => {
     <section className="py-20">
       <div className="flex flex-col gap-4 items-center">
         {user ? (
-          <>
-            <Link
-              href="/edit"
-              className="border border-slate-700 rounded-full py-2 px-4"
-            >
-              청첩장 수정하기
-            </Link>
-          </>
+          <Link
+            href="/edit"
+            className="border border-slate-700 rounded-full py-2 px-4"
+          >
+            청첩장 수정하기
+          </Link>
         ) : (
           <>
             <Link

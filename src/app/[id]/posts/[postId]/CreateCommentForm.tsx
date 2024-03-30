@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef } from "react";
+import { z } from "zod";
 import SubmitButton from "./CreateCommentSubmitButton";
 import { createComment } from "./actions";
-import { z } from "zod";
 
 type Props = {
   postId: string;

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 export const getSupabaseUser = async () => {
   "use server";
+
   const supabase = createClient();
 
   const {

@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+
 "use client";
 
 import { InstaImage } from "@/schemas/instaTemplate";
@@ -79,7 +81,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
                   className="object-cover h-full w-full"
                   fill
                   sizes="573px"
-                  draggable={true}
+                  draggable
                   priority
                 />
               </li>

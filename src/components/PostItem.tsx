@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
+import { InstaPost } from "@/schemas/instaTemplate";
 import PostImageViewerV2 from "./PostImageViewerV2";
 import PostLikeButton from "./PostLikeButton";
-import { InstaPost } from "@/schemas/instaTemplate";
 
 type Props = {
   post: InstaPost;

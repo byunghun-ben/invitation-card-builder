@@ -6,6 +6,7 @@ export const updatePost = async (
   updatePostDto: UpdatePostRequest,
 ) => {
   "use server";
+
   const supabase = createClient();
 
   const { error } = await supabase

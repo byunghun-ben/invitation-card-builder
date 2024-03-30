@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 "use client";
 
 import { InstaMetadata } from "@/schemas/instaTemplate";

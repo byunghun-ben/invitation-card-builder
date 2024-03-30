@@ -11,6 +11,10 @@ type Props = {
   setStories: Dispatch<SetStateAction<InstaStory[]>>;
 };
 
+function getStoryDisplayOrder(stories: InstaStory[]) {
+  return Math.max(...stories.map(story => story.displayOrder), 0) + 1;
+}
+
 const StoryPanel = ({ templateId, stories, setStories }: Props) => {
   const isEmpty = stories.length === 0;
 
@@ -110,7 +114,3 @@ const StoryPanel = ({ templateId, stories, setStories }: Props) => {
 };
 
 export default StoryPanel;
-
-function getStoryDisplayOrder(stories: InstaStory[]) {
-  return Math.max(...stories.map(story => story.displayOrder), 0) + 1;
-}

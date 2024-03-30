@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { debounce } from "radash";
 import { useEffect } from "react";
 

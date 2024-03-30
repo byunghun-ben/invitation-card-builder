@@ -60,6 +60,7 @@ export const getTemplateByUserId = async (userId: string) => {
 
 export const uploadFile = async (file: File): Promise<{ path: string }> => {
   "use server";
+
   const supabase = createClient();
 
   const { data, error } = await supabase.storage
@@ -75,6 +76,7 @@ export const uploadFile = async (file: File): Promise<{ path: string }> => {
 
 export const uploadImage = async (image: { path: string }) => {
   "use server";
+
   const BASE_URL =
     "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images";
 
