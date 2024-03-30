@@ -21,7 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-insta-stories": "^2.6.2",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
