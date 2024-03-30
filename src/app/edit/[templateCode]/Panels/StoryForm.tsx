@@ -1,9 +1,12 @@
 "use client";
 
-import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
-import { useCallback, useRef } from "react";
-import { uploadFile, uploadImage } from "../../action";
-import { useProcessImage } from "../useFile";
+import {
+  InstaImage,
+  InstaStory,
+  instaImageSchema,
+} from "@/schemas/instaTemplate";
+import { ChangeEvent, useCallback, useRef } from "react";
+import { compressImage } from "../../helpers";
 
 type Props = {
   index: number;
@@ -39,33 +42,51 @@ const StoryForm = ({
     [story.images, story.id, onChangeImages],
   );
 
-  const handleChangeImage = useCallback(
-    async (blob: Blob) => {
-      const fileName = `${Date.now()}`;
-      const file = new File([blob], fileName, { type: blob.type });
+  const uploadImageFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
 
-      const { path: filePath } = await uploadFile(file);
+    const res = await fetch("http://localhost:3000/api/images", {
+      method: "POST",
+      body: formData,
+    });
 
-      const newImage = await uploadImage({
-        path: filePath,
-      });
+    if (!res.ok) {
+      console.error("res", res);
+      throw new Error("Cannot upload image");
+    }
 
-      const newImages: InstaImage[] = [...story.images, newImage].map(
-        (image, index) => ({
-          ...image,
-          displayOrder:
-            Math.max(...story.images.map(i => i.displayOrder), 0) + 1,
-        }),
-      );
+    const resBody = await res.json();
+    const newImage = instaImageSchema.parse(resBody);
 
-      onChangeImages(story.id, newImages);
-    },
-    [story.images, story.id, onChangeImages],
-  );
+    return newImage;
+  };
 
-  const { handleChangeFileInput } = useProcessImage({
-    onProcessImages: handleChangeImage,
-  });
+  const handleChangeFileInput = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    const compressedFile = await compressImage(file);
+
+    const newImage = await uploadImageFile(compressedFile);
+
+    const newImages: InstaImage[] = [
+      ...story.images,
+      {
+        ...newImage,
+        displayOrder: Math.max(...story.images.map(i => i.displayOrder), 0) + 1,
+      },
+    ];
+
+    onChangeImages(story.id, newImages);
+  };
 
   return (
     <>
@@ -95,7 +116,7 @@ const StoryForm = ({
               {/* Empty */}
               <div className="h-24 flex items-center justify-center border border-slate-400 rounded">
                 <span className="text-sm text-slate-500 select-none">
-                  사진이나 영상을 추가해보세요.
+                  사진을 추가해보세요.
                 </span>
               </div>
               {/* Empty */}
@@ -129,7 +150,7 @@ const StoryForm = ({
             className="border border-slate-400 rounded py-1"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="text-sm">사진 또는 영상 추가</span>
+            <span className="text-sm">사진 추가</span>
           </button>
           <input
             type="file"

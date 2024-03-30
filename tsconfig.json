@@ -1,10 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -18,8 +20,14 @@
         "name": "next"
       }
     ],
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"],
+      "#components/*": ["components/*"],
+      "#hooks/*": ["hooks/*"],
+      "#foundation/*": ["foundation/*"],
+      "#utils/*": ["utils/*"],
+      "#schemas/*": ["schemas/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
