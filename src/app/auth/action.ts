@@ -54,24 +54,35 @@ export const login = async (
 const signupFormDataSchema = z.object({
   email: z.string().email("이메일 형식으로 입력하세요."),
   password: z.string().min(1, "비밀번호를 입력하세요."),
-  passwordConfirmation: z.string().min(1, "비밀번호를 다시 입력하세요."),
+  passwordConfirmation: z.string().min(1, "비밀번호 확인을 입력하세요."),
   invitationCode: z.string().min(1, "청첩장 주소로 사용할 코드를 입력하세요."),
 });
 
-export const signUp = async (formData: FormData) => {
-  const signupRequest = signupFormDataSchema.parse({
+export const signUp = async (
+  prevState: { message: string },
+  formData: FormData,
+): Promise<{ message: string }> => {
+  const signupRequest = signupFormDataSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     passwordConfirmation: formData.get("password-confirmation"),
     invitationCode: formData.get("invitation-code"),
   });
 
+  if (!signupRequest.success) {
+    return {
+      message: signupRequest.error.errors[0].message,
+    };
+  }
+
   const { email, password, passwordConfirmation, invitationCode } =
-    signupRequest;
+    signupRequest.data;
 
   // 비밀번호 확인
   if (password !== passwordConfirmation) {
-    throw new Error("비밀번호가 일치하지 않습니다.");
+    return {
+      message: "비밀번호가 일치하지 않습니다.",
+    };
   }
 
   const supabase = createClient();
@@ -84,11 +95,15 @@ export const signUp = async (formData: FormData) => {
   );
 
   if (emailError) {
-    throw new Error("이메일 중복 확인 중 오류가 발생했습니다.");
+    return {
+      message: "이메일 중복 확인 중 오류가 발생했습니다.",
+    };
   }
 
   if (typeof emailCount === "number" && emailCount > 0) {
-    throw new Error("이미 가입된 이메일입니다.");
+    return {
+      message: "이미 가입된 이메일입니다.",
+    };
   }
 
   // 청첩장 주소 중복 확인
@@ -99,11 +114,15 @@ export const signUp = async (formData: FormData) => {
     .eq("code", invitationCode);
 
   if (codeError) {
-    throw new Error("청첩장 주소 중복 확인 중 오류가 발생했습니다.");
+    return {
+      message: "청첩장 주소 중복 확인 중 오류가 발생했습니다.",
+    };
   }
 
   if (typeof codeCount === "number" && codeCount > 0) {
-    throw new Error("이미 사용 중인 청첩장 주소입니다.");
+    return {
+      message: "이미 사용 중인 청첩장 주소입니다.",
+    };
   }
 
   // 회원가입
@@ -118,7 +137,9 @@ export const signUp = async (formData: FormData) => {
   });
 
   if (signupError) {
-    throw new Error("회원가입 중 오류가 발생했습니다.");
+    return {
+      message: "회원가입 중 오류가 발생했습니다.",
+    };
   }
 
   revalidatePath("/edit", "layout");

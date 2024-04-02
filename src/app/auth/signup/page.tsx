@@ -23,7 +23,7 @@ const Page = async () => {
           <SignupForm />
           <div className="flex flex-col gap-1 items-center">
             <p className="text-sm">이미 만들던 청첩장이 있나요?</p>
-            <Link href="/auth/login" className="hover:underline">
+            <Link href="/auth/login" className="text-sm hover:underline">
               로그인하기
             </Link>
           </div>
