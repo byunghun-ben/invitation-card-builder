@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Link from "next/link";
-import { login } from "../actions";
+import { login } from "../action";
 
 const Page = () => {
   return (
@@ -19,7 +19,7 @@ const Page = () => {
                 <input
                   type="email"
                   name="email"
-                  className="flex-1 w-full border px-2 py-1 rounded dark:bg-slate-900 dark:text-white"
+                  className="flex-1 w-full border px-2 py-1 rounded placeholder:text-sm"
                   placeholder="이메일을 입력하세요."
                   autoComplete="one-time-code"
                 />
@@ -30,7 +30,7 @@ const Page = () => {
                 <input
                   type="password"
                   name="password"
-                  className="border px-2 py-1 rounded w-full dark:bg-slate-900 dark:text-white"
+                  className="flex-1 w-full border px-2 py-1 rounded placeholder:text-sm"
                   placeholder="비밀번호를 입력하세요."
                   autoComplete="one-time-code"
                 />
@@ -38,7 +38,7 @@ const Page = () => {
             </div>
             <button
               type="submit"
-              className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               로그인
             </button>

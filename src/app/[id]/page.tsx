@@ -1,38 +1,37 @@
-import { InstaTemplateSchema } from "@/schemas/instagram";
-import ViewSection from "./ViewSection/ViewSection";
-import { z } from "zod";
+import WeddingHallItem from "@/components/WeddingHallItem";
+import { Metadata, ResolvingMetadata } from "next";
+import InstaHeader from "./ui/InstaHeader";
+import PostSection from "./ui/ViewSection/PostSection";
+import StorySection from "./ui/ViewSection/StorySection";
+import { getInstaTemplateByCode, getMetadataByTemplateCode } from "./api";
 
 export const revalidate = 1;
 
-const NEXT_SERVER_URL = process.env.NEXT_SERVER_URL || "";
-
-const instaTemplateResponseSchema = z.object({
-  message: z.string(),
-  instaTemplate: InstaTemplateSchema,
-});
-
-const getInstagramTemplate = async (id: string) => {
-  try {
-    const res = await fetch(`${NEXT_SERVER_URL}/api/instagram-templates/${id}`);
-
-    if (!res.ok) {
-      return null;
-    }
-
-    const data = await res.json();
-
-    const parsedData = instaTemplateResponseSchema.safeParse(data);
-
-    if (!parsedData.success) {
-      console.error(parsedData.error);
-      return null;
-    }
-
-    return parsedData.data.instaTemplate;
-  } catch (error) {
-    return null;
-  }
+type MetadataProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
+
+export async function generateMetadata(
+  { params, searchParams }: MetadataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const templateCode = params.id;
+
+  try {
+    const instaMetadata = await getMetadataByTemplateCode(templateCode);
+
+    return {
+      title: instaMetadata.title,
+      description: instaMetadata.description,
+    };
+  } catch (error) {
+    return {
+      title: "결혼식 청첩장",
+      description: "결혼식에 초대합니다.",
+    };
+  }
+}
 
 type Props = {
   params: {
@@ -41,19 +40,28 @@ type Props = {
 };
 
 const Page = async (props: Props) => {
-  const id = props.params.id;
+  const templateCode = props.params.id;
 
-  const instaTemplate = await getInstagramTemplate(id);
+  // TODO: Error handling
+  const instaTemplate = await getInstaTemplateByCode(templateCode);
 
-  if (!instaTemplate) {
-    return (
-      <div>
-        <h1>Failed to fetch insta template</h1>
-      </div>
-    );
-  }
+  return (
+    <div className="h-full w-full flex-1 flex flex-col">
+      <InstaHeader
+        templateCode={templateCode}
+        metaTitle={instaTemplate.metadata.title}
+      />
 
-  return <ViewSection instaTemplate={instaTemplate} />;
+      <StorySection
+        templateCode={templateCode}
+        stories={instaTemplate.stories}
+      />
+
+      <PostSection posts={instaTemplate.posts} />
+
+      <WeddingHallItem weddingHall={instaTemplate.weddingHall} />
+    </div>
+  );
 };
 
 export default Page;

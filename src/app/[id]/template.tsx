@@ -1,7 +1,8 @@
 "use client";
 
+import useFullHeight from "@/hooks/useFullHeight";
 import { ReactNode, useRef } from "react";
-import useFullHeight from "./ViewSection/useFullHeight";
+import { ContainerWidthProvider } from "./model/ContainerWidthContext/ContainerWidthContext";
 
 const InstaViewTemplate = (props: { children: ReactNode }) => {
   const templateRef = useRef<HTMLDivElement>(null);
@@ -9,11 +10,11 @@ const InstaViewTemplate = (props: { children: ReactNode }) => {
 
   return (
     <div
-      data-component="InstaViewTemplate"
+      data-component="Container"
       ref={templateRef}
-      className="border overflow-y-scroll"
+      className="relative border overflow-y-scroll no-scrollbar"
     >
-      {props.children}
+      <ContainerWidthProvider>{props.children}</ContainerWidthProvider>
     </div>
   );
 };

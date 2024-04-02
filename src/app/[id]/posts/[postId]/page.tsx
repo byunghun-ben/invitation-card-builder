@@ -1,107 +1,76 @@
-"use client";
-
-import InstaHeader from "@/app/[id]/InstaHeader";
+import InstaHeader from "@/app/[id]/ui/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
-import PostLikeIcon from "@/components/PostLikeIcon";
-import { DummyInstaTemplate } from "@/foundation/data";
-import MenuIcon from "@/foundation/icons/MenuIcon";
-import { uid } from "radash";
-import { FormEvent, useCallback, useState } from "react";
+import { Metadata, ResolvingMetadata } from "next";
+import { getInstaPost, getMetadataByTemplateCode } from "../../api";
+import CommentItem from "./CommentItem";
+import CreateCommentForm from "./CreateCommentForm";
+import PostLikeSection from "./PostLikeSection";
 
-const POST_DATA = DummyInstaTemplate.posts[1];
+export const revalidate = 1;
 
-const Page = () => {
-  const [likeCount, setLikeCount] = useState(POST_DATA.likes);
-  const [replies, setReplies] = useState(
-    POST_DATA.replies.map(reply => ({ ...reply, id: uid(10, "reply-id") })),
-  );
+type MetadataProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-  const handleLike = useCallback(() => {
-    setLikeCount(prev => prev + 1);
-  }, []);
+export async function generateMetadata(
+  { params, searchParams }: MetadataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const templateCode = params.id;
 
-  const handleReplySubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  try {
+    const instaTemplateMetadata = await getMetadataByTemplateCode(templateCode);
 
-    const formData = new FormData(e.currentTarget);
+    return {
+      title: instaTemplateMetadata.title,
+      description: instaTemplateMetadata.description,
+    };
+  } catch (error) {
+    return {
+      title: "결혼식 청첩장",
+      description: "결혼식에 초대합니다.",
+    };
+  }
+}
 
-    const name = formData.get("name");
+type Props = {
+  params: {
+    id: string;
+    postId: string;
+  };
+};
 
-    const content = formData.get("content");
+const Page = async (props: Props) => {
+  const templateCode = props.params.id;
 
-    if (!name || typeof name !== "string") {
-      return;
-    }
-
-    if (!content || typeof content !== "string") {
-      return;
-    }
-
-    setReplies(prev => [
-      ...prev,
-      {
-        id: uid(10, "reply-id"),
-        name,
-        content,
-      },
-    ]);
-
-    e.currentTarget.reset();
-  }, []);
+  const instaPost = await getInstaPost(props.params.postId);
+  const instaTemplateMetadata = await getMetadataByTemplateCode(templateCode);
 
   return (
     <div className="w-full h-full flex flex-col">
-      <InstaHeader instaTemplate={DummyInstaTemplate} />
+      <InstaHeader
+        templateCode={templateCode}
+        metaTitle={instaTemplateMetadata.title}
+      />
 
       {/* ImageViewer */}
-      <PostImageViewerV2 images={POST_DATA.images} />
+      <PostImageViewerV2 images={instaPost.images} />
       {/* ImageViewer */}
 
-      <div className="flex-none py-1">
-        <PostLikeIcon onLike={handleLike} />
-        <p className="text-sm font-bold mb-2 px-2">{`좋아요 ${likeCount}개`}</p>
-        <p className="text-sm whitespace-pre-line px-2">{POST_DATA.content}</p>
+      <div className="flex-none flex flex-col gap-2 pt-1 pb-2">
+        <PostLikeSection postId={instaPost.id} likes={instaPost.likes} />
+        <p className="text-sm whitespace-pre-line px-2">{instaPost.content}</p>
       </div>
 
-      <div className="flex-1 pt-1 pb-4 flex flex-col gap-4 border-t">
-        <ul className="flex-none flex flex-col gap-2">
-          {replies.map(reply => (
-            <li key={reply.id} className="flex items-start">
-              <div className="flex-1 flex flex-col gap-1 pl-2">
-                <p className="text-sm font-bold">{reply.name}</p>
-                <p className="text-sm whitespace-pre-line">{reply.content}</p>
-              </div>
-              <button
-                type="button"
-                className="p-2 text-sm rounded active:bg-slate-50 dark:active:bg-slate-900"
-              >
-                <MenuIcon className="w-4 h-4" />
-              </button>
-            </li>
+      <div className="flex-1 py-4 flex flex-col gap-10 border-t">
+        <ul className="flex-none flex flex-col gap-1">
+          {instaPost.comments.map(comment => (
+            <CommentItem key={comment.id} comment={comment} />
           ))}
         </ul>
 
-        <form className="flex flex-col gap-3 px-2" onSubmit={handleReplySubmit}>
-          <div className="flex flex-col gap-2">
-            <input
-              type="text"
-              name="name"
-              placeholder="이름"
-              className="p-2 rounded dark:bg-slate-900 dark:text-white"
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              name="content"
-              placeholder="댓글 달기..."
-              className="p-2 rounded dark:bg-slate-900 dark:text-white"
-              autoComplete="off"
-            />
-          </div>
-          <button type="submit" className="border py-2 rounded">
-            <span className="text-sm font-bold">게시</span>
-          </button>
-        </form>
+        <CreateCommentForm postId={instaPost.id} />
       </div>
     </div>
   );
