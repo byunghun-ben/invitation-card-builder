@@ -2,28 +2,27 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const loginFormDataSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email("이메일 형식으로 입력하세요."),
+  password: z.string().min(1, "비밀번호를 입력하세요."),
 });
 
-export const login = async (formData: FormData) => {
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-
-  const url = `${protocol}://${host}/api/auth/login`;
-
+export const login = async (
+  prevState: { message: string },
+  formData: FormData,
+): Promise<{ message: string }> => {
   const loginRequestResult = loginFormDataSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
 
   if (!loginRequestResult.success) {
-    throw new Error("이메일과 비밀번호를 입력하세요.");
+    return {
+      message: loginRequestResult.error.errors[0].message,
+    };
   }
 
   const { email, password } = loginRequestResult.data;
@@ -35,8 +34,17 @@ export const login = async (formData: FormData) => {
     password,
   });
 
+  if (signInError?.status === 400) {
+    return {
+      message: "이메일 또는 비밀번호가 일치하지 않습니다.",
+    };
+  }
+
   if (signInError) {
-    throw new Error("로그인 중 오류가 발생했습니다.");
+    console.error(signInError);
+    return {
+      message: "로그인 중 오류가 발생했습니다.",
+    };
   }
 
   revalidatePath("/edit", "layout");
