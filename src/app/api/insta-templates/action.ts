@@ -577,10 +577,14 @@ export const getInstaTemplate = async (
       `,
     )
     .eq("code", templateCode)
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
+  }
+
+  if (!responseData) {
+    throw new Error("Not found");
   }
 
   const validationResult = instaTemplateResponseSchema.parse(responseData);

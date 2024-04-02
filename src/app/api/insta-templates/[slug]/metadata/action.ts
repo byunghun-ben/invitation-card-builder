@@ -18,10 +18,14 @@ export const getMetadata = async (
     `,
     )
     .eq("template.code", templateCode)
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error("Not found");
   }
 
   const validationResult = dbInstaMetadataSchema.parse(data);

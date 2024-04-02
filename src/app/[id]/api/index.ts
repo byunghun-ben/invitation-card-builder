@@ -9,6 +9,7 @@ import {
   instaTemplateSchema,
 } from "@/schemas/instaTemplate";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 export const getMetadataByTemplateCode = async (
   templateCode: string,
@@ -17,8 +18,19 @@ export const getMetadataByTemplateCode = async (
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/insta-templates/${templateCode}/metadata`;
 
-  const res = await fetch(url);
+  const res = await fetch(url, { next: { revalidate: 1 } });
   const responseBody = await res.json();
+
+  // 에러 핸들링
+  // 1. 404 에러
+  if (res.status === 404) {
+    notFound();
+  }
+
+  // 2. 500 에러
+  if (!res.ok) {
+    throw new Error("Internal Server Error");
+  }
 
   const instaMetadata = instaMetadataSchema.parse(responseBody);
 
@@ -33,8 +45,18 @@ export const getInstaTemplateByCode = async (
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/insta-templates/${templateCode}`;
 
-  const res = await fetch(url);
+  const res = await fetch(url, { next: { revalidate: 1 } });
   const responseBody = await res.json();
+
+  // 에러 핸들링
+  // 1. 404 에러
+  if (res.status === 404) {
+    notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error("Internal Server Error");
+  }
 
   return instaTemplateSchema.parse(responseBody);
 };

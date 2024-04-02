@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkIfError } from "@/utils/helpers";
 import {
   getInstaTemplate,
   updateMetadata,
@@ -22,14 +23,18 @@ export const GET = async (request: NextRequest) => {
 
     return NextResponse.json(instaTemplate);
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json({ message: error.message }, { status: 500 });
+    if (!checkIfError(error)) {
+      return NextResponse.json(
+        { message: "Internal Server Error" },
+        { status: 500 },
+      );
     }
 
-    return NextResponse.json(
-      { message: "알 수 없는 문제가 발생했어요" },
-      { status: 500 },
-    );
+    if (error.message === "Not found") {
+      return NextResponse.json({ message: error.message }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };
 
