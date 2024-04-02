@@ -42,21 +42,15 @@ const NavSection = ({ user }: Props) => {
           <>
             <Link
               href="/sample"
-              className="border border-slate-700 rounded-full py-2 px-4"
+              className="w-40 text-center border border-slate-700 rounded-full py-2 px-4"
             >
               샘플 청첩장 보기
             </Link>
             <Link
               href="/auth/signup"
-              className="border border-slate-700 rounded-full py-2 px-4"
+              className="w-40 text-center border border-slate-700 rounded-full py-2 px-4"
             >
-              회원가입
-            </Link>
-            <Link
-              href="/auth/login"
-              className="border border-slate-700 rounded-full py-2 px-4"
-            >
-              로그인
+              내 청첩장 만들기
             </Link>
           </>
         )}
