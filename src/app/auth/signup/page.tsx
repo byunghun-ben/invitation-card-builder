@@ -1,8 +1,19 @@
 import Header from "@/components/Header";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import SignupForm from "./SignupForm";
 
-const Page = () => {
+const Page = async () => {
+  const supabase = createClient();
+
+  // 로그인 상태인 경우, 메인 페이지로 리다이렉트 합니다.
+  const { data: sessionData } = await supabase.auth.getSession();
+
+  if (sessionData.session) {
+    redirect("/");
+  }
+
   return (
     <div className="flex flex-col">
       <Header />
@@ -12,7 +23,7 @@ const Page = () => {
           <SignupForm />
           <div className="flex flex-col gap-1 items-center">
             <p className="text-sm">이미 만들던 청첩장이 있나요?</p>
-            <Link href="/auth/login" className="hover:underline">
+            <Link href="/auth/login" className="text-sm hover:underline">
               로그인하기
             </Link>
           </div>
