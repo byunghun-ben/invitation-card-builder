@@ -20,7 +20,10 @@ const Header = async () => {
               샘풀 청첩장 보기
             </Link>
             <Link href="/auth/signup" className="text-sm font-medium px-2">
-              청첩장 만들기
+              회원가입
+            </Link>
+            <Link href="/auth/login" className="text-sm font-medium px-2">
+              로그인
             </Link>
           </>
         )}

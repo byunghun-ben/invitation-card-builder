@@ -7,6 +7,11 @@ import { getTemplateByUserId } from "./action";
 const CreatePage = async () => {
   const user = await getSupabaseUser();
 
+  if (!user) {
+    revalidatePath("/");
+    redirect("/");
+  }
+
   const myTemplates = await getTemplateByUserId(user.id);
   const template = first(myTemplates);
 

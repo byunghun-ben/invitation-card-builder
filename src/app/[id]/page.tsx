@@ -42,7 +42,6 @@ type Props = {
 const Page = async (props: Props) => {
   const templateCode = props.params.id;
 
-  // TODO: Error handling
   const instaTemplate = await getInstaTemplateByCode(templateCode);
 
   return (
