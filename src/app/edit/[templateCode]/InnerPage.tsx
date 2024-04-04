@@ -7,15 +7,16 @@ import {
   InstaTemplate,
   InstaWeddingHall,
 } from "@/schemas/instaTemplate";
+import logger from "@/utils/logger";
 import { Tab } from "@headlessui/react";
 import { useCallback, useEffect, useState } from "react";
+import { updateTemplate } from "../action";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
 import StoryPanel from "./Panels/StoryPanel";
 import WeddingHallPanel from "./Panels/WeddingHallPanel";
 import PreviewSection from "./PreviewSection/PreviewSection";
 import TabSection from "./TabSection";
-import { updateTemplate } from "../action";
 
 type InnerPageProps = {
   template: InstaTemplate;
@@ -48,7 +49,11 @@ const InnerPage = ({ template }: InnerPageProps) => {
     setWeddingHall(template.weddingHall);
   }, [template.weddingHall]);
 
+  const [isPending, setIsPending] = useState(false);
+
   const handleSubmit = useCallback(async () => {
+    setIsPending(true);
+
     const data = {
       metadata,
       stories,
@@ -56,15 +61,20 @@ const InnerPage = ({ template }: InnerPageProps) => {
       weddingHall,
     };
 
-    await updateTemplate(template.code, data);
-
-    alert("저장되었습니다.");
+    try {
+      await updateTemplate(template.code, data);
+      logger.log("Saved!");
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      setIsPending(false);
+    }
   }, [template.code, metadata, stories, posts, weddingHall]);
 
   return (
     <div className="flex h-screen">
       <Tab.Group>
-        <TabSection onSubmit={handleSubmit} />
+        <TabSection onSubmit={handleSubmit} isPending={isPending} />
         <section className="basis-96 flex-1 flex flex-col border-r overflow-y-auto">
           <Tab.Panels className="flex-1 flex flex-col">
             <Tab.Panel className="flex-1 flex flex-col p-10">

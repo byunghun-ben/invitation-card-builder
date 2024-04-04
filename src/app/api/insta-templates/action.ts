@@ -2,6 +2,7 @@
 
 "use server";
 
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
@@ -78,7 +79,7 @@ export const updateStories = async (
           .select(`*`)
           .single()
           .then(({ data, error }) => {
-            console.error(error);
+            logger.error(error);
             if (error) {
               throw new Error(error.message);
             }
@@ -508,7 +509,7 @@ export const updateWeddingHall = async (
       .in("image_id", imageIdsToRemove)
       .then(({ error }) => {
         if (error) {
-          console.error(error);
+          logger.error(error);
         }
       });
   }
@@ -542,7 +543,7 @@ export const updateWeddingHall = async (
     )
     .then(({ error }) => {
       if (error) {
-        console.error(error);
+        logger.error(error);
       }
     });
 

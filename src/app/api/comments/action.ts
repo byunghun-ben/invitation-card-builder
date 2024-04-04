@@ -1,3 +1,4 @@
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { CreateCommentRequest } from "./schema";
 
@@ -11,7 +12,7 @@ export const createComment = async (createCommentDto: CreateCommentRequest) => {
     .insert(createCommentDto);
 
   if (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error("댓글 작성 중 오류가 발생했습니다.");
   }
 

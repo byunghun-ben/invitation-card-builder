@@ -1,5 +1,6 @@
 "use server";
 
+import logger from "@/utils/logger";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
@@ -47,7 +48,7 @@ export const deleteComment = async (commentId: string, password: string) => {
   });
 
   if (response.ok) {
-    console.log("Comment deleted");
+    logger.log("Comment deleted");
   }
   revalidateTag("comments");
 };

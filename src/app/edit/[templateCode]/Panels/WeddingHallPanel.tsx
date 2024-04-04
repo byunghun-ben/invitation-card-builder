@@ -1,6 +1,7 @@
 "use client";
 
 import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
+import logger from "@/utils/logger";
 import Image from "next/image";
 import { max } from "radash";
 import {
@@ -64,7 +65,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
         images: newImages,
       }));
     } catch (error) {
-      console.error("error", error);
+      logger.error("error", error);
     } finally {
       setIsImageUploading(false);
     }

@@ -1,5 +1,6 @@
 "use server";
 
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -41,7 +42,7 @@ export const login = async (
   }
 
   if (signInError) {
-    console.error(signInError);
+    logger.error(signInError);
     return {
       message: "로그인 중 오류가 발생했습니다.",
     };

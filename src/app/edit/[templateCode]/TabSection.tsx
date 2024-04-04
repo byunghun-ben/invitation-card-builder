@@ -3,13 +3,15 @@
 "use client";
 
 import { Tab } from "@headlessui/react";
+import { Loading } from "@/components/Loading";
 import { logout } from "../action";
 
 type Props = {
+  isPending: boolean;
   onSubmit: () => void;
 };
 
-const TabSection = ({ onSubmit }: Props) => {
+const TabSection = ({ isPending, onSubmit }: Props) => {
   return (
     <section className="basis-48 flex-none border-r">
       <div className="w-full flex flex-col gap-10 py-10">
@@ -57,8 +59,13 @@ const TabSection = ({ onSubmit }: Props) => {
             type="button"
             className="border py-2 px-4 rounded-full hover:bg-slate-100"
             onClick={onSubmit}
+            disabled={isPending}
           >
-            <span className="font-bold">저장하기</span>
+            {isPending ? (
+              <Loading />
+            ) : (
+              <span className="font-bold">저장하기</span>
+            )}
           </button>
           <button
             onClick={() => {

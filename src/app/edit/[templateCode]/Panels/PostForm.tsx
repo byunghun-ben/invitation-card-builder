@@ -1,8 +1,9 @@
 "use client";
 
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import logger from "@/utils/logger";
 import { max } from "radash";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -31,7 +32,7 @@ const PostForm = ({
 
   const handleRemove = useCallback(() => {
     onRemove(post.id);
-  }, [post.id]);
+  }, [onRemove, post.id]);
 
   const handleChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
@@ -57,7 +58,7 @@ const PostForm = ({
 
       onChangeImages(post.id, newImages);
     } catch (error) {
-      console.error("error", error);
+      logger.error("error", error);
     } finally {
       setIsImageUploading(false);
     }

@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import logger from "@/utils/logger";
 import { DeleteCommentRequest } from "./schema";
 
 export const deleteComment = async ({ id, password }: DeleteCommentRequest) => {
@@ -14,7 +15,7 @@ export const deleteComment = async ({ id, password }: DeleteCommentRequest) => {
     .eq("password", password);
 
   if (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error("댓글 삭제 중 오류가 발생했습니다.");
   }
 

@@ -3,8 +3,9 @@
 "use client";
 
 import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import logger from "@/utils/logger";
 import { max } from "radash";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -69,7 +70,7 @@ const StoryForm = ({
 
       onChangeImages(story.id, newImages);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
     } finally {
       setIsImageUploading(false);
     }
