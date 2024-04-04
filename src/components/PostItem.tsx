@@ -1,30 +1,43 @@
-"use client";
-
 import CommentIcon from "@/foundation/icons/CommentIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
+import { InstaPost, instaPostSchema } from "@/schemas/instaTemplate";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
-import { InstaPost } from "@/schemas/instaTemplate";
+// import { useCallback } from "react";
+import logger from "@/utils/logger";
+import { headers } from "next/headers";
 import PostImageViewerV2 from "./PostImageViewerV2";
-import PostLikeButton from "./PostLikeButton";
+import PostLikeButtonV2 from "./PostLikeButtonV2";
 
 type Props = {
   post: InstaPost;
 };
 
-const PostItem = ({ post }: Props) => {
-  const pathname = usePathname();
-  const postDetailPath = `${pathname}/posts/${post.id}`;
+const PostItem = async ({ post: { id: postId } }: Props) => {
+  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+    next: {
+      tags: [`posts:${postId}`],
+    },
+  });
+  const data = await res.json();
+  const zodParseRes = instaPostSchema.safeParse(data);
 
-  const [likeCount, setLikeCount] = useState(post.likes);
+  if (!zodParseRes.success) {
+    logger.error("PostItem", zodParseRes.error);
+    return null;
+  }
+
+  const post = zodParseRes.data;
+
+  const host = headers().get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+
+  const pathname = `${protocol}://${host}`;
+  const postDetailPath = `${pathname}/posts/${post.id}`;
+  const likeCount = post.likes;
+
   // 콤마로 구분된 숫자
   const commentCount = (post.comments.length ?? 0).toLocaleString();
-
-  const handleLike = useCallback(() => {
-    setLikeCount(prev => prev + 1);
-  }, []);
 
   return (
     <article key={post.id} className="flex flex-col">
@@ -44,7 +57,7 @@ const PostItem = ({ post }: Props) => {
       <PostImageViewerV2 images={post.images} />
 
       <div className="relative flex items-center py-1">
-        <PostLikeButton onLike={handleLike} />
+        <PostLikeButtonV2 postId={postId} likeCount={likeCount} />
         <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
           <CommentIcon />
         </Link>

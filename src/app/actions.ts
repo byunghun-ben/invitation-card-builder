@@ -1,5 +1,10 @@
+"use server";
+
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
+import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 
 export const getSupabaseUser = async (): Promise<User | null> => {
   "use server";
@@ -17,4 +22,10 @@ export const getSupabaseUser = async (): Promise<User | null> => {
   }
 
   return user;
+};
+
+export const customRevalidateTag = async (tag: string) => {
+  "use server";
+
+  revalidateTag(tag);
 };

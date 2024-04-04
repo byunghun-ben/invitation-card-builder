@@ -32,17 +32,8 @@ export const getPost = async (postId: string) => {
     .select(
       `
       *,
-      comments (
-        id,
-        name,
-        content,
-        post_id,
-        created_at
-      ),
-      images (
-        id,
-        url
-      )
+      comments (*),
+      images (*)
     `,
     )
     .eq("id", postId)
