@@ -17,6 +17,9 @@ const nextConfig = {
       },
     ],
   },
+  compiler: {
+    removeConsole: true, // 빌드 시 console.log를 제거한다.
+  },
 };
 
 module.exports = nextConfig;
