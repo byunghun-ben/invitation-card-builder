@@ -1,5 +1,3 @@
-/* eslint-disable react/button-has-type */
-
 "use client";
 
 import MenuIcon from "@/foundation/icons/MenuIcon";
@@ -37,6 +35,7 @@ const CommentItem = ({ comment }: Props) => {
           <Menu.Item>
             {({ active }) => (
               <button
+                type="button"
                 className={`${
                   active ? "bg-slate-100" : ""
                 } whitespace-pre flex text-sm px-3 py-1`}

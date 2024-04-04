@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
 "use client";
 
 import HeartIcon from "@/foundation/icons/HeartIcon";
@@ -18,7 +16,12 @@ const PostLikeButton = ({ onLike }: Props) => {
   }, [onLike]);
 
   return (
-    <button type="button" className="p-2 group" onClick={handleLike}>
+    <button
+      type="button"
+      className="p-2 group"
+      onClick={handleLike}
+      aria-label="좋아요 버튼"
+    >
       <HeartIcon
         className={`${
           isLiked ? "fill-red-400 stroke-red-400" : ""

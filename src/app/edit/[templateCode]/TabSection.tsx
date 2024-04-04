@@ -1,5 +1,3 @@
-/* eslint-disable react/button-has-type */
-
 "use client";
 
 import { Tab } from "@headlessui/react";
@@ -57,7 +55,7 @@ const TabSection = ({ isPending, onSubmit }: Props) => {
         <div className="px-4 flex flex-col gap-2">
           <button
             type="button"
-            className="border py-2 px-4 rounded-full hover:bg-slate-100"
+            className="border py-2 px-4 rounded-full hover:bg-slate-100 disabled:cursor-not-allowed"
             onClick={onSubmit}
             disabled={isPending}
           >
@@ -68,10 +66,11 @@ const TabSection = ({ isPending, onSubmit }: Props) => {
             )}
           </button>
           <button
+            type="button"
+            className="text-sm text-slate-700 self-center"
             onClick={() => {
               logout();
             }}
-            className="text-sm text-slate-700 self-center"
           >
             로그아웃
           </button>

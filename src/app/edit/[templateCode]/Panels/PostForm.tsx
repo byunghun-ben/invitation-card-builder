@@ -4,6 +4,7 @@ import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
 import logger from "@/utils/logger";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { Loading } from "@/components/Loading";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -145,12 +146,15 @@ const PostForm = ({
 
           <button
             type="button"
-            className="border border-slate-400 rounded py-2"
+            className="border border-slate-400 rounded py-2 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => fileInputRef.current?.click()}
+            disabled={isImageUploading}
           >
-            <span className="text-sm">
-              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
-            </span>
+            {isImageUploading ? (
+              <Loading />
+            ) : (
+              <span className="text-sm">이미지 추가</span>
+            )}
           </button>
           <input
             type="file"

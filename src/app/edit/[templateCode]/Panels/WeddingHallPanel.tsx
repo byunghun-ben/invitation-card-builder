@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Loading } from "@/components/Loading";
 import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
 
@@ -123,7 +124,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
             className="p-2 border rounded hover:bg-slate-50"
             onClick={() => setIsOpenLocalSearchModal(true)}
           >
-            <span className="text-sm font-bold">식장 위치 검색</span>
+            <span className="text-sm">식장 위치 검색</span>
           </button>
           <LocalSearchModal
             isOpen={isOpenLocalSearchModal}
@@ -167,13 +168,15 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
 
           <button
             type="button"
-            className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50"
+            className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleImageClick}
             disabled={isImageUploading}
           >
-            <span className="text-sm font-bold">
-              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
-            </span>
+            {isImageUploading ? (
+              <Loading />
+            ) : (
+              <span className="text-sm">이미지 추가</span>
+            )}
           </button>
           <input
             type="file"

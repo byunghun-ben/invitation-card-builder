@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-
 "use client";
 
 import { InstaImage } from "@/schemas/instaTemplate";
@@ -69,6 +67,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
+            role="presentation"
           >
             {images.map(image => (
               <li
