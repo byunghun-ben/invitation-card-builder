@@ -10,6 +10,7 @@ import {
 import logger from "@/utils/logger";
 import { Tab } from "@headlessui/react";
 import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { updateTemplate } from "../action";
 import MetadataPanel from "./Panels/MetadataPanel";
 import PostPanel from "./Panels/PostPanel";
@@ -63,7 +64,10 @@ const InnerPage = ({ template }: InnerPageProps) => {
 
     try {
       await updateTemplate(template.code, data);
-      logger.log("Saved!");
+      toast.success("저장 완료!", {
+        position: "bottom-left",
+        duration: 2000,
+      });
     } catch (error) {
       logger.error(error);
     } finally {

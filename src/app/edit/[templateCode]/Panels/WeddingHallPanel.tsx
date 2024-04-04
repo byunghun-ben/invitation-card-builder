@@ -13,6 +13,7 @@ import {
   useState,
 } from "react";
 import { Loading } from "@/components/Loading";
+import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
 
@@ -65,6 +66,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
         ...prev,
         images: newImages,
       }));
+      toast.success("이미지가 추가되었습니다.");
     } catch (error) {
       logger.error("error", error);
     } finally {

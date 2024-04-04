@@ -5,6 +5,7 @@ import logger from "@/utils/logger";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { Loading } from "@/components/Loading";
+import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -58,6 +59,7 @@ const PostForm = ({
       ];
 
       onChangeImages(post.id, newImages);
+      toast.success("이미지가 추가되었습니다.");
     } catch (error) {
       logger.error("error", error);
     } finally {
@@ -146,7 +148,7 @@ const PostForm = ({
 
           <button
             type="button"
-            className="border border-slate-400 rounded py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="border border-slate-400 rounded py-2 enabled:hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => fileInputRef.current?.click()}
             disabled={isImageUploading}
           >

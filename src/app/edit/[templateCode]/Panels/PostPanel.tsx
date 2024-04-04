@@ -112,7 +112,7 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
 
       <button
         type="button"
-        className="flex border border-slate-500 py-3 rounded justify-center"
+        className="flex border border-slate-500 py-3 rounded justify-center hover:bg-slate-50"
         onClick={addPost}
       >
         게시물 추가하기
