@@ -59,6 +59,6 @@ input {
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(20px, 0);
+    transform: translate(16px, 0);
   }
 }
