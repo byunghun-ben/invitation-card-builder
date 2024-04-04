@@ -18,7 +18,7 @@ export const getMetadataByTemplateCode = async (
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/insta-templates/${templateCode}/metadata`;
 
-  const res = await fetch(url, { next: { revalidate: 1 } });
+  const res = await fetch(url);
   const responseBody = await res.json();
 
   // 에러 핸들링
@@ -45,7 +45,7 @@ export const getInstaTemplateByCode = async (
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/insta-templates/${templateCode}`;
 
-  const res = await fetch(url, { next: { revalidate: 1 } });
+  const res = await fetch(url);
   const responseBody = await res.json();
 
   // 에러 핸들링

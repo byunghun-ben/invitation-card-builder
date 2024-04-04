@@ -5,8 +5,6 @@ import PostSection from "./ui/ViewSection/PostSection";
 import StorySection from "./ui/ViewSection/StorySection";
 import { getInstaTemplateByCode, getMetadataByTemplateCode } from "./api";
 
-export const revalidate = 1;
-
 type MetadataProps = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };

@@ -6,8 +6,6 @@ import CommentItem from "./CommentItem";
 import CreateCommentForm from "./CreateCommentForm";
 import PostLikeSection from "./PostLikeSection";
 
-export const revalidate = 1;
-
 type MetadataProps = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
