@@ -47,8 +47,8 @@ export const deleteComment = async (commentId: string, password: string) => {
     method: "DELETE",
   });
 
-  if (response.ok) {
-    logger.log("Comment deleted");
+  if (!response.ok) {
+    throw new Error("비밀번호가 일치하지 않습니다.");
   }
   revalidateTag("comments");
 };

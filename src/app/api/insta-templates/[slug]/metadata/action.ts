@@ -24,6 +24,8 @@ export const getMetadata = async (
     throw new Error(error.message);
   }
 
+  console.log("getMetadata", templateCode);
+
   if (!data) {
     throw new Error("Not found");
   }

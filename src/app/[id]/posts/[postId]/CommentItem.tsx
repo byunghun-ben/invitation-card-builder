@@ -4,6 +4,8 @@ import MenuIcon from "@/foundation/icons/MenuIcon";
 import { InstaComment } from "@/schemas/instaTemplate";
 import { Dialog, Menu } from "@headlessui/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import logger from "@/utils/logger";
 import { deleteComment } from "./actions";
 
 type Props = {
@@ -17,8 +19,15 @@ const CommentItem = ({ comment }: Props) => {
   const handleDelete = async (formData: FormData) => {
     const password = formData.get("password") as string;
 
-    deleteComment(comment.id, password);
-    setShowDeleteDialog(false);
+    try {
+      await deleteComment(comment.id, password);
+      toast.success("댓글을 삭제했어요.", { position: "bottom-right" });
+    } catch (error) {
+      logger.error(error);
+      toast.error("댓글을 삭제하지 못했어요.", { position: "bottom-right" });
+    } finally {
+      setShowDeleteDialog(false);
+    }
   };
 
   return (

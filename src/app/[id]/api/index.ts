@@ -61,7 +61,9 @@ export const getInstaTemplateByCode = async (
   return instaTemplateSchema.parse(responseBody);
 };
 
-export const getInstaPost = async (postId: string): Promise<InstaPost> => {
+export const getInstaPost = async (
+  postId: string,
+): Promise<InstaPost | null> => {
   const host = headers().get("host") || "localhost:3000";
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/posts/${postId}`;
@@ -71,6 +73,18 @@ export const getInstaPost = async (postId: string): Promise<InstaPost> => {
       tags: ["posts", "comments"],
     },
   });
+
+  if (!res.ok) {
+    return null;
+  }
+
   const responseBody = await res.json();
-  return instaPostSchema.parse(responseBody);
+
+  const zodParseRes = instaPostSchema.safeParse(responseBody);
+
+  if (!zodParseRes.success) {
+    return null;
+  }
+
+  return zodParseRes.data;
 };
