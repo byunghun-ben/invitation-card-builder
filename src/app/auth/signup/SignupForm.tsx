@@ -1,7 +1,22 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { Loading } from "@/components/Loading";
 import { signUp } from "../action";
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      disabled={pending}
+    >
+      {pending ? <Loading /> : <span>회원가입</span>}
+    </button>
+  );
+};
 
 const SignupForm = () => {
   const [formState, signUpFormAction] = useFormState(signUp, { message: "" });
@@ -71,12 +86,7 @@ const SignupForm = () => {
         </div>
       )}
 
-      <button
-        type="submit"
-        className="flex-none border rounded py-2 px-2 text-center hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        회원가입
-      </button>
+      <SubmitButton />
     </form>
   );
 };

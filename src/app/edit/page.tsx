@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { first } from "radash";
-import { getSupabaseUser } from "../action";
+import { getSupabaseUser } from "../actions";
 import { getTemplateByUserId } from "./action";
 
 const CreatePage = async () => {

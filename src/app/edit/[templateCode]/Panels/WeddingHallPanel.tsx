@@ -1,6 +1,7 @@
 "use client";
 
 import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
+import logger from "@/utils/logger";
 import Image from "next/image";
 import { max } from "radash";
 import {
@@ -11,6 +12,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { Loading } from "@/components/Loading";
+import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
 
@@ -63,8 +66,9 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
         ...prev,
         images: newImages,
       }));
+      toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      console.error("error", error);
+      logger.error("error", error);
     } finally {
       setIsImageUploading(false);
     }
@@ -122,7 +126,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
             className="p-2 border rounded hover:bg-slate-50"
             onClick={() => setIsOpenLocalSearchModal(true)}
           >
-            <span className="text-sm font-bold">식장 위치 검색</span>
+            <span className="text-sm">식장 위치 검색</span>
           </button>
           <LocalSearchModal
             isOpen={isOpenLocalSearchModal}
@@ -166,13 +170,15 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
 
           <button
             type="button"
-            className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50"
+            className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleImageClick}
             disabled={isImageUploading}
           >
-            <span className="text-sm font-bold">
-              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
-            </span>
+            {isImageUploading ? (
+              <Loading />
+            ) : (
+              <span className="text-sm">이미지 추가</span>
+            )}
           </button>
           <input
             type="file"

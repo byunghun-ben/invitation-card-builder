@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { uid } from "radash";
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
@@ -12,8 +11,8 @@ type Props = {
 
 const PostPanel = ({ templateId, posts, setPosts }: Props) => {
   const addPost = useCallback(() => {
-    setPosts(posts => [
-      ...posts,
+    setPosts(prev => [
+      ...prev,
       {
         id: uid(10, "post-id"),
         title: "",
@@ -22,22 +21,22 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
         comments: [],
         likes: 0,
         templateId,
-        displayOrder: Math.max(...posts.map(post => post.displayOrder), 0) + 1,
+        displayOrder: Math.max(...prev.map(post => post.displayOrder), 0) + 1,
       },
     ]);
   }, [templateId, setPosts]);
 
   const onRemovePost = useCallback(
     (postId: string) => {
-      setPosts(posts => posts.filter(post => post.id !== postId));
+      setPosts(prev => prev.filter(post => post.id !== postId));
     },
     [setPosts],
   );
 
   const onChangePostTitle = useCallback(
     (id: string, title: string) => {
-      setPosts(posts =>
-        posts.map(post =>
+      setPosts(prev =>
+        prev.map(post =>
           post.id === id
             ? {
                 ...post,
@@ -52,8 +51,8 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
 
   const onChangePostContent = useCallback(
     (id: string, content: string) => {
-      setPosts(posts =>
-        posts.map(post =>
+      setPosts(prev =>
+        prev.map(post =>
           post.id === id
             ? {
                 ...post,
@@ -68,8 +67,8 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
 
   const onChangePostImage = useCallback(
     (id: string, images: InstaImage[]) => {
-      setPosts(posts =>
-        posts.map(post =>
+      setPosts(prev =>
+        prev.map(post =>
           post.id === id
             ? {
                 ...post,
@@ -113,7 +112,7 @@ const PostPanel = ({ templateId, posts, setPosts }: Props) => {
 
       <button
         type="button"
-        className="flex border border-slate-500 py-3 rounded justify-center"
+        className="flex border border-slate-500 py-3 rounded justify-center hover:bg-slate-50"
         onClick={addPost}
       >
         게시물 추가하기

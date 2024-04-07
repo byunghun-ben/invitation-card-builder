@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
 "use client";
 
 import WeddingHallItem from "@/components/WeddingHallItem";
@@ -64,6 +62,7 @@ const PreviewSection = ({ metadata, posts, stories, weddingHall }: Props) => {
           <button
             type="button"
             className="p-2 hover:bg-gray-100 dark:hover:bg-slate-900 rounded"
+            aria-label="좋아요"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -84,6 +83,7 @@ const PreviewSection = ({ metadata, posts, stories, weddingHall }: Props) => {
           <button
             type="button"
             className="p-2 hover:bg-gray-100 dark:hover:bg-slate-900 rounded"
+            aria-label="지도"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

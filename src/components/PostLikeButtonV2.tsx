@@ -1,19 +1,28 @@
 "use client";
 
+import { customRevalidateTag } from "@/app/actions";
 import HeartIcon from "@/foundation/icons/HeartIcon";
 import { useCallback, useState } from "react";
 
 type Props = {
-  onLike: () => void;
+  postId: string;
+  likeCount: number;
 };
 
-const PostLikeButton = ({ onLike }: Props) => {
+const PostLikeButtonV2 = ({ postId, likeCount }: Props) => {
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleLike = useCallback(() => {
+  const handleLike = useCallback(async () => {
+    if (isLiked) return;
+
     setIsLiked(true);
-    onLike();
-  }, [onLike]);
+
+    await fetch(`/api/posts/${postId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ likes: likeCount + 1 }),
+    });
+    customRevalidateTag(`posts:${postId}`);
+  }, [isLiked, likeCount, postId]);
 
   return (
     <button
@@ -31,4 +40,4 @@ const PostLikeButton = ({ onLike }: Props) => {
   );
 };
 
-export default PostLikeButton;
+export default PostLikeButtonV2;

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
 "use client";
 
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
@@ -45,7 +43,11 @@ const PostItem = ({ post }: Props) => {
       {/* Like & ImageIndex */}
       <div className="relative flex items-center my-1">
         <PostLikeButton onLike={handleLike} />
-        <button type="button" className="flex p-2 active:opacity-50">
+        <button
+          type="button"
+          className="flex p-2 active:opacity-50"
+          aria-label="Comment Button"
+        >
           <CommentIcon />
         </button>
       </div>

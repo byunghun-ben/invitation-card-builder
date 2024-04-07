@@ -1,11 +1,9 @@
+import PostItem from "@/components/PostItem";
 import WeddingHallItem from "@/components/WeddingHallItem";
 import { Metadata, ResolvingMetadata } from "next";
-import InstaHeader from "./ui/InstaHeader";
-import PostSection from "./ui/ViewSection/PostSection";
-import StorySection from "./ui/ViewSection/StorySection";
 import { getInstaTemplateByCode, getMetadataByTemplateCode } from "./api";
-
-export const revalidate = 1;
+import InstaHeader from "./ui/InstaHeader";
+import StorySection from "./ui/ViewSection/StorySection";
 
 type MetadataProps = {
   params: { id: string };
@@ -56,7 +54,15 @@ const Page = async (props: Props) => {
         stories={instaTemplate.stories}
       />
 
-      <PostSection posts={instaTemplate.posts} />
+      <section className="flex-none flex flex-col">
+        {instaTemplate.posts.map(post => (
+          <PostItem
+            key={post.id}
+            postId={post.id}
+            templateCode={templateCode}
+          />
+        ))}
+      </section>
 
       <WeddingHallItem weddingHall={instaTemplate.weddingHall} />
     </div>

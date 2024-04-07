@@ -4,11 +4,13 @@ import { GetPostResponse } from "./schema";
 export const transformInstaPost = (
   postResponse: GetPostResponse,
 ): InstaPost => {
-  const images = postResponse.images.map(image => ({
-    id: image.id,
-    url: image.url,
-    displayOrder: image.display_order,
-  }));
+  const images = postResponse.images
+    .map(image => ({
+      id: image.id,
+      url: image.url,
+      displayOrder: image.display_order,
+    }))
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 
   const comments = postResponse.comments.map(comment => ({
     id: comment.id,

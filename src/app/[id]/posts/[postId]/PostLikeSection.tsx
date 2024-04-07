@@ -16,19 +16,23 @@ const PostLikeSection = ({ postId, likes }: Props) => {
     const newLikeCount = likeCount + 1;
     setLikeCount(newLikeCount);
 
-    await fetch(`/api/posts/${postId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        likes: newLikeCount,
-      }),
-    });
+    try {
+      await fetch(`/api/posts/${postId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          likes: newLikeCount,
+        }),
+      });
+    } catch (error) {
+      setLikeCount(likeCount);
+    }
   }, [likeCount, postId]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-start">
       <PostLikeButton onLike={handleLike} />
       <p className="text-sm font-bold px-2">{`좋아요 ${likeCount}개`}</p>
     </div>

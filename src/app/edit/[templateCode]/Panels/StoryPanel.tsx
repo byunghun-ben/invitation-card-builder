@@ -104,7 +104,7 @@ const StoryPanel = ({ templateId, stories, setStories }: Props) => {
 
       <button
         type="button"
-        className="flex border border-slate-500 py-2 rounded justify-center"
+        className="flex border border-slate-500 py-2 rounded justify-center hover:bg-slate-50"
         onClick={addStory}
       >
         스토리 추가하기

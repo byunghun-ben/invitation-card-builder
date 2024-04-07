@@ -1,10 +1,11 @@
-/* eslint-disable no-param-reassign */
-
 "use client";
 
 import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import logger from "@/utils/logger";
 import { max } from "radash";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { Loading } from "@/components/Loading";
+import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -46,8 +47,9 @@ const StoryForm = ({
     event: ChangeEvent<HTMLInputElement>,
   ) => {
     try {
-      const file = event.target.files?.[0];
-      event.target.value = "";
+      const target = event.target;
+      const file = target.files?.[0];
+      target.value = "";
 
       if (!file) {
         return;
@@ -68,8 +70,9 @@ const StoryForm = ({
       ];
 
       onChangeImages(story.id, newImages);
+      toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
     } finally {
       setIsImageUploading(false);
     }
@@ -134,12 +137,15 @@ const StoryForm = ({
 
           <button
             type="button"
-            className="border border-slate-400 rounded py-1"
+            className="border border-slate-400 rounded py-1 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => fileInputRef.current?.click()}
+            disabled={isImageUploading}
           >
-            <span className="text-sm">
-              {isImageUploading ? "이미지 업로딩 중" : "사진 추가"}
-            </span>
+            {isImageUploading ? (
+              <Loading />
+            ) : (
+              <span className="text-sm">이미지 추가</span>
+            )}
           </button>
           <input
             type="file"

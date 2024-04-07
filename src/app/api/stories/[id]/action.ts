@@ -1,3 +1,4 @@
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { getStoryResponseSchema } from "./schema";
 
@@ -15,12 +16,12 @@ export const getStory = async (storyId: string) => {
     .single();
 
   if (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error("스토리를 찾는 중 오류가 발생했습니다.");
   }
 
   if (!data) {
-    console.error("Not found");
+    logger.error("Not found");
     throw new Error("스토리를 찾을 수 없습니다.");
   }
 

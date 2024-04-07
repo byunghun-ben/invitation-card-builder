@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Image from "next/image";
-import { getSupabaseUser } from "./action";
+import { getSupabaseUser } from "./actions";
 import HomeBannerList from "./ui/HomeBannerList";
 import NavSection from "./ui/NavSection";
 

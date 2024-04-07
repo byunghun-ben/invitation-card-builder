@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-
 "use server";
 
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
@@ -78,7 +77,7 @@ export const updateStories = async (
           .select(`*`)
           .single()
           .then(({ data, error }) => {
-            console.error(error);
+            logger.error(error);
             if (error) {
               throw new Error(error.message);
             }
@@ -174,8 +173,8 @@ export const updateStories = async (
             });
         }
 
-        const imageIdsToRemove = existingImageIds.filter(id => {
-          return !images.some(image => image.id === id);
+        const imageIdsToRemove = existingImageIds.filter(_id => {
+          return !images.some(image => image.id === _id);
         });
 
         if (imageIdsToRemove.length > 0) {
@@ -196,9 +195,9 @@ export const updateStories = async (
           .schema("insta_template")
           .from("images")
           .upsert(
-            images.map(({ id, url }, index) => ({
-              id,
-              url,
+            images.map((image, index) => ({
+              id: image.id,
+              url: image.url,
               display_order: index,
             })),
           )
@@ -358,8 +357,8 @@ export const updatePosts = async (
           const imagesToInsert = images.filter(image => {
             return !existingImageIds.includes(image.id);
           });
-          const imageIdsToRemove = existingImageIds.filter(id => {
-            return !images.some(image => image.id === id);
+          const imageIdsToRemove = existingImageIds.filter(_id => {
+            return !images.some(image => image.id === _id);
           });
 
           await supabase
@@ -393,9 +392,9 @@ export const updatePosts = async (
             .schema("insta_template")
             .from("images")
             .upsert(
-              images.map(({ id, url }, index) => ({
-                id,
-                url,
+              images.map((image, index) => ({
+                id: image.id,
+                url: image.url,
                 display_order: index,
               })),
             )
@@ -508,7 +507,7 @@ export const updateWeddingHall = async (
       .in("image_id", imageIdsToRemove)
       .then(({ error }) => {
         if (error) {
-          console.error(error);
+          logger.error(error);
         }
       });
   }
@@ -542,7 +541,7 @@ export const updateWeddingHall = async (
     )
     .then(({ error }) => {
       if (error) {
-        console.error(error);
+        logger.error(error);
       }
     });
 
