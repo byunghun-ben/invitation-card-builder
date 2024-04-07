@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkIfError } from "@/utils/helpers";
+import logger from "@/utils/logger";
 import { getMetadata } from "./action";
 import { transformMetadata } from "../../helpers/transformToClient";
 
@@ -8,12 +9,15 @@ export const GET = async (req: NextRequest) => {
   const pathname = req.nextUrl.pathname;
   const templateCode = pathname.split("/")[3];
 
+  logger.log("GET", { templateCode });
+
   try {
     const metadataResponse = await getMetadata(templateCode);
     const metadata = transformMetadata(metadataResponse);
 
     return NextResponse.json(metadata);
   } catch (error) {
+    logger.error("INSTA_TEMPLATES_METADATA_GET_ERROR", error);
     if (!checkIfError(error)) {
       return NextResponse.json(
         { error: "Internal Server Error" },

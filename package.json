@@ -20,7 +20,9 @@
     "radash": "^11.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "react-insta-stories": "^2.6.2",
+    "sharp": "0.33.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

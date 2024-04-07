@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 "use client";
 
 import { InstaMetadata } from "@/schemas/instaTemplate";
@@ -64,30 +62,20 @@ const MetadataPanel = ({ templateCode, metadata, setMetadata }: Props) => {
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-bold">프로필 정보</h2>
         <div className="flex flex-col gap-4 ">
-          <div className="flex flex-col gap-1">
-            <label
-              className="text-xs font-bold text-slate-700"
-              htmlFor="신랑이름"
-            >
-              신랑
-            </label>
+          <label htmlFor="groomNameInput" className="flex flex-col gap-1">
+            <span className="text-xs font-bold text-slate-700">신랑</span>
             <input
-              id="신랑이름"
+              id="groomNameInput"
               type="text"
               placeholder="이름을 입력하세요"
               className="w-full p-2 border rounded"
               value={metadata.groomName}
               onChange={handleChangeGroomName}
             />
-          </div>
+          </label>
 
-          <div className="flex flex-col gap-1">
-            <label
-              className="text-xs font-bold text-slate-700"
-              htmlFor="신부이름"
-            >
-              신부
-            </label>
+          <label htmlFor="신부이름" className="flex flex-col gap-1">
+            <span className="text-xs font-bold text-slate-700">신부</span>
             <input
               id="신부이름"
               type="text"
@@ -96,20 +84,17 @@ const MetadataPanel = ({ templateCode, metadata, setMetadata }: Props) => {
               value={metadata.brideName}
               onChange={handleChangeBrideName}
             />
-          </div>
+          </label>
         </div>
       </div>
 
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-bold">사이트 정보</h2>
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label
-              className="text-xs font-bold text-slate-700"
-              htmlFor="meta-title"
-            >
+          <label className="flex flex-col gap-1" htmlFor="meta-title">
+            <span className="text-xs font-bold text-slate-700">
               청첩장 제목
-            </label>
+            </span>
             <input
               id="meta-title"
               type="text"
@@ -118,15 +103,12 @@ const MetadataPanel = ({ templateCode, metadata, setMetadata }: Props) => {
               value={metadata.title}
               onChange={handleChangeTitle}
             />
-          </div>
+          </label>
 
-          <div className="flex flex-col gap-1">
-            <label
-              className="text-xs font-bold text-slate-700"
-              htmlFor="meta-description"
-            >
+          <label className="flex flex-col gap-1" htmlFor="meta-description">
+            <span className="text-xs font-bold text-slate-700">
               청첩장 소개
-            </label>
+            </span>
             <textarea
               id="meta-description"
               placeholder="소개를 입력하세요"
@@ -134,7 +116,7 @@ const MetadataPanel = ({ templateCode, metadata, setMetadata }: Props) => {
               value={metadata.description}
               onChange={handleChangeDescription}
             />
-          </div>
+          </label>
 
           <div className="flex flex-col gap-1">
             <span className="text-xs font-bold text-slate-700">

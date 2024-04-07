@@ -1,4 +1,5 @@
 import { instaImageSchema } from "@/schemas/instaTemplate";
+import logger from "@/utils/logger";
 import { uid } from "radash";
 
 export const readFileAsDataURL = (file: File): Promise<string> => {
@@ -98,7 +99,7 @@ export const uploadImageFile = async (file: File) => {
   });
 
   if (!res.ok) {
-    console.error("res", res);
+    logger.error("res", res);
     throw new Error("Cannot upload image");
   }
 

@@ -1,3 +1,4 @@
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { UpdatePostRequest, getPostResponseSchema } from "./schema";
 
@@ -16,7 +17,7 @@ export const updatePost = async (
     .eq("id", postId);
 
   if (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error("업데이트 중 오류가 발생했습니다.");
     // return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
@@ -31,24 +32,15 @@ export const getPost = async (postId: string) => {
     .select(
       `
       *,
-      comments (
-        id,
-        name,
-        content,
-        post_id,
-        created_at
-      ),
-      images (
-        id,
-        url
-      )
+      comments (*),
+      images (*)
     `,
     )
     .eq("id", postId)
     .single();
 
   if (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error("포스트를 찾는 중 오류가 발생했습니다.");
   }
 

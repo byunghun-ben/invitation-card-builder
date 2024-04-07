@@ -1,4 +1,4 @@
-import { getSupabaseUser } from "@/app/action";
+import { getSupabaseUser } from "@/app/actions";
 import Link from "next/link";
 
 const Header = async () => {

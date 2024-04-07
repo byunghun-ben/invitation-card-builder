@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { debounce } from "radash";
 import { useEffect } from "react";
 
@@ -24,7 +23,7 @@ const useFullHeight = ({ divRef }: Props) => {
     return () => {
       window.removeEventListener("resize", setHeight);
     };
-  }, []);
+  }, [divRef]);
 };
 
 export default useFullHeight;

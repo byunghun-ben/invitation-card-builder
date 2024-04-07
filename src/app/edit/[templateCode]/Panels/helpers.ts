@@ -1,3 +1,4 @@
+import logger from "@/utils/logger";
 import { uploadFile, uploadImage } from "../../action";
 
 // upload files to supabase storage
@@ -7,7 +8,7 @@ export const uploadFiles = async (files: File[]) => {
 
     return uploadRes;
   } catch (error) {
-    console.error("uploadFiles error", error);
+    logger.error("uploadFiles error", error);
     return null;
   }
 };
@@ -19,7 +20,7 @@ export const insertImages = async (images: { path: string }[]) => {
 
     return newImages;
   } catch (error) {
-    console.error("insertImages error", error);
+    logger.error("insertImages error", error);
     return null;
   }
 };
