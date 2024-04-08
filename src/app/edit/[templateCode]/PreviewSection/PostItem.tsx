@@ -2,9 +2,9 @@
 
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
 import PostLikeButton from "@/components/PostLikeButton";
-import CommentIcon from "@/foundation/icons/CommentIcon";
 import DEFAULT_IMAGE from "@/foundation/images/img_default_image.webp";
 import { InstaPost } from "@/schemas/instaTemplate";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
@@ -48,7 +48,7 @@ const PostItem = ({ post }: Props) => {
           className="flex p-2 active:opacity-50"
           aria-label="Comment Button"
         >
-          <CommentIcon />
+          <ChatBubbleOvalLeftIcon className="w-6 h-6" />
         </button>
       </div>
       {/* Like & ImageIndex */}

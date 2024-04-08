@@ -13,7 +13,7 @@ const SubmitButton = () => {
       {pending ? (
         <Loading />
       ) : (
-        <span className="text-sm font-bold">댓글 쓰기</span>
+        <span className="text-sm font-bold">작성하기</span>
       )}
     </button>
   );

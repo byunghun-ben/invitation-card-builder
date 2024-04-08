@@ -1,9 +1,8 @@
 "use client";
 
 import { customRevalidateTag } from "@/app/actions";
-import CommentIcon from "@/foundation/icons/CommentIcon";
-import HeartIcon from "@/foundation/icons/HeartIcon";
 import logger from "@/utils/logger";
+import { ChatBubbleOvalLeftIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 
@@ -61,11 +60,11 @@ const InstaPostLikeAndComment = ({
           <HeartIcon
             className={`${
               isLiked ? "fill-red-400 stroke-red-400" : ""
-            } transition group-active:scale-90 group-active:rotate-12`}
+            } w-6 h-6 transition group-active:scale-90 group-active:rotate-12`}
           />
         </button>
         <Link className="flex p-2 active:opacity-50" href={postDetailPath}>
-          <CommentIcon />
+          <ChatBubbleOvalLeftIcon className="w-6 h-6" />
         </Link>
       </div>
       <div className="flex gap-2 px-3">

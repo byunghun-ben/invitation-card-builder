@@ -1,7 +1,8 @@
 "use client";
 
 import { customRevalidateTag } from "@/app/actions";
-import HeartIcon from "@/foundation/icons/HeartIcon";
+import { HeartIcon } from "@heroicons/react/24/outline";
+// import HeartIcon from "@/foundation/icons/HeartIcon";
 import { useCallback, useState } from "react";
 
 type Props = {
@@ -34,7 +35,7 @@ const PostLikeButtonV2 = ({ postId, likeCount }: Props) => {
       <HeartIcon
         className={`${
           isLiked ? "fill-red-400 stroke-red-400" : ""
-        } transition group-active:scale-90 group-active:rotate-12`}
+        } w-6 h-6 transition group-active:scale-90 group-active:rotate-12`}
       />
     </button>
   );
