@@ -11,8 +11,8 @@ type Props = {
 };
 
 const WeddingHallItem = ({ weddingHall }: Props) => {
-  const name = weddingHall.name || "식장 이름";
-  const content = weddingHall.content || "식장 소개가 없습니다.";
+  const name = weddingHall.name;
+  const content = weddingHall.content;
 
   const naverMapUrl = encodeURI(
     `https://map.naver.com/v5/search/${weddingHall.name}`,

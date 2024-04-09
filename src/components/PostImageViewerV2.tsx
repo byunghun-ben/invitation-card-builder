@@ -69,7 +69,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
             onMouseMove={handleMouseMove}
             role="presentation"
           >
-            {images.map(image => (
+            {images.map((image, index) => (
               <li
                 key={image.id}
                 className="relative flex-none h-full w-full snap-start"
@@ -78,10 +78,10 @@ const PostImageViewerV2 = ({ images }: Props) => {
                   src={image.url}
                   alt="이미지"
                   className="object-cover h-full w-full"
-                  fill
-                  sizes="573px"
+                  width={510}
+                  height={510}
                   draggable
-                  priority
+                  priority={index === 0}
                 />
               </li>
             ))}
