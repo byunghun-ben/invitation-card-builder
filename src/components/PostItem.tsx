@@ -49,15 +49,15 @@ const PostItem = async ({ templateCode, postId }: Props) => {
 
   return (
     <article key={post.id} className="flex flex-col">
-      <div className="flex gap-2 items-center p-3">
+      <div className="flex gap-2 items-center p-2">
         <Image
           alt="프로필 이미지"
           src={DEFAULT_IMAGE}
           className="rounded-full border object-cover"
-          width={32}
-          height={32}
+          width={24}
+          height={24}
         />
-        <span className="text-sm font-bold">{postTitle}</span>
+        <span className="text-sm">{postTitle}</span>
       </div>
 
       <PostImageViewerV2 images={post.images} />
@@ -69,13 +69,11 @@ const PostItem = async ({ templateCode, postId }: Props) => {
         commentCount={commentCount}
       />
 
-      {/* Content */}
       {postContent && (
         <div className="flex flex-col gap-1 py-1 px-3">
-          <div className="text-sm whitespace-pre-line">{postContent}</div>
+          <p className="text-sm whitespace-pre-line">{postContent}</p>
         </div>
       )}
-      {/* Content */}
     </article>
   );
 };

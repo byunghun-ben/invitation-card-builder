@@ -10,10 +10,7 @@ function StoryItem({
   clickStoryCover: (story: InstaStory) => () => void;
 }) {
   return (
-    <div
-      key={story.id}
-      className="flex-none basis-16 flex flex-col gap-1 items-center"
-    >
+    <div className="flex-none basis-16 flex flex-col gap-1 items-center">
       <div>
         <Image
           src={story.images?.[0]?.url || DEFAULT_IMAGE}

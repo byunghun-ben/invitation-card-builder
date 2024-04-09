@@ -36,17 +36,27 @@ export const loadImage = (url: string): Promise<HTMLImageElement> => {
 
 export const convertImageToCanvas = (
   image: HTMLImageElement,
+  maxWidth: number = 1024,
+  maxHeight: number = 1024,
 ): HTMLCanvasElement => {
-  const canvas = document.createElement("canvas");
-  const canvasContext = canvas.getContext("2d");
+  // 원본 이미지와의 비율을 계산합니다.
+  // 이미지의 크기가 maxWidth, maxHeight보다 작은 경우 1을 반환합니다.
+  const ratio = Math.min(maxWidth / image.width, maxHeight / image.height, 1);
 
+  // 새로운 크기를 계산합니다.
+  const newWidth = image.width * ratio;
+  const newHeight = image.height * ratio;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = newWidth;
+  canvas.height = newHeight;
+
+  const canvasContext = canvas.getContext("2d");
   if (!canvasContext) {
     throw new Error("Cannot get canvas context");
   }
 
-  canvas.width = image.width;
-  canvas.height = image.height;
-  canvasContext.drawImage(image, 0, 0, image.width, image.height);
+  canvasContext.drawImage(image, 0, 0, newWidth, newHeight);
 
   return canvas;
 };
@@ -81,8 +91,9 @@ export const compressImage = async (file: File): Promise<File> => {
 
   const fileUrl = await readFileAsDataURL(file);
   const image = await loadImage(fileUrl);
+
   const canvas = convertImageToCanvas(image);
-  const blob = await convertConvasToBlob({ canvas });
+  const blob = await convertConvasToBlob({ canvas, quality: 0.7 });
   const compressedFile = new File([blob], fileName, { type: blob.type });
 
   return compressedFile;

@@ -2,10 +2,8 @@
 
 import { InstaMetadata } from "@/schemas/instaTemplate";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 
-// 도메인 주소: https://boran-maria.com
 const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN;
 
 type Props = {

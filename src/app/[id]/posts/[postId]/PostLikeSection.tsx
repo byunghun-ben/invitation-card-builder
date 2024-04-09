@@ -1,40 +1,51 @@
 "use client";
 
-import PostLikeButton from "@/components/PostLikeButton";
-import { useCallback, useState } from "react";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { debounce } from "radash";
+import { useMemo, useState } from "react";
 
 type Props = {
   postId: string;
-  likes: number;
+  defaultLikes: number;
 };
 
-const PostLikeSection = ({ postId, likes }: Props) => {
-  const [likeCount, setLikeCount] = useState(likes);
+const PostLikeSection = ({ postId, defaultLikes }: Props) => {
+  const [likes, setLikes] = useState(defaultLikes);
+  const [isLiked, setIsLiked] = useState(false);
+  const formattedLikes = likes.toLocaleString();
 
-  // TODO: 빠르게 여러번 클릭했을 때, 여러번 요청이 가는 문제를 debounce로 해결하기
-  const handleLike = useCallback(async () => {
-    const newLikeCount = likeCount + 1;
-    setLikeCount(newLikeCount);
-
-    try {
-      await fetch(`/api/posts/${postId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          likes: newLikeCount,
-        }),
-      });
-    } catch (error) {
-      setLikeCount(likeCount);
-    }
-  }, [likeCount, postId]);
+  const debouncedUpdateLikes = useMemo(
+    () =>
+      debounce({ delay: 1000 }, async (newLikes: number) => {
+        await fetch(`/api/posts/${postId}`, {
+          method: "PATCH",
+          body: JSON.stringify({ likes: newLikes }),
+        });
+      }),
+    [postId],
+  );
 
   return (
     <div className="flex flex-col items-start">
-      <PostLikeButton onLike={handleLike} />
-      <p className="text-sm font-bold px-2">{`좋아요 ${likeCount}개`}</p>
+      <button
+        type="button"
+        className="p-2 group"
+        onClick={() => {
+          const newLikes = likes + 1;
+          setLikes(newLikes);
+          setIsLiked(true);
+
+          debouncedUpdateLikes(newLikes);
+        }}
+        aria-label="좋아요 버튼"
+      >
+        <HeartIcon
+          className={`${
+            isLiked ? "fill-red-400 stroke-red-400" : ""
+          } w-6 h-6 transition group-active:scale-90 group-active:rotate-12`}
+        />
+      </button>
+      <p className="text-sm font-bold px-2">{`좋아요 ${formattedLikes}개`}</p>
     </div>
   );
 };

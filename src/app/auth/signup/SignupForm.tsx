@@ -4,6 +4,8 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Loading } from "@/components/Loading";
 import { signUp } from "../action";
 
+const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN;
+
 const SubmitButton = () => {
   const { pending } = useFormStatus();
 
@@ -75,7 +77,7 @@ const SignupForm = () => {
             />
           </label>
           <p className="text-xs text-slate-500">
-            https://bora-n-maria.com/ 뒤에 입력한 코드가 붙어서 생성됩니다.
+            {`${DOMAIN} 뒤에 입력한 코드가 붙어서 생성됩니다.`}
           </p>
         </div>
       </div>

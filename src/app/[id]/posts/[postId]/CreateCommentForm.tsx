@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import { z } from "zod";
-import toast from "react-hot-toast";
 import { Disclosure } from "@headlessui/react";
-import { ChevronDownIcon } from "@/foundation/icons/ChevronIcon";
+import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { useRef } from "react";
+import toast from "react-hot-toast";
+import { z } from "zod";
 import SubmitButton from "./CreateCommentSubmitButton";
 import { createComment } from "./actions";
 
@@ -56,10 +56,8 @@ const CreateCommentForm = ({ postId }: Props) => {
       <Disclosure.Button className="flex items-center justify-between px-2 py-1">
         {({ open }) => (
           <>
-            <span className="font-bold">댓글 작성</span>
-            <ChevronDownIcon
-              className={`transition-all ${open ? "rotate-180" : ""}`}
-            />
+            <span className="font-bold">댓글 작성하기</span>
+            <ChevronUpDownIcon className="w-5 h-5 text-slate-700" />
           </>
         )}
       </Disclosure.Button>
@@ -95,39 +93,6 @@ const CreateCommentForm = ({ postId }: Props) => {
         </form>
       </Disclosure.Panel>
     </Disclosure>
-  );
-
-  return (
-    <form
-      className="flex flex-col gap-2 px-2"
-      action={handleAction}
-      ref={formRef}
-    >
-      <p className="font-bold">댓글 작성하기</p>
-      <div className="flex flex-col gap-2">
-        <input
-          type="text"
-          name="name"
-          placeholder="이름"
-          className="px-2 py-1 rounded border"
-          autoComplete="off"
-        />
-        <textarea
-          name="content"
-          placeholder="댓글을 입력해주세요."
-          className="px-2 py-1 rounded border"
-          autoComplete="off"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="비밀번호"
-          className="px-2 py-1 rounded border"
-          autoComplete="one-time-code"
-        />
-      </div>
-      <SubmitButton />
-    </form>
   );
 };
 

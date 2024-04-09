@@ -112,6 +112,7 @@ const InnerPage = ({ template }: InnerPageProps) => {
         </section>
       </Tab.Group>
       <PreviewSection
+        templateCode={template.code}
         metadata={metadata}
         stories={stories}
         posts={posts}

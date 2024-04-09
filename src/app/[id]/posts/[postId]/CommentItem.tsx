@@ -1,11 +1,11 @@
 "use client";
 
-import MenuIcon from "@/foundation/icons/MenuIcon";
 import { InstaComment } from "@/schemas/instaTemplate";
 import { Dialog, Menu } from "@headlessui/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import logger from "@/utils/logger";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { deleteComment } from "./actions";
 
 type Props = {
@@ -38,7 +38,7 @@ const CommentItem = ({ comment }: Props) => {
       </div>
       <Menu as="div" className="relative">
         <Menu.Button className="p-2 text-sm rounded active:bg-slate-50">
-          <MenuIcon className="w-4 h-4" />
+          <EllipsisVerticalIcon className="w-4 h-4" />
         </Menu.Button>
         <Menu.Items className="absolute z-10 right-2 top-8 flex flex-col rounded border bg-white shadow">
           <Menu.Item>
