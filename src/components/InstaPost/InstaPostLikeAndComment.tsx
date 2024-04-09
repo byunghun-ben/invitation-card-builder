@@ -1,10 +1,9 @@
 "use client";
 
-import { customRevalidateTag } from "@/app/actions";
-import logger from "@/utils/logger";
 import { ChatBubbleOvalLeftIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { debounce } from "radash";
+import { useCallback, useMemo, useState } from "react";
 
 type Props = {
   templateCode: string;
@@ -23,27 +22,25 @@ const InstaPostLikeAndComment = ({
 
   const [likeCount, setLikeCount] = useState(defaultLikeCount);
   const [isLiked, setIsLiked] = useState(false);
-  const controllerRef = useRef(new AbortController());
+
+  const debouncedUpdateLikeCount = useMemo(
+    () =>
+      debounce({ delay: 1000 }, (likes: number) => {
+        return fetch(`/api/posts/${postId}`, {
+          method: "PATCH",
+          body: JSON.stringify({ likes }),
+        });
+      }),
+    [postId],
+  );
 
   const handleLike = useCallback(async () => {
-    const controller = controllerRef.current;
+    const newLikes = likeCount + 1;
     setIsLiked(true);
-    setLikeCount(prev => prev + 1);
+    setLikeCount(newLikes);
 
-    try {
-      await fetch(`/api/posts/${postId}`, {
-        method: "PATCH",
-        body: JSON.stringify({ likes: likeCount + 1 }),
-        signal: controller.signal,
-      });
-
-      customRevalidateTag(`posts:${postId}`);
-    } catch (error) {
-      setIsLiked(false);
-      setLikeCount(prev => prev - 1);
-      logger.error("InstaPostLikeAndComment", error);
-    }
-  }, [likeCount, postId]);
+    debouncedUpdateLikeCount(newLikes);
+  }, [likeCount, debouncedUpdateLikeCount]);
 
   const formattedLikeCount = likeCount.toLocaleString();
   const formattedCommentCount = commentCount.toLocaleString();

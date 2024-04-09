@@ -1,7 +1,6 @@
 import InstaHeader from "@/app/[id]/ui/InstaHeader";
 import PostImageViewerV2 from "@/components/PostImageViewerV2";
 import { Metadata, ResolvingMetadata } from "next";
-import logger from "@/utils/logger";
 import { notFound } from "next/navigation";
 import { getInstaPost, getMetadataByTemplateCode } from "../../api";
 import CommentItem from "./CommentItem";
@@ -64,7 +63,7 @@ const Page = async (props: Props) => {
       <PostImageViewerV2 images={instaPost.images} />
 
       <div className="flex-none flex flex-col gap-2 pt-1 pb-2">
-        <PostLikeSection postId={instaPost.id} likes={instaPost.likes} />
+        <PostLikeSection postId={instaPost.id} defaultLikes={instaPost.likes} />
         {instaPost.content && (
           <p className="text-sm whitespace-pre-line px-2">
             {instaPost.content}
