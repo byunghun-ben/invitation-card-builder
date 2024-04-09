@@ -61,7 +61,7 @@ const PostForm = ({
       onChangeImages(post.id, newImages);
       toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      logger.error("error", error);
+      toast.error("이미지를 추가하는 중에 오류가 발생했습니다.");
     } finally {
       setIsImageUploading(false);
     }

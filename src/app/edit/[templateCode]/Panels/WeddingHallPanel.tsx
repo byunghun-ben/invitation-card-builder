@@ -1,7 +1,7 @@
 "use client";
 
+import { Loading } from "@/components/Loading";
 import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
-import logger from "@/utils/logger";
 import Image from "next/image";
 import { max } from "radash";
 import {
@@ -12,7 +12,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Loading } from "@/components/Loading";
 import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 import LocalSearchModal from "./LocalSearchModal";
@@ -68,7 +67,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
       }));
       toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      logger.error("error", error);
+      toast.error("이미지를 추가하는 중에 오류가 발생했습니다.");
     } finally {
       setIsImageUploading(false);
     }

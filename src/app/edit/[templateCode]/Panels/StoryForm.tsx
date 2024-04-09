@@ -1,10 +1,9 @@
 "use client";
 
+import { Loading } from "@/components/Loading";
 import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
-import logger from "@/utils/logger";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
-import { Loading } from "@/components/Loading";
 import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 
@@ -54,10 +53,9 @@ const StoryForm = ({
       if (!file) {
         return;
       }
-
       const compressedFile = await compressImage(file);
-
       const newImage = await uploadImageFile(compressedFile);
+
       const newImageDisplayOrder =
         max(story.images.map(i => i.displayOrder)) ?? 0 + 1;
 
@@ -72,7 +70,7 @@ const StoryForm = ({
       onChangeImages(story.id, newImages);
       toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      logger.error(error);
+      toast.error("이미지를 추가하는 중에 문제가 발생했습니다.");
     } finally {
       setIsImageUploading(false);
     }
