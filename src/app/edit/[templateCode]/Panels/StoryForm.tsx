@@ -1,11 +1,11 @@
 "use client";
 
+import { Loading } from "@/components/Loading";
 import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
-import logger from "@/utils/logger";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
-import { Loading } from "@/components/Loading";
 import toast from "react-hot-toast";
+import Image from "next/image";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -54,10 +54,9 @@ const StoryForm = ({
       if (!file) {
         return;
       }
-
       const compressedFile = await compressImage(file);
-
       const newImage = await uploadImageFile(compressedFile);
+
       const newImageDisplayOrder =
         max(story.images.map(i => i.displayOrder)) ?? 0 + 1;
 
@@ -72,7 +71,7 @@ const StoryForm = ({
       onChangeImages(story.id, newImages);
       toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      logger.error(error);
+      toast.error("이미지를 추가하는 중에 문제가 발생했습니다.");
     } finally {
       setIsImageUploading(false);
     }
@@ -118,9 +117,12 @@ const StoryForm = ({
               {/* Image */}
               {story.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
-                  <div
-                    className="h-16 w-16 bg-cover bg-center border rounded"
-                    style={{ backgroundImage: `url(${image.url})` }}
+                  <Image
+                    src={image.url}
+                    alt="스토리 예시 이미지"
+                    className="h-16 w-16 object-cover object-center border rounded"
+                    width={64}
+                    height={64}
                   />
                   <button
                     type="button"

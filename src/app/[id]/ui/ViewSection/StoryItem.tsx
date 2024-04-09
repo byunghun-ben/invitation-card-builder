@@ -11,11 +11,16 @@ type Props = {
 const StoryItem = ({ story, templateCode }: Props) => {
   const storyDetailUrl = `/${templateCode}/stories/${story.id}`;
   const thumbnail = first(story.images)?.url || "";
+  const title = story.title || "스토리";
+
+  if (!thumbnail) {
+    return null;
+  }
 
   return (
     <Link
       href={storyDetailUrl}
-      className="flex-none basis-16 flex flex-col gap-1 items-center"
+      className="flex-none basis-16 flex flex-col gap-1 items-center hover:bg-slate-100"
     >
       <Image
         src={thumbnail}
@@ -24,7 +29,7 @@ const StoryItem = ({ story, templateCode }: Props) => {
         width={64}
         height={64}
       />
-      <span className="text-xxs line-clamp-1">{story.title || "스토리"}</span>
+      <span className="text-xs text-slate-700 line-clamp-1">{title}</span>
     </Link>
   );
 };

@@ -1,10 +1,10 @@
 "use client";
 
+import { Loading } from "@/components/Loading";
 import { InstaImage, InstaPost } from "@/schemas/instaTemplate";
-import logger from "@/utils/logger";
+import Image from "next/image";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
-import { Loading } from "@/components/Loading";
 import toast from "react-hot-toast";
 import { compressImage, uploadImageFile } from "../../helpers";
 
@@ -61,7 +61,7 @@ const PostForm = ({
       onChangeImages(post.id, newImages);
       toast.success("이미지가 추가되었습니다.");
     } catch (error) {
-      logger.error("error", error);
+      toast.error("이미지를 추가하는 중에 오류가 발생했습니다.");
     } finally {
       setIsImageUploading(false);
     }
@@ -129,9 +129,12 @@ const PostForm = ({
               {/* Image */}
               {post.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
-                  <div
-                    className="h-16 w-16 bg-cover bg-center border rounded"
-                    style={{ backgroundImage: `url(${image.url})` }}
+                  <Image
+                    src={image.url}
+                    alt="게시물 샘플 이미지"
+                    width={64}
+                    height={64}
+                    className="h-16 w-16 border rounded object-cover object-center"
                   />
                   <button
                     type="button"
