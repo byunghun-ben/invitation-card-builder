@@ -5,6 +5,7 @@ import { InstaImage, InstaStory } from "@/schemas/instaTemplate";
 import { max } from "radash";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 import { compressImage, uploadImageFile } from "../../helpers";
 
 type Props = {
@@ -116,9 +117,12 @@ const StoryForm = ({
               {/* Image */}
               {story.images.map(image => (
                 <div key={image.id} className="flex flex-col gap-1 pb-1">
-                  <div
-                    className="h-16 w-16 bg-cover bg-center border rounded"
-                    style={{ backgroundImage: `url(${image.url})` }}
+                  <Image
+                    src={image.url}
+                    alt="스토리 예시 이미지"
+                    className="h-16 w-16 object-cover object-center border rounded"
+                    width={64}
+                    height={64}
                   />
                   <button
                     type="button"

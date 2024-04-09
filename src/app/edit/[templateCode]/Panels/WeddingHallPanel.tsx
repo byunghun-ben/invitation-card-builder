@@ -150,7 +150,7 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
                   <Image
                     src={image.url}
                     alt="게시물 이미지"
-                    className="object-cover h-16 w-16"
+                    className="w-16 h-16 object-cover object-center border rounded"
                     width={64}
                     height={64}
                   />
