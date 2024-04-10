@@ -41,13 +41,34 @@ export const instaStorySchema = z.object({
   displayOrder: z.number(),
 });
 
-export const instaWeddingHallSchema = z.object({
-  templateId: z.string(),
+export const instaWeddingHallInfoSchema = z.object({
   name: z.string(),
   address: z.string(),
-  content: z.string(),
-  images: z.array(instaImageSchema),
+  roadAddress: z.string().default(""),
+  url: z.string().default(""),
+  lat: z.string().default(""),
+  lng: z.string().default(""),
 });
+
+export const instaWeddingHallSchema = z
+  .object({
+    templateId: z.string(),
+    content: z.string(),
+    images: z.array(instaImageSchema),
+  })
+  .merge(instaWeddingHallInfoSchema);
+
+// export const instaWeddingHallSchema = z.object({
+//   templateId: z.string(),
+//   name: z.string(),
+//   address: z.string(),
+//   roadAddress: z.string().default(""),
+//   url: z.string().default(""),
+//   lat: z.string().default(""),
+//   lng: z.string().default(""),
+//   content: z.string(),
+//   images: z.array(instaImageSchema),
+// });
 
 export const baseInstaTemplateSchema = z.object({
   id: z.string(),
@@ -69,7 +90,10 @@ export type InstaImage = z.infer<typeof instaImageSchema>;
 export type InstaComment = z.infer<typeof instaCommentSchema>;
 export type InstaPost = z.infer<typeof instaPostSchema>;
 export type InstaStory = z.infer<typeof instaStorySchema>;
+
+export type InstaWeddingHallInfo = z.infer<typeof instaWeddingHallInfoSchema>;
 export type InstaWeddingHall = z.infer<typeof instaWeddingHallSchema>;
+
 export type BaseInstaTemplate = z.infer<typeof baseInstaTemplateSchema>;
 export type InstaTemplate = z.infer<typeof instaTemplateSchema>;
 

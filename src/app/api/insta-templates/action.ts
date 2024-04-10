@@ -453,14 +453,22 @@ export const updateWeddingHall = async (
   updateData: UpdateWeddingHallDto,
 ) => {
   const weddingHallId = templateId;
-  const { images, name, address, content } = updateData;
+  const { images, ...weddingHallDataWithoutImages } = updateData;
 
   const supabase = createClient();
 
   await supabase
     .schema("insta_template")
     .from("wedding_hall")
-    .update({ name, address, content })
+    .update({
+      name: weddingHallDataWithoutImages.name,
+      address: weddingHallDataWithoutImages.address,
+      road_address: weddingHallDataWithoutImages.roadAddress,
+      url: weddingHallDataWithoutImages.url,
+      lat: weddingHallDataWithoutImages.lat,
+      lng: weddingHallDataWithoutImages.lng,
+      content: weddingHallDataWithoutImages.content,
+    })
     .eq("template_id", weddingHallId)
     .then(({ error }) => {
       if (error) {

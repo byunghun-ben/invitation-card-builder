@@ -105,7 +105,17 @@ const transformStory = (responseData: InstaStoryResponse): InstaStory => {
 const transformWeddingHall = (
   responseData: InstaWeddingHallResponse,
 ): InstaWeddingHall => {
-  const { template_id, name, address, content, images } = responseData;
+  const {
+    template_id,
+    name,
+    address,
+    road_address,
+    url,
+    lat,
+    lng,
+    content,
+    images,
+  } = responseData;
 
   images.sort((a, b) => a.display_order - b.display_order);
 
@@ -114,6 +124,10 @@ const transformWeddingHall = (
     name,
     address,
     content,
+    roadAddress: road_address,
+    url,
+    lat,
+    lng,
     images: images.map(transformImage),
   };
 };
