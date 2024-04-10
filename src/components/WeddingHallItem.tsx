@@ -125,7 +125,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
       </div>
 
       <PostImageViewerV2 images={weddingHall.images} />
-      <div ref={mapWrapperRef} className="w-full aspect-square" />
+      <div ref={mapWrapperRef} className="w-full aspect-square mt-4" />
 
       <div className="flex flex-col gap-2 p-3">
         {content && <p className="text-sm whitespace-pre-line">{content}</p>}
