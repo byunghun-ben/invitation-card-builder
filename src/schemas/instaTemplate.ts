@@ -58,18 +58,6 @@ export const instaWeddingHallSchema = z
   })
   .merge(instaWeddingHallInfoSchema);
 
-// export const instaWeddingHallSchema = z.object({
-//   templateId: z.string(),
-//   name: z.string(),
-//   address: z.string(),
-//   roadAddress: z.string().default(""),
-//   url: z.string().default(""),
-//   lat: z.string().default(""),
-//   lng: z.string().default(""),
-//   content: z.string(),
-//   images: z.array(instaImageSchema),
-// });
-
 export const baseInstaTemplateSchema = z.object({
   id: z.string(),
   userId: z.string(),

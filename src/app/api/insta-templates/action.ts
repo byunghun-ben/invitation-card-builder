@@ -602,20 +602,10 @@ export const getInstaTemplate = async (
 export const getInstaTemplates = async () => {
   const supabase = createClient();
 
-  // const {
-  //   data: { user },
-  //   error: getUserError,
-  // } = await supabase.auth.getUser();
-
-  // if (getUserError || !user) {
-  //   return NextResponse.json({ message: "권한이 없습니다" }, { status: 401 });
-  // }
-
   const { error: templatesError, data: templatesResponseData } = await supabase
     .schema("insta_template")
     .from("template")
     .select("*");
-  // .eq("user_id", user.id);
 
   const templatesResponse = baseInstaTemplateResponseSchema
     .array()
