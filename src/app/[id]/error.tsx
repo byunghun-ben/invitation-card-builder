@@ -1,5 +1,6 @@
 "use client";
 
+import logger from "@/utils/logger";
 import Link from "next/link";
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 };
 
 const ErrorPage = ({ error, reset }: Props) => {
+  logger.error(error);
   return (
     <div>
       <h1>청첩장을 불러오던 중에 문제가 발생했어요</h1>

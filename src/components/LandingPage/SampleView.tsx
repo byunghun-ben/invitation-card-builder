@@ -1,20 +1,12 @@
 "use client";
 
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useRef, useState } from "react";
 import { Loading } from "../Loading";
 
+const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || "http://localhost:3000";
+const IFRAME_URL = `${DOMAIN}/sample`;
+
 const SampleView = () => {
-  // const iframeWrapperRef = useRef<HTMLDivElement>(null);
-  // useEffect(() => {
-  //   const iframeWrapper = iframeWrapperRef.current;
-
-  //   if (!iframeWrapper) {
-  //     return;
-  //   }
-
-  //   iframeWrapper.style.height = `${window.innerHeight}px`;
-  // }, []);
-
   const [loading, setLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -37,7 +29,7 @@ const SampleView = () => {
       )}
       <iframe
         ref={iframeRef}
-        src="/sample"
+        src={IFRAME_URL}
         className="w-full h-px"
         title="샘플 청첩장"
         onLoad={handleLoadIframe}
