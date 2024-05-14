@@ -1,7 +1,11 @@
 "use client";
 
 import { Loading } from "@/components/Loading";
-import { InstaImage, InstaWeddingHall } from "@/schemas/instaTemplate";
+import {
+  InstaImage,
+  InstaWeddingHall,
+  InstaWeddingHallInfo,
+} from "@/schemas/instaTemplate";
 import Image from "next/image";
 import { max } from "radash";
 import {
@@ -90,11 +94,10 @@ const WeddingHallPanel = ({ weddingHall, setWeddingHall }: Props) => {
   const [isOpenLocalSearchModal, setIsOpenLocalSearchModal] = useState(false);
 
   const handleSelectLocalSearch = useCallback(
-    (result: { name: string; address: string }) => {
+    (weddingHallInfo: InstaWeddingHallInfo) => {
       setWeddingHall(prev => ({
         ...prev,
-        name: result.name,
-        address: result.address,
+        ...weddingHallInfo,
       }));
     },
     [setWeddingHall],

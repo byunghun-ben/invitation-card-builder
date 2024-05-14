@@ -453,14 +453,22 @@ export const updateWeddingHall = async (
   updateData: UpdateWeddingHallDto,
 ) => {
   const weddingHallId = templateId;
-  const { images, name, address, content } = updateData;
+  const { images, ...weddingHallDataWithoutImages } = updateData;
 
   const supabase = createClient();
 
   await supabase
     .schema("insta_template")
     .from("wedding_hall")
-    .update({ name, address, content })
+    .update({
+      name: weddingHallDataWithoutImages.name,
+      address: weddingHallDataWithoutImages.address,
+      road_address: weddingHallDataWithoutImages.roadAddress,
+      url: weddingHallDataWithoutImages.url,
+      lat: weddingHallDataWithoutImages.lat,
+      lng: weddingHallDataWithoutImages.lng,
+      content: weddingHallDataWithoutImages.content,
+    })
     .eq("template_id", weddingHallId)
     .then(({ error }) => {
       if (error) {
@@ -594,20 +602,10 @@ export const getInstaTemplate = async (
 export const getInstaTemplates = async () => {
   const supabase = createClient();
 
-  // const {
-  //   data: { user },
-  //   error: getUserError,
-  // } = await supabase.auth.getUser();
-
-  // if (getUserError || !user) {
-  //   return NextResponse.json({ message: "권한이 없습니다" }, { status: 401 });
-  // }
-
   const { error: templatesError, data: templatesResponseData } = await supabase
     .schema("insta_template")
     .from("template")
     .select("*");
-  // .eq("user_id", user.id);
 
   const templatesResponse = baseInstaTemplateResponseSchema
     .array()

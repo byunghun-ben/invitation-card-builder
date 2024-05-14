@@ -28,7 +28,8 @@
       "#foundation/*": ["foundation/*"],
       "#utils/*": ["utils/*"],
       "#schemas/*": ["schemas/*"]
-    }
+    },
+    "types": ["kakao.maps.d.ts"]
   },
   "include": [
     "next-env.d.ts",

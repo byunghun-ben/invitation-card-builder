@@ -16,6 +16,10 @@ const updateMetadataSchema = z.object({
 const updateWeddingHallSchema = z.object({
   name: z.string(),
   address: z.string(),
+  roadAddress: z.string().optional(),
+  url: z.string().optional(),
+  lat: z.string().optional(),
+  lng: z.string().optional(),
   content: z.string(),
   images: z.array(updateImageSchema),
 });
