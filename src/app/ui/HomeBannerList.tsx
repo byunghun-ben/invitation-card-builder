@@ -55,7 +55,7 @@ const HomeBannerList = ({ children }: Props) => {
   }, []);
 
   return (
-    <section className="relative h-[260px] border-b flex items-center justify-center bg-pink-200">
+    <section className="relative h-[640px] border-b flex items-center justify-center bg-pink-200">
       {/* 왼쪽으로 스크롤하는 버튼 */}
       {showLeftButton && (
         <button
