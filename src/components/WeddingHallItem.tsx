@@ -45,6 +45,11 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
         return;
       }
 
+      if (!window.kakao) {
+        logger.error("kakao is not valid");
+        return;
+      }
+
       const mapOptions: kakao.maps.MapOptions = {
         center: new kakao.maps.LatLng(lat, lng),
         level: 3,
