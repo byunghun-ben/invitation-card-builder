@@ -19,15 +19,16 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
   const isKakaoScriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    const naverMapUrl = encodeURI(
-      `https://map.naver.com/v5/search/${weddingHall.name}`,
-    );
-    const kakaoMapUrl = encodeURI(
-      `https://map.kakao.com/link/search/${weddingHall.name}`,
-    );
+    const naverMapUrl = encodeURI(`https://map.naver.com/v5/search/${name}`);
+    const kakaoMapUrl = encodeURI(`https://map.kakao.com/link/search/${name}`);
 
     const mapElement = mapWrapperRef.current;
     const isKakaoScriptLoaded = isKakaoScriptLoadedRef.current;
+
+    if (!window.kakao.maps) {
+      logger.error("kakao is not valid");
+      return;
+    }
 
     const createMap = () => {
       logger.log("createMap");
@@ -42,11 +43,6 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
       if (!lat || !lng) {
         logger.error("lat or lng is not valid");
         mapElement.style.display = "none";
-        return;
-      }
-
-      if (!window.kakao) {
-        logger.error("kakao is not valid");
         return;
       }
 
@@ -72,7 +68,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
         >
           <span
             class="flex font-bold whitespace-pre-line"
-          >${weddingHall.name}</span>
+          >${name}</span>
           <span
             class="flex text-sm whitespace-pre-line"
           >${weddingHall.roadAddress}</span>
@@ -109,12 +105,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
       logger.log("reload map");
       createMap();
     }
-  }, [
-    weddingHall.lat,
-    weddingHall.lng,
-    weddingHall.name,
-    weddingHall.roadAddress,
-  ]);
+  }, [weddingHall.lat, weddingHall.lng, name, weddingHall.roadAddress]);
 
   return (
     <div className="flex-none flex flex-col">
@@ -126,7 +117,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
           height={32}
           className="rounded-full border object-cover"
         />
-        <span className="text-sm font-bold">{`${weddingHall.name} 오시는 길`}</span>
+        <span className="text-sm font-bold">{`${name} 오시는 길`}</span>
       </div>
 
       <PostImageViewerV2 images={weddingHall.images} />

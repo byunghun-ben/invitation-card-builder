@@ -64,7 +64,7 @@ const Page = async (props: Props) => {
         ))}
       </section>
 
-      {/* <WeddingHallItem weddingHall={instaTemplate.weddingHall} /> */}
+      <WeddingHallItem weddingHall={instaTemplate.weddingHall} />
     </div>
   );
 };
