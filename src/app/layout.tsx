@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import Script from "next/script";
+
+const APP_KEY = "b66b5419c9c51832a54b919747775178";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +23,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <Toaster />
         {children}
+        <Script
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&autoload=false`}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

@@ -1,6 +1,8 @@
 "use client";
 
+import { InstaWeddingHallInfo } from "@/schemas/instaTemplate";
 import { LocalSearchKeywordDocumentType } from "@/schemas/kakaoMap";
+import logger from "@/utils/logger";
 import { Dialog, Transition } from "@headlessui/react";
 import { FormEvent, Fragment, useCallback, useState } from "react";
 import { searchLocalByKeyword } from "../api";
@@ -8,7 +10,14 @@ import { searchLocalByKeyword } from "../api";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: ({ name, address }: { name: string; address: string }) => void;
+  onSelect: ({
+    name,
+    address,
+    roadAddress,
+    url,
+    lat,
+    lng,
+  }: InstaWeddingHallInfo) => void;
 };
 
 const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
@@ -39,6 +48,7 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
 
     const { documents: searchResult } = await searchLocalByKeyword(keyword);
 
+    logger.log(searchResult);
     setResult(searchResult);
     setSearchLoading(false);
     setSearchFetched(true);
@@ -49,6 +59,10 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
       onSelect({
         name: local.place_name,
         address: local.address_name,
+        roadAddress: local.road_address_name,
+        url: local.place_url,
+        lat: local.y,
+        lng: local.x,
       });
       handleClose();
     },
@@ -129,6 +143,10 @@ const LocalSearchModal = ({ isOpen, onClose, onSelect }: Props) => {
                         onSelect({
                           name,
                           address,
+                          roadAddress: "",
+                          url: "",
+                          lat: "",
+                          lng: "",
                         });
 
                         handleClose();

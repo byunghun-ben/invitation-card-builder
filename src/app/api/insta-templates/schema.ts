@@ -83,6 +83,10 @@ const getWeddingHallSchema = z.object({
   template_id: z.string(),
   name: z.string(),
   address: z.string(),
+  road_address: z.string(),
+  url: z.string(),
+  lat: z.string(),
+  lng: z.string(),
   content: z.string(),
   images: z.array(getInstaImageSchema),
 });
