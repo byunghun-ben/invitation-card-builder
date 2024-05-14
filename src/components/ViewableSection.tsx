@@ -22,7 +22,6 @@ const ViewableSection = ({ sectionName, children }: Props) => {
       const isIntersecting = entries.some(
         entry => entry.intersectionRatio > 0.8,
       );
-      console.log(sectionName, isIntersecting);
       setIsInView(isIntersecting);
     }, INTERSECTION_OPTION);
 
