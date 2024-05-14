@@ -25,7 +25,7 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
     const mapElement = mapWrapperRef.current;
     const isKakaoScriptLoaded = isKakaoScriptLoadedRef.current;
 
-    if (!window.kakao.maps) {
+    if (!window.kakao) {
       logger.error("kakao is not valid");
       return;
     }
