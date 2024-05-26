@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Script from "next/script";
 
-const APP_KEY = "b66b5419c9c51832a54b919747775178";
+const APP_KEY = process.env.KAKAO_APP_KEY || "";
 
 const inter = Inter({ subsets: ["latin"] });
 
