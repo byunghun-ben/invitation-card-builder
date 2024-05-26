@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const APP_KEY = process.env.KAKAO_APP_KEY || "";
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </body>
+      <SpeedInsights />
     </html>
   );
 }
