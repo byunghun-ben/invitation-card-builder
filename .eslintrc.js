@@ -10,7 +10,6 @@ module.exports = {
   },
   extends: [
     "plugin:@typescript-eslint/recommended",
-    "airbnb",
     "airbnb-typescript",
     "plugin:prettier/recommended",
     "next/core-web-vitals",
@@ -29,5 +28,6 @@ module.exports = {
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+    "jsx-a11y/label-has-associated-control": "off",
   },
 };
