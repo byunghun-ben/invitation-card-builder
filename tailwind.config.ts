@@ -35,6 +35,11 @@ const config: Config = {
         ".scrolling-touch": {
           "-webkit-overflow-scrolling": "touch",
         },
+        ".flex-center": {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        },
       };
       addUtilities(newUtilities);
     }),

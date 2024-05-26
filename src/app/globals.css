@@ -9,20 +9,14 @@
   --input-color-rgb: 15, 23, 42;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-}
+@layer base {
+  body {
+    @apply bg-white text-slate-900;
+  }
 
-/* input focus outline none */
-input:focus {
-  outline: none;
-}
-
-/* Darkmode Input background */
-input {
-  background-color: rgb(var(--input-background-rgb));
-  color: rgb(var(--input-color-rgb));
+  input {
+    @apply outline-none;
+  }
 }
 
 /* Loaders */

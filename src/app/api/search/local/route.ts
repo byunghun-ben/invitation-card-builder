@@ -16,7 +16,7 @@ const GET = async (req: NextRequest) => {
     );
   }
 
-  const url = `${BASE_URL}?query=${query}`;
+  const url = `${BASE_URL}?query=${query}&size=5`;
 
   const response = await fetch(url, {
     method: "GET",
