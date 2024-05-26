@@ -21,7 +21,7 @@ const SampleView = () => {
   };
 
   return (
-    <div className="sticky top-0 inset-x-0 h-screen">
+    <div className="sticky top-0 inset-x-0 h-full overflow-hidden">
       {loading && (
         <div className="w-full flex items-center justify-center p-10">
           <Loading />
@@ -30,7 +30,7 @@ const SampleView = () => {
       <iframe
         ref={iframeRef}
         src={IFRAME_URL}
-        className="w-full h-px"
+        className="w-full h-full"
         title="샘플 청첩장"
         onLoad={handleLoadIframe}
       />

@@ -12,7 +12,7 @@ const InstaViewTemplate = (props: { children: ReactNode }) => {
     <div
       data-component="Container"
       ref={templateRef}
-      className="relative border-x overflow-y-scroll no-scrollbar"
+      className="relative overflow-y-scroll no-scrollbar"
     >
       <ContainerWidthProvider>{props.children}</ContainerWidthProvider>
     </div>

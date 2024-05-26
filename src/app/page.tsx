@@ -1,13 +1,7 @@
 import Header from "@/components/Header";
 import SampleView from "@/components/LandingPage/SampleView";
-import ScrollView from "@/components/LandingPage/ScrollView";
+import Link from "next/link";
 import { getSupabaseUser } from "./actions";
-
-// const BANNER_IMAGES = [
-//   "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images/banner_11.webp",
-//   "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images/banner_2.webp",
-//   "https://knuahpfeiqewcczgflkw.supabase.co/storage/v1/object/public/images/banner_3.webp",
-// ];
 
 const Page = async () => {
   const user = await getSupabaseUser();
@@ -16,30 +10,31 @@ const Page = async () => {
     <div className="flex flex-col">
       <Header />
 
-      {/* <HomeBannerList>
-        {BANNER_IMAGES.map((url, index) => (
-          <li key={url} className="relative flex-none h-full w-full snap-start">
-            <Image
-              src={url}
-              className="w-full h-full object-cover"
-              alt="banner"
-              fill
-              draggable={false}
-              priority={index === 0}
-            />
-          </li>
-        ))}
-      </HomeBannerList> */}
+      <div className="flex flex-1 flex-col">
+        <section className="bg-slate-100 px-6 py-12">
+          <div className="w-full mx-auto flex flex-col gap-6 md:flex-row md:items-center">
+            <div className="flex-none flex flex-col gap-3 text-center md:flex-1">
+              <p className="font-bold text-slate-500">
+                결혼을 앞둔 개발자가 백수 때 만든 청첩장 에디터
+              </p>
+              <h1 className="text-3xl font-black text-slate-900 whitespace-normal">
+                우리의 이야기를 담은 모바일 청첩장
+              </h1>
+              <p className="text-slate-700 font-medium">
+                우리만의 피드를 만들고, 공유해보세요.
+              </p>
+              <Link
+                href="/auth/login"
+                className="flex-none mx-auto py-2 px-4 bg-green-700 rounded-xl"
+              >
+                <span className="text-white font-bold text-lg">시작하기</span>
+              </Link>
+            </div>
 
-      <div className="flex items-stretch min-h-screen">
-        <section className="sticky top-0 flex-1 flex flex-col pt-40">
-          <ScrollView user={user} />
-        </section>
-        <section
-          aria-label="샘플 청첩장을 띄움"
-          className="hidden relative basis-[420px] flex-shrink-0 lg:flex flex-col"
-        >
-          <SampleView />
+            <div className="relative flex-none mx-auto w-full max-w-96 aspect-[1/2] bg-white p-4 border border-slate-400 rounded-3xl">
+              <SampleView />
+            </div>
+          </div>
         </section>
       </div>
     </div>

@@ -1,11 +1,12 @@
 "use client";
 
+import logger from "@/utils/logger";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 const INTERSECTION_OPTION: IntersectionObserverInit = {
   root: null,
-  rootMargin: "60px",
-  threshold: [0, 0.75, 0.8, 0.85, 1.0],
+  rootMargin: "0px",
+  threshold: [0, 0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 1.0],
 };
 
 type Props = {
@@ -19,9 +20,10 @@ const ViewableSection = ({ sectionName, children }: Props) => {
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
-      const isIntersecting = entries.some(
-        entry => entry.intersectionRatio > 0.8,
-      );
+      const isIntersecting = entries.some(entry => {
+        logger.log("isIntersecting", sectionName, entry.intersectionRatio);
+        return entry.intersectionRatio > 0;
+      });
       setIsInView(isIntersecting);
     }, INTERSECTION_OPTION);
 
@@ -37,10 +39,10 @@ const ViewableSection = ({ sectionName, children }: Props) => {
   return (
     <div
       ref={sectionRef}
-      className={`sticky top-0 h-screen shrink-0 flex flex-col items-center transition bg-white ${isInView ? "opacity-100 translate-y-0" : "opacity-0"}`}
+      className={`shrink-0 flex flex-col items-center transition bg-white ${isInView ? "opacity-100 translate-y-0" : "opacity-0"}`}
       aria-label={sectionName}
     >
-      <div className="sticky top-40 flex flex-col items-center justify-center px-10">
+      <div className="flex flex-col items-center justify-center px-10">
         {children}
       </div>
     </div>
