@@ -2,6 +2,7 @@
 
 import { ROLE, ROLES } from "@/constants";
 import { HallLocation, Owner, Roles } from "@/schemas/pagesisters";
+import logger from "@/utils/logger";
 import {
   Dispatch,
   ReactNode,
@@ -25,6 +26,7 @@ const eventFormContext = createContext<{
   setEventForm: Dispatch<SetStateAction<EventForm>>;
   handleOwnerRoleChange: (newRoles: Roles) => void;
   handleOwnerOrderChange: () => void;
+  handleOwnerNameChange: (ownerId: string, name: string) => void;
 }>({
   eventForm: {
     owners: [],
@@ -35,6 +37,7 @@ const eventFormContext = createContext<{
   setEventForm: () => {},
   handleOwnerRoleChange: () => {},
   handleOwnerOrderChange: () => {},
+  handleOwnerNameChange: () => {},
 });
 
 export const EventFormContextProvider = ({
@@ -128,10 +131,19 @@ export const EventFormContextProvider = ({
 
   // 호스트 표기 순서 변경
   const handleOwnerOrderChange = useCallback(() => {
-    console.log("handleOwnerOrderChange");
+    logger.log("handleOwnerOrderChange");
     setEventForm(prev => ({
       ...prev,
       owners: [prev.owners[1], prev.owners[0]],
+    }));
+  }, []);
+
+  const handleOwnerNameChange = useCallback((ownerId: string, name: string) => {
+    setEventForm(prev => ({
+      ...prev,
+      owners: prev.owners.map(owner => {
+        return owner.id === ownerId ? { ...owner, name } : owner;
+      }),
     }));
   }, []);
 
@@ -143,6 +155,7 @@ export const EventFormContextProvider = ({
         setEventForm,
         handleOwnerRoleChange,
         handleOwnerOrderChange,
+        handleOwnerNameChange,
       }}
     >
       {children}

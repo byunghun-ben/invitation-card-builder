@@ -2,6 +2,7 @@
 
 import { searchLocalByKeyword } from "@/app/edit/[templateCode]/api";
 import { LocalSearchKeywordDocumentType } from "@/schemas/kakaoMap";
+import logger from "@/utils/logger";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   ChangeEvent,
@@ -38,7 +39,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
   const searchLocal = useCallback(async (query: string) => {
     const response = await searchLocalByKeyword(query);
 
-    console.log(response);
+    logger.log(response);
     setSearchResults(response.documents);
     setIsLoading(false);
   }, []);
@@ -77,7 +78,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
 
   const handleItemClick = useCallback(
     (item: LocalSearchKeywordDocumentType) => {
-      console.log("click", item);
+      logger.log("click", item);
       setSelectedItem(item);
       onSelect(item);
       setIsOpen(false);
@@ -87,7 +88,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      console.log("key down", e.key, searchResults.length);
+      logger.log("key down", e.key, searchResults.length);
       const isListEmpty = searchResults.length === 0;
 
       switch (e.key) {
@@ -142,7 +143,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
   useEffect(
     function scrollListToHighlighted() {
       const listElement = listRef.current;
-      console.log("scroll", highlightedIndex, listElement);
+      logger.log("scroll", highlightedIndex, listElement);
       if (highlightedIndex < 0 || !listElement) {
         return;
       }
@@ -190,7 +191,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
           onBlur={e => {
             // item이 선택되었을 때, blur 이벤트가 발생하지 않도록
             if (e.relatedTarget) {
-              console.log("related target", e.relatedTarget);
+              logger.log("related target", e.relatedTarget);
               return;
             }
 

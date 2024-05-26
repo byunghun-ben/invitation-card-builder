@@ -10,20 +10,23 @@ const ROLE_LABELS = {
 } as const;
 
 const RolesFieldset = () => {
-  const { eventForm, ownerRolesType, handleOwnerOrderChange } = useEventForm();
+  const {
+    eventForm,
+    ownerRolesType,
+    handleOwnerOrderChange,
+    handleOwnerNameChange,
+  } = useEventForm();
   const { owners } = eventForm;
 
   const showRoleOrderChangeSection = ownerRolesType === "groom-bride";
 
   const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
     const ownerId = e.currentTarget.dataset.ownerid as string;
-    console.log("drag start", ownerId);
     e.dataTransfer.setData("text/plain", ownerId);
     e.dataTransfer.effectAllowed = "move";
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLButtonElement>) => {
-    console.log("drag over", e.currentTarget.dataset.ownerid);
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
   };
@@ -38,7 +41,6 @@ const RolesFieldset = () => {
     }
 
     handleOwnerOrderChange();
-    console.log("drop", transferOwnerId, currentOwnerId);
   };
 
   return (
@@ -54,9 +56,11 @@ const RolesFieldset = () => {
             <input
               className="relative w-full h-12 px-2 text-slate-700 border rounded border-slate-200 placeholder:text-slate-300"
               type="text"
-              name={`host-name-${owner.role}`}
+              name={`host-name-${owner.id}`}
               id={`host-name-${owner.id}`}
               placeholder="이름 입력"
+              value={owner.name}
+              onChange={e => handleOwnerNameChange(owner.id, e.target.value)}
             />
           </label>
         ))}

@@ -4,6 +4,7 @@ import { InputHTMLAttributes, ReactNode, useCallback, useState } from "react";
 import CommonInput from "./CommonInput";
 import { Dialog } from "@headlessui/react";
 import DatePickerModal from "./DatePickerModal";
+import logger from "@/utils/logger";
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
   value: string;
@@ -41,7 +42,7 @@ const DateInput = ({
         value={value}
         // onChange={e => onChange(e.target.value)}
         onClick={() => {
-          console.log("clicked");
+          logger.log("clicked");
           setIsOpen(true);
         }}
         error={error}

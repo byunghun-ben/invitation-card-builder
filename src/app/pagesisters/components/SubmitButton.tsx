@@ -1,12 +1,13 @@
 "use client";
 
+import logger from "@/utils/logger";
 import { useEventForm } from "../hooks/EventFormContext";
 
 const SubmitButton = () => {
   const { eventForm } = useEventForm();
 
   const handleSubmit = () => {
-    console.log("청첩장 만들기", eventForm);
+    logger.log("청첩장 만들기", eventForm);
   };
 
   return (
