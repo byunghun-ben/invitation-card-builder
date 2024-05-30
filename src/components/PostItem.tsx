@@ -7,8 +7,6 @@ import InstaPostLikeAndComment from "./InstaPost/InstaPostLikeAndComment";
 import PostImageViewerV2 from "./PostImageViewerV2";
 
 const getPost = async (postId: string): Promise<InstaPost | null> => {
-  "use server";
-
   const host = headers().get("host") || "localhost:3000";
   const protocol = host.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${host}/api/posts/${postId}`;

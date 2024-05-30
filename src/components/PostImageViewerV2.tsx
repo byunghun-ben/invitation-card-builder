@@ -80,7 +80,7 @@ const PostImageViewerV2 = ({ images }: Props) => {
                   className="object-cover h-full w-full"
                   width={510}
                   height={510}
-                  draggable
+                  draggable={false}
                   priority={index === 0}
                 />
               </li>

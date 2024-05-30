@@ -31,7 +31,6 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
     }
 
     const createMap = () => {
-      logger.log("createMap");
       const lat = Number(weddingHall.lat);
       const lng = Number(weddingHall.lng);
 
@@ -102,7 +101,6 @@ const WeddingHallItem = ({ weddingHall }: Props) => {
     });
 
     if (isKakaoScriptLoaded) {
-      logger.log("reload map");
       createMap();
     }
   }, [weddingHall.lat, weddingHall.lng, name, weddingHall.roadAddress]);

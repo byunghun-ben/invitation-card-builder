@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import SignupForm from "./SignupForm";
+import { Button } from "@/components/ui/button";
 
 const Page = async () => {
   const supabase = createClient();
@@ -20,12 +21,16 @@ const Page = async () => {
       <section className="w-full max-w-sm mx-auto py-20">
         <div className="flex-1 px-4 py-10 flex flex-col items-center">
           <h1 className="text-xl font-bold mb-10">회원가입</h1>
+
           <SignupForm />
-          <div className="flex flex-col gap-1 items-center">
+
+          <div className="flex flex-col gap-1 items-center mt-2">
             <p className="text-sm">이미 만들던 청첩장이 있나요?</p>
-            <Link href="/auth/login" className="text-sm hover:underline">
-              로그인하기
-            </Link>
+            <Button asChild variant="link">
+              <Link href="/auth/login" className="text-sm hover:underline">
+                로그인하기
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
