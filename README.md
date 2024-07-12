@@ -18,3 +18,13 @@
   - /share/template/:id (템플릿 공유 페이지)
 
 - /templates/:id (템플릿 상세 페이지)
+
+## TODO
+
+### Auth
+
+- [x] 카카오 로그인
+
+### MyPage
+
+- [ ] 내 템플릿 목록 확인하기

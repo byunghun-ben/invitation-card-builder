@@ -3,7 +3,7 @@ import Link from "next/link";
 import SignoutButton from "./Header/SignoutButton";
 import { Button } from "./ui/button";
 
-const Header = async () => {
+const NavigationHeader = async () => {
   const user = await getSupabaseUser();
   const isLogged = user ? true : false;
 
@@ -17,16 +17,22 @@ const Header = async () => {
       </Link>
       <div className="items-center gap-2">
         {isLogged ? (
-          <div className="flex items-center gap-3 lg:gap-4">
+          <div className="flex items-center gap-2 lg:gap-4">
             <Button asChild variant="ghost" className="px-2">
               <Link href="/edit" className="relative flex items-center">
                 <span className="text-sm font-bold">청첩장 수정하기</span>
               </Link>
             </Button>
+
+            <Button asChild variant="ghost" className="px-2">
+              <Link href="/mypage" className="relative flex items-center">
+                <span className="text-sm font-bold">마이페이지</span>
+              </Link>
+            </Button>
             <SignoutButton />
           </div>
         ) : (
-          <div className="flex items-center gap-3 lg:gap-4">
+          <div className="flex items-center gap-2 lg:gap-4">
             <Button asChild variant="ghost" className="px-2">
               <Link href="/sample" className="relative flex items-center">
                 <span className="text-sm font-bold">샘플보기</span>
@@ -44,4 +50,4 @@ const Header = async () => {
   );
 };
 
-export default Header;
+export default NavigationHeader;

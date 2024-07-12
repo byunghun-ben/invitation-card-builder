@@ -1,7 +1,7 @@
 "use client";
 
 import logger from "@/utils/logger";
-import { useEventForm } from "../hooks/EventFormContext";
+import { useEventForm } from "../_hooks/EventFormContext";
 
 const SubmitButton = () => {
   const { eventForm } = useEventForm();

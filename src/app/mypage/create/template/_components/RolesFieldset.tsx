@@ -1,8 +1,8 @@
 "use client";
 
 import { ROLE } from "@/constants";
-import { useEventForm } from "../hooks/EventFormContext";
 import { HandRaisedIcon } from "@heroicons/react/24/outline";
+import { useEventForm } from "../_hooks/EventFormContext";
 
 const ROLE_LABELS = {
   [ROLE.GROOM]: "신랑",

@@ -1,7 +1,7 @@
 "use client";
 
 import { ROLES } from "@/constants";
-import { useEventForm } from "../hooks/EventFormContext";
+import { useEventForm } from "../_hooks/EventFormContext";
 
 const RolesRadio = () => {
   const { eventForm, ownerRolesType, handleOwnerRoleChange } = useEventForm();

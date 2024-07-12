@@ -1,19 +1,11 @@
-import Link from "next/link";
-import RolesFieldset from "./components/RolesFieldset";
-import RolesRadio from "./components/RolesRadio";
-import WeddingHallSection from "./components/WeddingHallSection/WeddingHallSection";
-import SubmitButton from "./components/SubmitButton";
-import { EventFormContextProvider } from "./hooks/EventFormContext";
+import RolesFieldset from "./_components/RolesFieldset";
+import RolesRadio from "./_components/RolesRadio";
+import { EventFormContextProvider } from "./_hooks/EventFormContext";
 
-const Page = async () => {
+const CreateTemplatePage = async () => {
   return (
-    <EventFormContextProvider>
-      <nav className="flex-none z-10 sticky top-0 flex items-center border-b h-12 px-4 bg-white">
-        <Link href="/" className="font-bold text-sm">
-          보란말이야
-        </Link>
-      </nav>
-      <div className="flex flex-1 flex-col bg-slate-50">
+    <div className="flex flex-col">
+      <EventFormContextProvider>
         <div className="flex flex-col max-w-md mx-auto py-20">
           <section className="flex flex-col gap-8">
             <div className="flex flex-col">
@@ -35,13 +27,11 @@ const Page = async () => {
             <div className="h-px w-4 bg-slate-400" />
           </div>
 
-          <WeddingHallSection />
+          {/* <WeddingHallSection /> */}
         </div>
-
-        <SubmitButton />
-      </div>
-    </EventFormContextProvider>
+      </EventFormContextProvider>
+    </div>
   );
 };
 
-export default Page;
+export default CreateTemplatePage;

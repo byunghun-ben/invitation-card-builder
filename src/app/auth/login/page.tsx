@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import NavigationHeader from "@/components/NavigationHeader";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { signInWithKakao } from "./_actions/signInWithKakao";
@@ -24,7 +24,7 @@ const Page = async ({ searchParams }: Props) => {
 
   return (
     <div className="flex-1 h-full flex flex-col">
-      <Header />
+      <NavigationHeader />
       <section className="flex-1 w-full flex flex-col items-center px-8 py-16">
         <div className="max-w-80 w-full flex flex-col gap-8">
           <div className="w-full flex flex-col gap-2">

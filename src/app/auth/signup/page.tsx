@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import NavigationHeader from "@/components/NavigationHeader";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -17,7 +17,7 @@ const Page = async () => {
 
   return (
     <div className="flex flex-col">
-      <Header />
+      <NavigationHeader />
       <section className="w-full max-w-sm mx-auto py-20">
         <div className="flex-1 px-4 py-10 flex flex-col items-center">
           <h1 className="text-xl font-bold mb-10">회원가입</h1>

@@ -1,11 +1,11 @@
-import Header from "@/components/Header";
+import NavigationHeader from "@/components/NavigationHeader";
 import SampleView from "@/components/LandingPage/SampleView";
 import Link from "next/link";
 
 const Page = async () => {
   return (
     <div className="flex flex-col">
-      <Header />
+      <NavigationHeader />
 
       <div className="flex flex-1 flex-col">
         <section className="px-6 py-12">
