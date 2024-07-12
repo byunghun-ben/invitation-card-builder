@@ -1,11 +1,8 @@
 import Header from "@/components/Header";
 import SampleView from "@/components/LandingPage/SampleView";
 import Link from "next/link";
-import { getSupabaseUser } from "./actions";
 
 const Page = async () => {
-  const user = await getSupabaseUser();
-
   return (
     <div className="flex flex-col">
       <Header />

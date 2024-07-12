@@ -1,10 +1,11 @@
 "use client";
 
 import { InstaMetadata } from "@/schemas/instaTemplate";
+import { getURL } from "@/utils/helpers";
 import Link from "next/link";
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 
-const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN;
+const URL = getURL();
 
 type Props = {
   templateCode: string;
@@ -13,7 +14,7 @@ type Props = {
 };
 
 const MetadataPanel = ({ templateCode, metadata, setMetadata }: Props) => {
-  const publicUrl = `${DOMAIN}/${templateCode}`;
+  const publicUrl = `${URL}/${templateCode}`;
 
   const handleChangeGroomName = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

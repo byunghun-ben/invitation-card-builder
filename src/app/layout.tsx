@@ -5,7 +5,6 @@ import { Inter as FontSans } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { ContainerWidthProvider } from "./[id]/model/ContainerWidthContext/ContainerWidthContext";
 
 const APP_KEY = process.env.KAKAO_APP_KEY || "";
 
