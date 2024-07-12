@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ["src/components/ui/"],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "prettier"],
   parserOptions: {
