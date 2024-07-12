@@ -1,3 +1,4 @@
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -21,7 +22,7 @@ export const GET = async (request: Request) => {
 
     return NextResponse.redirect(`${origin}${next}`);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return NextResponse.redirect(`${origin}/auth/auth-code-error`);
   }
 };

@@ -10,8 +10,6 @@ type Params = {
 
 export const signInWithKakao = async ({ next = "/" }: Params) => {
   "use server";
-  console.log("카카오로 로그인하기", next);
-
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({

@@ -10,7 +10,6 @@ type Props = {
 };
 
 const Page = async ({ searchParams }: Props) => {
-  console.log("로그인 페이지", searchParams);
   // 로그인 후 리다이렉트할 URL을 가져옵니다.
   const next = searchParams.next ?? "/";
 
