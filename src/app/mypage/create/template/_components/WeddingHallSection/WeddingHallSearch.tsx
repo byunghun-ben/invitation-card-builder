@@ -165,17 +165,17 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
     <div className="relative">
       <label
         htmlFor="wedding-hall-address"
-        className="relative flex items-center bg-white border rounded border-slate-200"
+        className="relative h-12 flex items-center bg-white border rounded-md border-slate-200 overflow-hidden"
       >
-        <div className="p-1">
-          <MagnifyingGlassIcon className="w-5 h-5 text-slate-500" />
+        <div className="absolute left-2 top-3 p-1">
+          <MagnifyingGlassIcon className="w-4 h-4 text-slate-500" />
         </div>
         <input
           ref={inputRef}
           type="text"
           name="wedding-hall-address"
           id="wedding-hall-address"
-          className="w-full h-12 px-2 text-slate-700 placeholder:text-slate-300"
+          className="w-full h-full pl-8 text-slate-700 rounded-md placeholder:text-sm placeholder:text-muted-foreground"
           placeholder="예식장 이름이나 주소를 입력해주세요."
           autoComplete="off"
           onChange={handleWeddingHallQueryChange}

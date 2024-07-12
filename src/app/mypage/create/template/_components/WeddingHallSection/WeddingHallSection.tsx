@@ -8,6 +8,7 @@ import DateInput from "../Input/DateInput";
 import TextInput from "../Input/TextInput";
 import WeddingHallSearch from "./WeddingHallSearch";
 import { HallLocation } from "@/schemas/pagesisters";
+import DateTimePickerInput from "../Input/DateTimePickerInput";
 
 const WeddingHallSection = () => {
   const [eventAt, setEventAt] = useState<string>("");
@@ -31,15 +32,15 @@ const WeddingHallSection = () => {
   );
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex flex-col">
-        <h2 className="text-lg font-bold">예식장 정보 입력</h2>
+    <section className="flex flex-col">
+      <div className="flex flex-col gap-1 mb-8">
+        <h2 className="font-bold text-slate-700">예식장 정보 입력</h2>
         <p className="text-sm text-slate-400">
           아직 정해지지 않았다면, 나중에 입력해도 됩니다.
         </p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-6">
         {location && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
@@ -55,6 +56,9 @@ const WeddingHallSection = () => {
                   type="button"
                   className="flex-none flex-center w-16 h-16"
                   aria-label="삭제"
+                  onClick={() => {
+                    setLocation(null);
+                  }}
                 >
                   <TrashIcon className="w-6 h-6 text-slate-500" />
                 </button>
@@ -101,7 +105,17 @@ const WeddingHallSection = () => {
             </div>
           </div>
         )}
-        {showSearch && <WeddingHallSearch onSelect={handleSelectItem} />}
+        {showSearch && (
+          <div className="flex flex-col gap-2">
+            <h3 className="font-bold text-slate-700">예식장 주소</h3>
+            <WeddingHallSearch onSelect={handleSelectItem} />
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <h3 className="font-bold text-slate-700">예식 일시</h3>
+        <DateTimePickerInput />
       </div>
     </section>
   );

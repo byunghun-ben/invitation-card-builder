@@ -1,5 +1,6 @@
 import RolesFieldset from "./_components/RolesFieldset";
 import RolesRadio from "./_components/RolesRadio";
+import WeddingHallSection from "./_components/WeddingHallSection/WeddingHallSection";
 import { EventFormContextProvider } from "./_hooks/EventFormContext";
 
 const CreateTemplatePage = async () => {
@@ -27,7 +28,7 @@ const CreateTemplatePage = async () => {
             <div className="h-px w-4 bg-slate-400" />
           </div>
 
-          {/* <WeddingHallSection /> */}
+          <WeddingHallSection />
         </div>
       </EventFormContextProvider>
     </div>
