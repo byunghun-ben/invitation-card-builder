@@ -8,7 +8,7 @@ const Page = async () => {
       <Header />
 
       <div className="flex flex-1 flex-col">
-        <section className="bg-slate-100 px-6 py-12">
+        <section className="px-6 py-12">
           <div className="w-full mx-auto flex flex-col gap-6 md:flex-row md:items-center">
             <div className="flex-none flex flex-col gap-3 text-center md:flex-1">
               <p className="font-bold text-slate-500">

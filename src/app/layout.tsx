@@ -5,6 +5,7 @@ import { Inter as FontSans } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import { ReactNode } from "react";
 
 const APP_KEY = process.env.KAKAO_APP_KEY || "";
 
@@ -18,11 +19,7 @@ export const metadata: Metadata = {
   description: "당신의 결혼식을 위한 청첩장을 만들어보세요",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
