@@ -9,7 +9,11 @@ const PostSection = ({ posts }: Props) => {
   return (
     <section className="grid grid-cols-3 gap-4">
       {posts.map(post => (
-        <PostItem key={post.id} post={post} />
+        <PostItem
+          key={post.id}
+          templateCode={post.templateId}
+          postId={post.id}
+        />
       ))}
     </section>
   );
