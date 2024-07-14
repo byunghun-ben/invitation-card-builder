@@ -1,8 +1,15 @@
 "use client";
 
 import { ROLE, ROLES } from "@/constants";
-import { HallLocation, Owner, Roles } from "@/schemas/pagesisters";
+import {
+  HallLocation,
+  Owner,
+  ownerSchema,
+  Roles,
+  weddingHallSchema,
+} from "@/schemas/pagesisters";
 import logger from "@/utils/logger";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dispatch,
   ReactNode,
@@ -13,12 +20,22 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-type EventForm = {
-  owners: Owner[];
-  location: HallLocation | null;
-  eventAt: string;
-};
+const templateSchema = z.object({
+  owners: z.array(ownerSchema),
+  location: z.nullable(weddingHallSchema),
+  eventAt: z.string(),
+});
+
+type EventForm = z.infer<typeof templateSchema>;
+
+// type EventForm = {
+//   owners: Owner[];
+//   location: HallLocation | null;
+//   eventAt: string;
+// };
 
 const eventFormContext = createContext<{
   eventForm: EventForm;
@@ -45,6 +62,26 @@ export const EventFormContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const form = useForm<EventForm>({
+    resolver: zodResolver(templateSchema),
+    defaultValues: {
+      owners: [
+        {
+          id: "firstOwner",
+          role: ROLE.GROOM,
+          name: "",
+        },
+        {
+          id: "secondOwner",
+          role: ROLE.BRIDE,
+          name: "",
+        },
+      ],
+      location: null,
+      eventAt: "",
+    },
+  });
+
   const [eventForm, setEventForm] = useState<EventForm>({
     owners: [
       {

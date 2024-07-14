@@ -11,13 +11,13 @@
 
 - /mypage (내 템플릿)
 
-  - /create/template (템플릿 생성 페이지)
-  - /templates/:id/edit (템플릿 수정 페이지)
+  - /create/invitations (템플릿 생성 페이지)
+  - /invitations/:id/edit (템플릿 수정 페이지)
   - /profile (프로필 페이지)
   - /settings (설정 페이지)
-  - /share/template/:id (템플릿 공유 페이지)
+  - /share/invitations/:id (템플릿 공유 페이지)
 
-- /templates/:id (템플릿 상세 페이지)
+- /invitations/:id (템플릿 상세 페이지)
 
 ## TODO
 

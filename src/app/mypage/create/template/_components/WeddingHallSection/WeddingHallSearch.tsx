@@ -39,7 +39,6 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
   const searchLocal = useCallback(async (query: string) => {
     const response = await searchLocalByKeyword(query);
 
-    logger.log(response);
     setSearchResults(response.documents);
     setIsLoading(false);
   }, []);
@@ -70,6 +69,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
     (e: ChangeEvent<HTMLInputElement>) => {
       const query = e.target.value;
 
+      setHighlightedIndex(-1);
       setWeddingHallQuery(query);
       debouncedSearchLocal(query);
     },
@@ -99,6 +99,7 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
         }
 
         case "ArrowDown": {
+          // FIX: 검색 후 처음으로 아래로 이동할 때, 아래로 두번 이동하는 문제
           e.preventDefault();
           setHighlightedIndex(prev => {
             if (isListEmpty) {
@@ -143,7 +144,6 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
   useEffect(
     function scrollListToHighlighted() {
       const listElement = listRef.current;
-      logger.log("scroll", highlightedIndex, listElement);
       if (highlightedIndex < 0 || !listElement) {
         return;
       }
@@ -222,7 +222,13 @@ const WeddingHallSearch = ({ onSelect }: Props) => {
               ref={listRef}
             >
               {searchResults.map((item, index) => (
-                <li key={item.id} className="flex flex-col">
+                <li
+                  key={item.id}
+                  className="flex flex-col"
+                  onMouseOver={() => {
+                    setHighlightedIndex(index);
+                  }}
+                >
                   <button
                     type="button"
                     className={`relative flex flex-col gap-0.5 w-full py-3 px-4 ${highlightedIndex === index ? "bg-slate-100" : "bg-white"}`}

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { ko } from "date-fns/locale";
 import {
   Popover,
   PopoverContent,
@@ -10,12 +9,29 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent } from "react";
+import { SelectSingleEventHandler } from "react-day-picker";
 
-const DateTimePickerInput = () => {
-  const [date, setDate] = useState<Date>();
-  const [time, setTime] = useState<string>("12:00");
+type Props = {
+  value: {
+    date: Date;
+    time: string;
+  };
+  onChange: (value: { date: Date; time: string }) => void;
+};
+
+const DateTimePickerInput = ({ value, onChange }: Props) => {
+  const { date, time } = value;
+
+  const onChangeTime = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...value, time: e.target.value });
+  };
+
+  const onChangeDate: SelectSingleEventHandler = (_, selectedDay) => {
+    onChange({ date: selectedDay, time });
+  };
 
   return (
     <div className="flex flex-col">
@@ -40,16 +56,14 @@ const DateTimePickerInput = () => {
           <input
             type="time"
             className="rounded-md border p-2"
-            value={time}
-            onChange={e => {
-              setTime(e.target.value);
-            }}
+            value={value.time}
+            onChange={onChangeTime}
           />
           <div className="rounded-md border">
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={onChangeDate}
               locale={ko}
             />
           </div>

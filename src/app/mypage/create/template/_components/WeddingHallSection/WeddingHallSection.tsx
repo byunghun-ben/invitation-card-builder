@@ -1,24 +1,25 @@
 "use client";
 
 import { LocalSearchKeywordDocumentType } from "@/schemas/kakaoMap";
-import logger from "@/utils/logger";
-import { CalendarDaysIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { HallLocation } from "@/schemas/pagesisters";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
-import DateInput from "../Input/DateInput";
+import { Controller, useWatch } from "react-hook-form";
+import { useTemplateFormContext } from "../../_hooks/TemplateFormContext";
+import DateTimePickerInput from "../Input/DateTimePickerInput";
 import TextInput from "../Input/TextInput";
 import WeddingHallSearch from "./WeddingHallSearch";
-import { HallLocation } from "@/schemas/pagesisters";
-import DateTimePickerInput from "../Input/DateTimePickerInput";
 
 const WeddingHallSection = () => {
-  const [eventAt, setEventAt] = useState<string>("");
-  const [location, setLocation] = useState<HallLocation | null>(null);
+  const { form } = useTemplateFormContext();
+  const { setValue, control } = form;
+  const { location } = useWatch({ control });
 
   const showSearch = !location;
 
   const handleSelectItem = useCallback(
     (item: LocalSearchKeywordDocumentType) => {
-      setLocation({
+      setValue("location", {
         address: item.address_name,
         coord: [Number(item.x), Number(item.y)],
         mapType: "KAKAO",
@@ -28,8 +29,12 @@ const WeddingHallSection = () => {
         roadAddress: item.road_address_name,
       });
     },
-    [],
+    [setValue],
   );
+
+  const resetLocation = () => {
+    setValue("location", null);
+  };
 
   return (
     <section className="flex flex-col">
@@ -56,53 +61,36 @@ const WeddingHallSection = () => {
                   type="button"
                   className="flex-none flex-center w-16 h-16"
                   aria-label="삭제"
-                  onClick={() => {
-                    setLocation(null);
-                  }}
+                  onClick={resetLocation}
                 >
                   <TrashIcon className="w-6 h-6 text-slate-500" />
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="flex font-bold text-slate-600">예식장 이름</span>
-              <TextInput
-                value={location.placeName}
-                onChange={value => {
-                  setLocation({ ...location, placeName: value });
-                }}
-              />
-            </div>
+            <Controller
+              control={control}
+              name="location.placeName"
+              render={({ field }) => (
+                <div className="flex flex-col gap-2">
+                  <span className="flex font-bold text-slate-600">
+                    예식장 이름
+                  </span>
+                  <TextInput {...field} />
+                </div>
+              )}
+            />
 
-            <div className="flex flex-col gap-2">
-              <span className="flex font-bold text-slate-600">홀 이름</span>
-              <TextInput
-                value={location.placeDetail}
-                onChange={value => {
-                  setLocation({ ...location, placeDetail: value });
-                }}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="flex font-bold text-slate-600">예식 일시</span>
-              <DateInput
-                value={eventAt}
-                onChange={value => {
-                  logger.log(value);
-                  setEventAt(value);
-                }}
-                placeholder="예식일을 선택해주세요"
-                rightIcon={
-                  <div className="flex-center w-12 h-12">
-                    <CalendarDaysIcon className="w-6 h-6 text-slate-500" />
-                  </div>
-                }
-                className="cursor-default"
-                readOnly
-              />
-            </div>
+            <Controller
+              control={control}
+              name="location.placeDetail"
+              render={({ field }) => (
+                <div className="flex flex-col gap-2">
+                  <span className="flex font-bold text-slate-600">홀 이름</span>
+                  <TextInput {...field} />
+                </div>
+              )}
+            />
           </div>
         )}
         {showSearch && (
@@ -113,10 +101,16 @@ const WeddingHallSection = () => {
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-bold text-slate-700">예식 일시</h3>
-        <DateTimePickerInput />
-      </div>
+      <Controller
+        control={form.control}
+        name="eventAt"
+        render={({ field: { value, onChange } }) => (
+          <div className="flex flex-col gap-2">
+            <h3 className="font-bold text-slate-700">예식 일시</h3>
+            <DateTimePickerInput value={value} onChange={onChange} />
+          </div>
+        )}
+      />
     </section>
   );
 };
