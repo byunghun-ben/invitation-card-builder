@@ -7,7 +7,7 @@ const MyPage = async () => {
         <div className="flex items-center mb-10">
           <h2 className="flex-1 text-2xl font-black">청첩장 목록</h2>
           <Link
-            href={`/mypage/create/template`}
+            href={`/mypage/invitations/create`}
             className="flex-center h-8 px-2 bg-slate-50 border border-slate-200 rounded select-none text-sm font-bold tracking-tight hover:bg-slate-100"
           >
             새 청첩장 만들기

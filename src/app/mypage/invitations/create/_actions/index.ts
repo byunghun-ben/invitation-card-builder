@@ -1,10 +1,9 @@
 "use server";
 
 import { Owner } from "@/schemas/pagesisters";
-import { TemplateFormValues } from "../_hooks/TemplateFormContext";
 import { createClient } from "@/utils/supabase/server";
-import logger from "@/utils/logger";
 import { format } from "date-fns";
+import { TemplateFormValues } from "../_hooks/TemplateFormContext";
 
 const getCoupleType = (owners: Owner[]) => {
   let coupleType = "groom_bride";
