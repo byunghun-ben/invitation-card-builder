@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         data-component="Container"
         className={cn(
-          "min-h-screen bg-background font-sans antialiased flex flex-col",
+          "h-screen bg-background font-sans antialiased flex flex-col",
           fontSans.variable,
         )}
       >

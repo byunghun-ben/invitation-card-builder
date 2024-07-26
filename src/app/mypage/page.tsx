@@ -1,6 +1,54 @@
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const invitationSchema = z.object({
+  id: z.number(),
+  weddingId: z.number(),
+  invitationTypeId: z.number(),
+});
+
+const getInvitations = async () => {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    console.error("사용자 정보를 가져올 수 없습니다.");
+    redirect("/auth/login");
+  }
+
+  const { data, error } = await supabase
+    .from("invitations")
+    .select(
+      `
+      id,
+      weddingId:wedding_id,
+      invitationTypeId:invitation_type_id
+    `,
+    )
+    .eq("user_id", user.id);
+
+  if (error) {
+    return [];
+  }
+
+  const safeParseReturn = invitationSchema.array().safeParse(data);
+
+  if (!safeParseReturn.success) {
+    return [];
+  }
+
+  return safeParseReturn.data;
+};
 
 const MyPage = async () => {
+  const invitations = await getInvitations();
+
+  console.log(invitations);
   return (
     <div className="flex flex-col">
       <section className="flex flex-col py-10 px-6">
@@ -15,12 +63,16 @@ const MyPage = async () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {Array.from({ length: 7 }).map((_, index) => (
-            <div key={index} className="flex flex-col p-3 bg-red-100">
+          {invitations.map(invitation => (
+            <Link
+              key={invitation.id}
+              className="flex flex-col p-3 bg-red-100"
+              href={`/mypage/invitations/${invitation.id}/edit`}
+            >
               <h3 className="text-lg font-bold">청첩장 제목</h3>
               <p className="text-sm">청첩장 내용</p>
               <p className="text-sm">최근 수정일: 2021-08-01</p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

@@ -7,10 +7,10 @@ import { TemplateFormContextProvider } from "./_hooks/TemplateFormContext";
 
 const CreateTemplatePage = async () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-y-auto">
       <EventFormContextProvider>
         <TemplateFormContextProvider>
-          <div className="flex flex-col max-w-md w-full mx-auto py-20">
+          <div className="flex flex-col max-w-md w-full mx-auto p-6">
             <section className="flex flex-col gap-8">
               <div className="flex flex-col">
                 <h3 className="text-lg font-bold">호스트 정보 입력</h3>

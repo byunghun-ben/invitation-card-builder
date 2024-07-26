@@ -12,7 +12,7 @@ const MyPageLayout = async ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <NavigationHeader />
 
       {children}
