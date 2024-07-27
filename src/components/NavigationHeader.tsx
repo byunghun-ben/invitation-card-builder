@@ -19,12 +19,6 @@ const NavigationHeader = async () => {
         {isLogged ? (
           <div className="flex items-center gap-2 lg:gap-4">
             <Button asChild variant="ghost" className="px-2">
-              <Link href="/edit" className="relative flex items-center">
-                <span className="text-sm font-bold">청첩장 수정하기</span>
-              </Link>
-            </Button>
-
-            <Button asChild variant="ghost" className="px-2">
               <Link href="/mypage" className="relative flex items-center">
                 <span className="text-sm font-bold">마이페이지</span>
               </Link>

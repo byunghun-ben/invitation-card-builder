@@ -64,12 +64,12 @@ const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
       as="div"
       className="fixed inset-0 z-50"
     >
-      <Dialog.Backdrop className="fixed inset-0 bg-black/50" />
+      <Dialog.Backdrop className="fixed z-10 inset-0 bg-black/50" />
       <div className="fixed inset-0 px-6">
         <Dialog.Panel className="relative flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90%] w-full max-w-[640px] bg-white rounded shadow-md z-50 overflow-hidden">
           <div className="flex flex-col">
             <div className="flex-none flex items-center p-4">
-              <h3 className="text-lg font-bold">게시물 위젯 수정하기</h3>
+              <h3 className="text-lg font-bold">위젯 수정하기</h3>
               <button type="button" className="ml-auto" onClick={onClose}>
                 <XIcon />
               </button>

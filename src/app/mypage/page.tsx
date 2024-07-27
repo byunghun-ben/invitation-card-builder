@@ -7,6 +7,18 @@ const invitationSchema = z.object({
   id: z.number(),
   weddingId: z.number(),
   invitationTypeId: z.number(),
+  wedding: z.object({
+    weddingDate: z.string(),
+    weddingTime: z.string(),
+    couples: z.object({
+      firstPersonName: z.string(),
+      secondPersonName: z.string(),
+    }),
+    venues: z.object({
+      venueName: z.string(),
+      hallName: z.string(),
+    }),
+  }),
 });
 
 const getInvitations = async () => {
@@ -27,7 +39,19 @@ const getInvitations = async () => {
       `
       id,
       weddingId:wedding_id,
-      invitationTypeId:invitation_type_id
+      invitationTypeId:invitation_type_id,
+      wedding:weddings (
+        weddingDate:wedding_date,
+        weddingTime:wedding_time,
+        couples (
+          firstPersonName:first_person_name,
+          secondPersonName:second_person_name
+        ),
+        venues (
+          venueName:venue_name,
+          hallName:hall_name
+        )
+      )
     `,
     )
     .eq("user_id", user.id);
@@ -48,7 +72,6 @@ const getInvitations = async () => {
 const MyPage = async () => {
   const invitations = await getInvitations();
 
-  console.log(invitations);
   return (
     <div className="flex flex-col">
       <section className="flex flex-col py-10 px-6">
@@ -62,18 +85,24 @@ const MyPage = async () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          {invitations.map(invitation => (
-            <Link
-              key={invitation.id}
-              className="flex flex-col p-3 bg-red-100"
-              href={`/mypage/invitations/${invitation.id}/edit`}
-            >
-              <h3 className="text-lg font-bold">청첩장 제목</h3>
-              <p className="text-sm">청첩장 내용</p>
-              <p className="text-sm">최근 수정일: 2021-08-01</p>
-            </Link>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {invitations.map(invitation => {
+            const invitationLabel = `${invitation.wedding.couples.firstPersonName} & ${invitation.wedding.couples.secondPersonName} 결혼식`;
+            const locationLabel = `${invitation.wedding.venues.venueName} (${invitation.wedding.venues.hallName})`;
+            const weddingDate = `${invitation.wedding.weddingDate} ${invitation.wedding.weddingTime}`;
+
+            return (
+              <Link
+                key={invitation.id}
+                className="flex flex-col gap-1 p-3 border border-slate-200 rounded-lg"
+                href={`/mypage/invitations/${invitation.id}/edit`}
+              >
+                <h3 className="text-lg font-bold">{invitationLabel}</h3>
+                <p className="text-sm">{locationLabel}</p>
+                <p className="text-sm">{weddingDate}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
     </div>

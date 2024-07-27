@@ -4,6 +4,7 @@ import { Owner } from "@/schemas/pagesisters";
 import { createClient } from "@/utils/supabase/server";
 import { format } from "date-fns";
 import { TemplateFormValues } from "../_hooks/TemplateFormContext";
+import { revalidatePath } from "next/cache";
 
 const getCoupleType = (owners: Owner[]) => {
   let coupleType = "groom_bride";
@@ -75,11 +76,20 @@ const createWedding = async (props: {
 }): Promise<number> => {
   const supabase = createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("사용자 정보를 가져올 수 없습니다.");
+  }
+
   const { data, error } = await supabase
     .from("weddings")
     .insert({
       wedding_date: format(props.weddingDate, "yyyy-MM-dd"),
       wedding_time: props.weddingTime,
+      user_id: user.id,
     })
     .select(`id`)
     .single();
@@ -126,6 +136,8 @@ export const createTemplateMetadata = async (
     createVenues(weddingId, formValues.location),
     createInvitation(weddingId),
   ]);
+
+  revalidatePath("/mypage");
 
   return {
     invitationId,

@@ -1,10 +1,7 @@
-import { createClient } from "@/utils/supabase/server";
-import { MapIcon } from "@heroicons/react/24/outline";
-import { PlusIcon } from "lucide-react";
+import { getInvitation } from "@/actions/invitations";
+import Link from "next/link";
 import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
-import { InvitationSchema } from "./types";
-import Link from "next/link";
 
 type PageProps = {
   params: {
@@ -15,44 +12,8 @@ type PageProps = {
 const InvitationEditPage = async ({ params }: PageProps) => {
   const invitationId = Number(params.id);
 
-  const supabase = createClient();
+  const invitation = await getInvitation(invitationId);
 
-  const { data, error } = await supabase
-    .from("invitations")
-    .select(
-      `
-      id,
-      weddingId:wedding_id,
-      invitationTypeId:invitation_type_id,
-      widgets (
-        id,
-        type,
-        order,
-        instaPostWidget:insta_post_widgets (
-          content,
-          images (
-            id,
-            url:image_url
-          )
-        ),
-        instaMapWidget:insta_map_widgets (
-          title,
-          placeName:place_name,
-          placeDetail:place_detail,
-          address,
-          roadAddress:road_address,
-          coordX:coord_x,
-          coordY:coord_y
-        )
-      )
-    `,
-    )
-    .eq("id", invitationId)
-    .single();
-
-  // return null;
-
-  const invitation = InvitationSchema.parse(data);
   const weddingId = invitation.weddingId;
 
   // 위젯의 마지막 order 값을 가져옵니다.
@@ -70,8 +31,9 @@ const InvitationEditPage = async ({ params }: PageProps) => {
             <span className="flex font-bold">청첩장 수정하기</span>
             <div className="ml-auto flex items-center">
               <Link
-                href={`/mypage/${invitationId}/preview`}
+                href={`/mypage/invitations/${invitationId}/preview`}
                 className="flex text-sm font-bold text-slate-700"
+                target="_blank"
               >
                 미리보기
               </Link>

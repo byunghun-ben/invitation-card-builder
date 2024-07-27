@@ -51,7 +51,7 @@ const AddWidgetModal = ({
     <>
       <button
         type="button"
-        className="group fixed bottom-4 right-4 flex items-center justify-center gap-2 p-3 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 shadow-md"
+        className="group fixed z-10 bottom-4 right-4 flex items-center justify-center gap-2 p-3 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 shadow-md"
         onClick={() => setIsOpen(true)}
       >
         <p className="text-sm font-bold text-slate-700">위젯 추가하기</p>
