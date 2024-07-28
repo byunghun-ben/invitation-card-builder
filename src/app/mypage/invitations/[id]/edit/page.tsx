@@ -1,4 +1,4 @@
-import { getInvitation, getWedding } from "@/actions/invitations";
+import { getInvitationV1, getWedding } from "@/actions/invitations";
 import Link from "next/link";
 import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
@@ -13,7 +13,7 @@ type PageProps = {
 const InvitationEditPage = async ({ params }: PageProps) => {
   const invitationId = Number(params.id);
 
-  const invitation = await getInvitation(invitationId);
+  const invitation = await getInvitationV1(invitationId);
   const wedding = await getWedding(invitation.weddingId);
 
   const weddingId = invitation.weddingId;

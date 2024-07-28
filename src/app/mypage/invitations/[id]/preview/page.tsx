@@ -1,4 +1,4 @@
-import { getInvitation } from "@/actions/invitations";
+import { getInvitationV1 } from "@/actions/invitations";
 import Link from "next/link";
 import InstaPostItem from "./_components/InstaPostItem";
 import InstaMapItem from "./_components/InstaMapItem";
@@ -13,7 +13,7 @@ type PageProps = {
 const Page = async ({ params: { id } }: PageProps) => {
   const invitationId = Number(id);
 
-  const invitation = await getInvitation(invitationId);
+  const invitation = await getInvitationV1(invitationId);
 
   console.log(invitation);
 
