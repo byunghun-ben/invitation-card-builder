@@ -13,8 +13,8 @@ type Props = {
     coordX: number;
     coordY: number;
   };
-  widgetId: number;
-  invitationId: number;
+  widgetId: string;
+  invitationId: string;
 };
 
 export const updateInstaMapWidget = async ({

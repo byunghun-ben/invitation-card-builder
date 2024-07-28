@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { InstaMapWidgetType } from "@/types/invitation";
 import { Dialog } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { XIcon } from "lucide-react";
@@ -17,14 +18,13 @@ import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { updateInstaMapWidget } from "../_actions/updateInstaMapWidget";
-import { InstaMapWidget } from "../types";
+import { useInvitationContext } from "../_contexts/InvitationContext";
 
 type Props = {
-  widget: InstaMapWidget;
-  invitationId: number;
+  widget: InstaMapWidgetType;
 };
 
-const EditInstaMapWidgetModal = ({ widget, invitationId }: Props) => {
+const EditInstaMapWidgetModal = ({ widget }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -37,20 +37,13 @@ const EditInstaMapWidgetModal = ({ widget, invitationId }: Props) => {
         위젯 수정
       </button>
 
-      {isOpen && (
-        <Modal
-          invitationId={invitationId}
-          widget={widget}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
+      {isOpen && <Modal widget={widget} onClose={() => setIsOpen(false)} />}
     </>
   );
 };
 
 type ModalProps = {
-  invitationId: number;
-  widget: InstaMapWidget;
+  widget: InstaMapWidgetType;
   onClose: () => void;
 };
 
@@ -66,17 +59,20 @@ const EditFormSchema = z.object({
 
 type EditFormValues = z.infer<typeof EditFormSchema>;
 
-const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
+const Modal = ({ widget, onClose }: ModalProps) => {
+  const { invitation } = useInvitationContext();
+  const invitationId = invitation.id;
+
   const form = useForm<EditFormValues>({
     resolver: zodResolver(EditFormSchema),
     defaultValues: {
-      title: widget.instaMapWidget.title,
-      placeName: widget.instaMapWidget.placeName,
-      placeDetail: widget.instaMapWidget.placeDetail,
-      coordX: widget.instaMapWidget.coordX,
-      coordY: widget.instaMapWidget.coordY,
-      address: widget.instaMapWidget.address,
-      roadAddress: widget.instaMapWidget.roadAddress,
+      title: widget.title,
+      placeName: widget.placeName,
+      placeDetail: widget.placeDetail,
+      coordX: widget.coord[0],
+      coordY: widget.coord[1],
+      address: widget.address,
+      roadAddress: widget.roadAddress,
     },
   });
 

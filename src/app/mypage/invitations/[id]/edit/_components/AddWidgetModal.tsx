@@ -4,6 +4,8 @@ import { Dialog } from "@headlessui/react";
 import { PlusIcon, XIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
 import { onAddWidget } from "../_actions/addWidget";
+import { useInvitationContext } from "../_contexts/InvitationContext";
+import { InvitationType, WidgetType } from "@/types/invitation";
 
 // 위젯 종류
 const WIDGET_TYPES = [
@@ -27,17 +29,53 @@ const WIDGET_TYPES = [
   },
 ] as const;
 
-type Props = {
-  widgetLastOrder: number;
-  invitationId: number;
-  weddingId: number;
+const widgetFactory = (
+  widgetType: string,
+  location: InvitationType["location"],
+): WidgetType => {
+  switch (widgetType) {
+    case "INSTA_COVER": {
+      return {
+        type: "INSTA_COVER",
+        id: Math.random().toString(36).slice(2),
+        title: "표지",
+        url: "",
+      };
+    }
+
+    case "INSTA_POST": {
+      return {
+        type: "INSTA_POST",
+        id: Math.random().toString(36).slice(2),
+        images: [],
+        title: "포스트",
+        content: "",
+      };
+    }
+
+    case "INSTA_MAP": {
+      return {
+        type: "INSTA_MAP",
+        id: Math.random().toString(36).slice(2),
+        title: "지도",
+        address: location?.address || "",
+        coord: location?.coord || [],
+        placeName: location?.placeName || "",
+        placeDetail: location?.placeDetail || "",
+        roadAddress: location?.roadAddress || "",
+      };
+    }
+
+    default: {
+      throw new Error(`Unknown widget type: ${widgetType}`);
+    }
+  }
 };
 
-const AddWidgetModal = ({
-  widgetLastOrder,
-  invitationId,
-  weddingId,
-}: Props) => {
+const AddWidgetModal = () => {
+  const { invitation } = useInvitationContext();
+  const invitationId = invitation.id;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickAddWidget = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -47,8 +85,9 @@ const AddWidgetModal = ({
       return;
     }
 
-    console.log("invitationId", invitationId, widgetType);
-    await onAddWidget({ weddingId, invitationId, widgetType, widgetLastOrder });
+    const newWidget = widgetFactory(widgetType, invitation.location);
+
+    await onAddWidget({ invitationId, newWidget });
     // TODO: 에러 처리
     setIsOpen(false);
   };

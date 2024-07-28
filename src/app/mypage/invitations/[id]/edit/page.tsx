@@ -1,4 +1,8 @@
-import { getInvitationV1, getWedding } from "@/actions/invitations";
+import {
+  getInvitation,
+  getInvitationV1,
+  getWedding,
+} from "@/actions/invitations";
 import Link from "next/link";
 import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
@@ -11,20 +15,12 @@ type PageProps = {
 };
 
 const InvitationEditPage = async ({ params }: PageProps) => {
-  const invitationId = Number(params.id);
-
-  const invitation = await getInvitationV1(invitationId);
-  const wedding = await getWedding(invitation.weddingId);
-
-  const weddingId = invitation.weddingId;
-
-  // 위젯의 마지막 order 값을 가져옵니다.
-  const lastOrder = invitation.widgets.reduce((acc, widget) => {
-    return widget.order > acc ? widget.order : acc;
-  }, -1);
+  const invitationId = params.id;
+  const invitation = await getInvitation(invitationId);
+  console.log(invitation);
 
   return (
-    <InvitationContextProvider invitation={invitation} wedding={wedding}>
+    <InvitationContextProvider invitation={invitation}>
       <div className="relative flex-1 flex flex-col pb-20 bg-slate-50 overflow-y-auto">
         <section className="flex-1 max-w-lg w-full mx-auto flex flex-col p-4">
           {/* 인스타그램 초대장 레이아웃 */}
@@ -46,21 +42,12 @@ const InvitationEditPage = async ({ params }: PageProps) => {
             {/* Widgets */}
             <div className="flex-none flex flex-col gap-6">
               {invitation.widgets.map(widget => (
-                <Widget
-                  key={widget.id}
-                  widget={widget}
-                  invitationId={invitationId}
-                  weddingId={weddingId}
-                />
+                <Widget key={widget.id} widget={widget} />
               ))}
             </div>
           </div>
         </section>
-        <AddWidgetModal
-          widgetLastOrder={lastOrder}
-          weddingId={weddingId}
-          invitationId={invitationId}
-        />
+        <AddWidgetModal />
       </div>
     </InvitationContextProvider>
   );

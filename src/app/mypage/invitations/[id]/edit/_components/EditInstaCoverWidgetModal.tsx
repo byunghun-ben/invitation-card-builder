@@ -1,23 +1,22 @@
 "use client";
 
-import { Dialog, RadioGroup } from "@headlessui/react";
-import { PlusIcon, XIcon } from "lucide-react";
-import { useRef, useState } from "react";
-import { InstaCoverWidget } from "../types";
+import { InstaCoverWidgetType } from "@/types/invitation";
 import { createClient } from "@/utils/supabase/client";
+import { Dialog, RadioGroup } from "@headlessui/react";
+import { format } from "date-fns";
+import { PlusIcon, XIcon } from "lucide-react";
 import Image from "next/image";
+import { useRef, useState } from "react";
 import { useInvitationContext } from "../_contexts/InvitationContext";
-import { format, formatDate } from "date-fns";
 
 type Props = {
-  widget: InstaCoverWidget;
-  invitationId: number;
+  widget: InstaCoverWidgetType;
 };
 
 const BUKET_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images";
 
-const EditInstaCoverWidgetModal = ({ widget, invitationId }: Props) => {
+const EditInstaCoverWidgetModal = ({ widget }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,38 +29,31 @@ const EditInstaCoverWidgetModal = ({ widget, invitationId }: Props) => {
         위젯 수정
       </button>
 
-      {isOpen && (
-        <Modal
-          invitationId={invitationId}
-          widget={widget}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
+      {isOpen && <Modal widget={widget} onClose={() => setIsOpen(false)} />}
     </>
   );
 };
 
 type ModalProps = {
-  invitationId: number;
-  widget: InstaCoverWidget;
+  widget: InstaCoverWidgetType;
   onClose: () => void;
 };
 
-const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
-  const { wedding } = useInvitationContext();
+const Modal = ({ widget, onClose }: ModalProps) => {
+  const { invitation } = useInvitationContext();
 
-  const {
-    venue: { venueName, hallName },
-    weddingDate,
-    weddingTime,
-  } = wedding;
+  const { location, eventAt } = invitation;
+
+  const locationLabel = location
+    ? `${location?.placeName} (${location?.placeDetail})`
+    : "";
 
   // 예식 날짜 + 시간
-  const weddingDateTimeString = `${weddingDate} ${weddingTime}`;
+  const weddingDateTimeString = `${eventAt.date} ${eventAt.time}`;
   const date = new Date(weddingDateTimeString);
 
-  const [title, setTitle] = useState(widget.instaCoverWidget.title);
-  const [imageUrl, setImageUrl] = useState(widget.instaCoverWidget.url);
+  const [title, setTitle] = useState(widget.title);
+  const [imageUrl, setImageUrl] = useState(widget.url);
   const [dateFormatString, setDateFormatString] = useState("yyyy-MM-dd HH:mm");
 
   const formattedDate = format(date, dateFormatString);
@@ -161,7 +153,7 @@ const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
                   <div className="flex flex-col p-4">
                     <span className="font-bold mb-2">{title}</span>
                     <span className="text-sm text-slate-500">
-                      {`${venueName} (${hallName})`}
+                      {locationLabel}
                     </span>
                     <span className="text-sm text-slate-500">
                       {formattedDate}

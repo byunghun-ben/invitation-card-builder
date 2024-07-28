@@ -9,9 +9,9 @@ export const editInstaPostWidget = async ({
   invitationId,
   content,
 }: {
-  imageIds: number[];
-  widgetId: number;
-  invitationId: number;
+  imageIds: string[];
+  widgetId: string;
+  invitationId: string;
   content: string;
 }) => {
   console.log("저장");

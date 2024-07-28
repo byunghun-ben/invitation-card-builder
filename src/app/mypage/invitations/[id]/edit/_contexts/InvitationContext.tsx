@@ -1,25 +1,22 @@
 "use client";
 
-import { createContext, ReactNode, useContext } from "react";
-import { Invitation } from "../types";
 import { WeddingType } from "@/schemas/invitation";
+import { InvitationType } from "@/types/invitation";
+import { createContext, ReactNode, useContext } from "react";
 
 const InvitationContext = createContext<{
-  invitation: Invitation;
-  wedding: WeddingType;
+  invitation: InvitationType;
 } | null>(null);
 
 export const InvitationContextProvider = ({
   invitation,
-  wedding,
   children,
 }: {
-  invitation: Invitation;
-  wedding: WeddingType;
+  invitation: InvitationType;
   children: ReactNode;
 }) => {
   return (
-    <InvitationContext.Provider value={{ invitation, wedding }}>
+    <InvitationContext.Provider value={{ invitation }}>
       {children}
     </InvitationContext.Provider>
   );

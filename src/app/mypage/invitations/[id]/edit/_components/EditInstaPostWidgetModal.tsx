@@ -1,5 +1,6 @@
 "use client";
 
+import { InstaPostWidgetType } from "@/types/invitation";
 import { createClient } from "@/utils/supabase/client";
 import { Dialog } from "@headlessui/react";
 import { PlusIcon, XIcon } from "lucide-react";
@@ -7,16 +8,16 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { editInstaPostWidget } from "../_actions/editInstaPostWidget";
 import { InstaPostWidget } from "../types";
+import { useInvitationContext } from "../_contexts/InvitationContext";
 
 type Props = {
-  widget: InstaPostWidget;
-  invitationId: number;
+  widget: InstaPostWidgetType;
 };
 
 const BUKET_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images";
 
-const EditInstaPostWidgetModal = ({ widget, invitationId }: Props) => {
+const EditInstaPostWidgetModal = ({ widget }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -29,27 +30,23 @@ const EditInstaPostWidgetModal = ({ widget, invitationId }: Props) => {
         위젯 수정
       </button>
 
-      {isOpen && (
-        <Modal
-          invitationId={invitationId}
-          widget={widget}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
+      {isOpen && <Modal widget={widget} onClose={() => setIsOpen(false)} />}
     </>
   );
 };
 
 type ModalProps = {
-  invitationId: number;
-  widget: InstaPostWidget;
+  widget: InstaPostWidgetType;
   onClose: () => void;
 };
 
-const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
-  const [content, setContent] = useState(widget.instaPostWidget.content);
+const Modal = ({ widget, onClose }: ModalProps) => {
+  const { invitation } = useInvitationContext();
+  const invitationId = invitation.id;
+
+  const [content, setContent] = useState(widget.content);
   const [images, setImages] = useState(
-    widget.instaPostWidget.images.map(({ id, url }) => ({
+    widget.images.map(({ id, url }) => ({
       id,
       url,
       isNew: false,
@@ -197,14 +194,14 @@ const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
               <button
                 className="w-full flex-center p-2 border bg-green-600 rounded-lg"
                 onClick={async () => {
-                  await editInstaPostWidget.bind(null, {
+                  await editInstaPostWidget({
                     invitationId,
                     widgetId: widget.id,
                     content,
                     imageIds: images
                       .filter(({ isNew }) => isNew)
                       .map(image => image.id),
-                  })();
+                  });
 
                   // revalidatePath를 통해서, 위젯 수정 완료 후 페이지 컴포넌트를 다시 렌더링하도록 했음.
                   // 하지만, EditInstaPostWidgetModal 컴포넌트는 페이지 컴포넌트를 다시 렌더링하더라도 유지가 된다.

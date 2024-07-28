@@ -1,14 +1,13 @@
 import Image from "next/image";
-import { type InstaPostWidget as InstaPostWidgetType } from "../types";
 import EditInstaPostWidgetModal from "./EditInstaPostWidgetModal";
+import { InstaPostWidgetType } from "@/types/invitation";
 
 type Props = {
   widget: InstaPostWidgetType;
-  invitationId: number;
 };
 
-const InstaPostWidget = async ({ widget, invitationId }: Props) => {
-  const images = widget.instaPostWidget.images;
+const InstaPostWidget = async ({ widget }: Props) => {
+  const images = widget.images;
   const isImageEmpty = images.length === 0;
 
   return (
@@ -17,7 +16,7 @@ const InstaPostWidget = async ({ widget, invitationId }: Props) => {
         <div className="flex-1 flex items-center">
           <span className="font-bold">게시물</span>
         </div>
-        <EditInstaPostWidgetModal widget={widget} invitationId={invitationId} />
+        <EditInstaPostWidgetModal widget={widget} />
       </div>
 
       <div className="flex flex-col border-b border-slate-200">
@@ -63,7 +62,7 @@ const InstaPostWidget = async ({ widget, invitationId }: Props) => {
 
       <div className="p-4">
         <span className="text-sm text-slate-900">
-          {widget.instaPostWidget.content || "내용을 입력해주세요"}
+          {widget.content || "내용을 입력해주세요"}
         </span>
       </div>
     </div>

@@ -1,26 +1,24 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { InstaMapWidget as InstaMapWidgetType } from "../types";
 import EditInstaMapWidgetModal from "./EditInstaMapWidgetModal";
 import logger from "@/utils/logger";
+import { InstaMapWidgetType } from "@/types/invitation";
 
 type Props = {
   widget: InstaMapWidgetType;
-  invitationId: number;
 };
 
-const InstaMapWidget = ({ widget, invitationId }: Props) => {
+const InstaMapWidget = ({ widget }: Props) => {
   // MAP
   const {
-    coordX,
-    coordY,
+    coord: [coordX, coordY],
     placeName,
     placeDetail,
     roadAddress,
     address,
     title,
-  } = widget.instaMapWidget;
+  } = widget;
   const mapWrapperRef = useRef<HTMLDivElement>(null);
   const isKakaoScriptLoadedRef = useRef(false);
 
@@ -123,7 +121,7 @@ const InstaMapWidget = ({ widget, invitationId }: Props) => {
         <div className="flex-1 flex items-center">
           <span className="font-bold">지도</span>
         </div>
-        <EditInstaMapWidgetModal widget={widget} invitationId={invitationId} />
+        <EditInstaMapWidgetModal widget={widget} />
       </div>
 
       <div className="flex flex-col border-b border-slate-200">

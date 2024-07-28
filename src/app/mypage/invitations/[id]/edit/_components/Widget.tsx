@@ -1,26 +1,24 @@
-import { Widget as WidgetType } from "../types";
+import { WidgetType } from "@/types/invitation";
 import InstaCoverWidget from "./InstaCoverWidget";
 import InstaMapWidget from "./InstaMapWidget";
 import InstaPostWidget from "./InstaPostWidget";
 
 type Props = {
   widget: WidgetType;
-  invitationId: number;
-  weddingId: number;
 };
 
-const Widget = async ({ widget, invitationId, weddingId }: Props) => {
+const Widget = async ({ widget }: Props) => {
   switch (widget.type) {
+    case "INSTA_COVER": {
+      return <InstaCoverWidget widget={widget} />;
+    }
+
     case "INSTA_MAP": {
-      return <InstaMapWidget widget={widget} invitationId={invitationId} />;
+      return <InstaMapWidget widget={widget} />;
     }
 
     case "INSTA_POST": {
-      return <InstaPostWidget widget={widget} invitationId={invitationId} />;
-    }
-
-    case "INSTA_COVER": {
-      return <InstaCoverWidget widget={widget} invitationId={invitationId} />;
+      return <InstaPostWidget widget={widget} />;
     }
 
     default: {
