@@ -133,6 +133,11 @@ order가 고려되어야 하는 케이스
 1. Atlas 플랫폼을 통해 mongodb 적용하기
 2. 데이터 베이스 이동하기
 
+### 문제점
+
+- globalThis 타입 에러
+  [참고 블로그](https://huns.me/2022-05-22-43-TypeScript%EC%97%90%EC%84%9C%20%EC%A0%84%EC%97%AD%20%EA%B0%9C%EC%B2%B4%20%ED%83%80%EC%9E%85%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%A0%95%EC%9D%98%ED%95%98%EB%82%98%EC%9A%94)
+
 ## #1 표지 위젯 추가하기
 
 - 표지 이미지

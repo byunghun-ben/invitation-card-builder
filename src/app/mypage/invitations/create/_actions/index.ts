@@ -5,6 +5,9 @@ import { createClient } from "@/utils/supabase/server";
 import { format } from "date-fns";
 import { TemplateFormValues } from "../_hooks/TemplateFormContext";
 import { revalidatePath } from "next/cache";
+import clientPromise from "@/lib/mongodb";
+import logger from "@/utils/logger";
+import { z } from "zod";
 
 const getCoupleType = (owners: Owner[]) => {
   let coupleType = "groom_bride";
@@ -142,4 +145,54 @@ export const createTemplateMetadata = async (
   return {
     invitationId,
   };
+};
+
+export const createInvitationByMongoDB = async (
+  formValues: TemplateFormValues,
+) => {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    throw error;
+  }
+
+  const date = new Date(
+    `${format(formValues.eventAt.date, "yyyy-MM-dd")} ${formValues.eventAt.time}`,
+  );
+  const formattedDate = format(date, "yyyy년 MM월 dd일 HH시 mm분");
+  const title = `${formValues.owners[0].name} & ${formValues.owners[1].name}의 결혼식`;
+  const description = formValues.location
+    ? `${title}이 ${formattedDate}에 ${formValues.location.placeName}에서 열립니다.`
+    : `${title}이 ${formattedDate}에 열립니다.`;
+
+  const client = await clientPromise;
+  const db = client.db("invitations");
+  const invitations = db.collection("invitations");
+  const result = await invitations.insertOne({
+    createdAt: new Date(),
+    user: {
+      id: user.id,
+      email: user.email,
+    },
+    owners: formValues.owners,
+    location: formValues.location,
+    eventAt: {
+      date: format(formValues.eventAt.date, "yyyy-MM-dd"),
+      time: formValues.eventAt.time,
+    },
+    meta: {
+      title,
+      description,
+    },
+    updatedAt: new Date(),
+    widgets: [],
+  });
+
+  logger.log("result", result);
+
+  return result.insertedId.toString();
 };

@@ -1,3 +1,4 @@
+import clientPromise from "@/lib/mongodb";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -69,8 +70,18 @@ const getInvitations = async () => {
   return safeParseReturn.data;
 };
 
+const getInvitationsByMongoDB = async () => {
+  const client = await clientPromise;
+  const db = client.db("invitations");
+  const invitations = db.collection("invitations");
+  const result = await invitations.find().toArray();
+  return result;
+};
+
 const MyPage = async () => {
   const invitations = await getInvitations();
+  const invitationsByMongoDB = await getInvitationsByMongoDB();
+  console.log("invitationsByMongoDB", invitationsByMongoDB);
 
   return (
     <div className="flex flex-col">
