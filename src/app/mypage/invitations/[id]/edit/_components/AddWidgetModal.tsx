@@ -8,6 +8,12 @@ import { onAddWidget } from "../_actions/addWidget";
 // 위젯 종류
 const WIDGET_TYPES = [
   {
+    id: 3,
+    name: "표지",
+    description: "청첩장의 표지로 사용할 수 있는 위젯이에요.",
+    type: "INSTA_COVER",
+  },
+  {
     id: 1,
     name: "게시물",
     description: "사진과 본문으로 구성된 게시물이에요.",
@@ -66,7 +72,7 @@ const AddWidgetModal = ({
         as="div"
         className="fixed inset-0 z-50"
       >
-        <Dialog.Backdrop className="fixed inset-0 bg-black/50" />
+        <Dialog.Backdrop className="fixed z-10 inset-0 bg-black/50" />
         <div className="fixed inset-0 px-6">
           <Dialog.Panel className="relative flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90%] w-full max-w-[640px] bg-white rounded shadow-md z-50 overflow-hidden">
             <div className="flex-none flex items-center p-4">

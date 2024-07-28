@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { VenueSchema } from "../types";
+import logger from "@/utils/logger";
 
 const createWidget = async ({
   invitationId,
@@ -93,6 +94,43 @@ const createInstaMapWidget = async ({
   }
 };
 
+const createInstaCoverWidget = async ({
+  widgetId,
+  weddingId,
+}: {
+  widgetId: number;
+  weddingId: number;
+}): Promise<void> => {
+  const supabase = createClient();
+
+  const { data: couplesData, error: couplesError } = await supabase
+    .from("couples")
+    .select(
+      `
+      first_person_name,
+      second_person_name
+    `,
+    )
+    .eq("wedding_id", weddingId)
+    .single();
+
+  if (couplesError) {
+    throw couplesError;
+  }
+
+  const title = `${couplesData.first_person_name} & ${couplesData.second_person_name}`;
+
+  const { error } = await supabase.from("insta_cover_widgets").insert({
+    widget_id: widgetId,
+    title,
+    url: "",
+  });
+
+  if (error) {
+    throw error;
+  }
+};
+
 export const onAddWidget = async ({
   weddingId,
   invitationId,
@@ -112,10 +150,26 @@ export const onAddWidget = async ({
   });
 
   try {
-    if (widgetType === "INSTA_POST") {
-      await createInstaPostWidget(widgetId);
-    } else if (widgetType === "INSTA_MAP") {
-      await createInstaMapWidget({ widgetId, weddingId });
+    switch (widgetType) {
+      case "INSTA_POST": {
+        await createInstaPostWidget(widgetId);
+        break;
+      }
+
+      case "INSTA_MAP": {
+        await createInstaMapWidget({ widgetId, weddingId });
+        break;
+      }
+
+      case "INSTA_COVER": {
+        await createInstaCoverWidget({ widgetId, weddingId });
+        break;
+      }
+
+      default: {
+        logger.error("Unknown widget type", { widgetType });
+        return;
+      }
     }
   } catch (error) {
     console.error(error);

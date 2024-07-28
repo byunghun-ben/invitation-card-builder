@@ -1,6 +1,7 @@
 "use server";
 
 import { InvitationSchema } from "@/app/mypage/invitations/[id]/edit/types";
+import { WeddingSchema } from "@/schemas/invitation";
 import { createClient } from "@/utils/supabase/server";
 
 export const getInvitation = async (invitationId: number) => {
@@ -32,7 +33,13 @@ export const getInvitation = async (invitationId: number) => {
           roadAddress:road_address,
           coordX:coord_x,
           coordY:coord_y
-        )
+        ),
+        instaCoverWidget:insta_cover_widgets (*)
+      ),
+      wedding:weddings (
+        *,
+        couple:couples (*),
+        venue:venues (*)
       )
     `,
     )
@@ -46,4 +53,39 @@ export const getInvitation = async (invitationId: number) => {
   const invitation = InvitationSchema.parse(data);
 
   return invitation;
+};
+
+export const getWedding = async (weddingId: number) => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("weddings")
+    .select(
+      `
+      id,
+      weddingDate:wedding_date,
+      weddingTime:wedding_time,
+      couple:couples (
+        firstPersonName:first_person_name,
+        secondPersonName:second_person_name,
+        coupleType:couple_type
+      ),
+      venue:venues (
+        venueName:venue_name,
+        hallName:hall_name,
+        address,
+        roadAddress:road_address,
+        coordX:coord_x,
+        coordY:coord_y
+      )
+    `,
+    )
+    .eq("id", weddingId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return WeddingSchema.parse(data);
 };
