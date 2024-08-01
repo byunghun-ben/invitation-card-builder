@@ -41,7 +41,7 @@ export const onAddWidget = async ({
       },
     );
   } catch (error) {
-    console.error(error);
+    logger.error("Failed to add widget", error);
     return;
   }
 

@@ -18,8 +18,6 @@ export const editInstaPostWidget = async ({
   invitationId: string;
   content: string;
 }) => {
-  console.log("저장");
-
   const supabase = createClient();
 
   const {
@@ -46,8 +44,6 @@ export const editInstaPostWidget = async ({
       },
     },
   );
-
-  console.log("editInstaPostWidget", invitation);
 
   revalidatePath(`/mypage/invitations/${invitationId}/edit`);
 };

@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 import { editInstaPostWidget } from "../_actions/editInstaPostWidget";
 import { InstaPostWidget } from "../types";
 import { useInvitationContext } from "../_contexts/InvitationContext";
+import logger from "@/utils/logger";
 
 type Props = {
   widget: InstaPostWidgetType;
@@ -66,7 +67,7 @@ const Modal = ({ widget, index, onClose }: ModalProps) => {
       .upload(fileName, file);
 
     if (error) {
-      console.error(error);
+      logger.error("Failed to upload image", error);
       return;
     }
 

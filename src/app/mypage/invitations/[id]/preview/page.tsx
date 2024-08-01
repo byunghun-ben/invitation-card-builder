@@ -15,8 +15,6 @@ const Page = async ({ params: { id } }: PageProps) => {
 
   const invitation = await getInvitationV1(invitationId);
 
-  console.log(invitation);
-
   return (
     <div className="flex-1 flex flex-col gap-4 py-6 overflow-y-auto">
       {/* Header */}

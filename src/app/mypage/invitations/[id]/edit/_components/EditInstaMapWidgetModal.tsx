@@ -86,7 +86,6 @@ const Modal = ({ widget, index, onClose }: ModalProps) => {
   const [showLocationSearch, setShowLocationSearch] = useState(false);
 
   const onSubmitSuccess = async (formValues: EditFormValues) => {
-    console.log("onSubmitSuccess", formValues);
     try {
       await updateInstaMapWidget({
         formValues,
@@ -121,7 +120,7 @@ const Modal = ({ widget, index, onClose }: ModalProps) => {
             <Form {...form}>
               <form
                 className="flex-1 flex flex-col gap-6 p-4"
-                onSubmit={form.handleSubmit(onSubmitSuccess, console.error)}
+                onSubmit={form.handleSubmit(onSubmitSuccess, logger.error)}
               >
                 <div className="flex flex-col gap-4">
                   <FormField
