@@ -5,20 +5,21 @@ import InstaPostWidget from "./InstaPostWidget";
 
 type Props = {
   widget: WidgetType;
+  index: number;
 };
 
-const Widget = async ({ widget }: Props) => {
+const Widget = async ({ widget, index }: Props) => {
   switch (widget.type) {
     case "INSTA_COVER": {
-      return <InstaCoverWidget widget={widget} />;
+      return <InstaCoverWidget widget={widget} index={index} />;
     }
 
     case "INSTA_MAP": {
-      return <InstaMapWidget widget={widget} />;
+      return <InstaMapWidget widget={widget} index={index} />;
     }
 
     case "INSTA_POST": {
-      return <InstaPostWidget widget={widget} />;
+      return <InstaPostWidget widget={widget} index={index} />;
     }
 
     default: {

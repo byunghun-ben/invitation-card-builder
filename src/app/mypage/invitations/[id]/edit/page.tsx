@@ -1,8 +1,4 @@
-import {
-  getInvitation,
-  getInvitationV1,
-  getWedding,
-} from "@/actions/invitations";
+import { getInvitation } from "@/actions/invitations";
 import Link from "next/link";
 import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
@@ -17,7 +13,6 @@ type PageProps = {
 const InvitationEditPage = async ({ params }: PageProps) => {
   const invitationId = params.id;
   const invitation = await getInvitation(invitationId);
-  console.log(invitation);
 
   return (
     <InvitationContextProvider invitation={invitation}>
@@ -41,8 +36,8 @@ const InvitationEditPage = async ({ params }: PageProps) => {
 
             {/* Widgets */}
             <div className="flex-none flex flex-col gap-6">
-              {invitation.widgets.map(widget => (
-                <Widget key={widget.id} widget={widget} />
+              {invitation.widgets.map((widget, index) => (
+                <Widget key={widget.id} widget={widget} index={index} />
               ))}
             </div>
           </div>

@@ -12,35 +12,39 @@ import { useInvitationContext } from "../_contexts/InvitationContext";
 
 type Props = {
   widget: InstaPostWidgetType;
+  index: number;
 };
 
 const BUKET_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images";
 
-const EditInstaPostWidgetModal = ({ widget }: Props) => {
+const EditInstaPostWidgetModal = ({ widget, index }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <button
         type="button"
-        className="flex py-2 px-3 text-xs font-bold text-slate-700 bg-slate-100 rounded-md hover:bg-slate-200"
+        className="flex py-2 px-3 text-xs font-bold bg-slate-100 rounded-md hover:bg-slate-200"
         onClick={() => setIsOpen(true)}
       >
-        위젯 수정
+        수정
       </button>
 
-      {isOpen && <Modal widget={widget} onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <Modal widget={widget} index={index} onClose={() => setIsOpen(false)} />
+      )}
     </>
   );
 };
 
 type ModalProps = {
   widget: InstaPostWidgetType;
+  index: number;
   onClose: () => void;
 };
 
-const Modal = ({ widget, onClose }: ModalProps) => {
+const Modal = ({ widget, index, onClose }: ModalProps) => {
   const { invitation } = useInvitationContext();
   const invitationId = invitation.id;
 
@@ -49,10 +53,48 @@ const Modal = ({ widget, onClose }: ModalProps) => {
     widget.images.map(({ id, url }) => ({
       id,
       url,
-      isNew: false,
     })),
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadImage = async (file: File) => {
+    const fileName = `${Date.now()}`;
+
+    const supabase = createClient();
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload(fileName, file);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    return `${BUKET_URL}/${data.path}`;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) {
+      return;
+    }
+
+    const url = await uploadImage(file);
+    if (!url) {
+      return;
+    }
+
+    setImages(prevImages => {
+      return [
+        ...prevImages,
+        {
+          id: Math.random().toString(36).slice(2),
+          url,
+        },
+      ];
+    });
+  };
 
   return (
     <Dialog
@@ -90,60 +132,7 @@ const Modal = ({ widget, onClose }: ModalProps) => {
                       type="file"
                       className="hidden"
                       accept="image/*"
-                      onChange={async e => {
-                        const file = e.target.files?.[0];
-                        e.target.value = "";
-                        if (!file) {
-                          return;
-                        }
-
-                        // 사용할 수 없는 문자열이 포함되어 있는 경우가 있음
-                        // 파일 이름을 유지할 필요가 없다면, 파일 이름을 Date.now()로 변경하자.
-                        const fileName = `${Date.now()}`;
-
-                        const supabase = createClient();
-                        const { data, error } = await supabase.storage
-                          .from("images")
-                          .upload(fileName, file);
-
-                        if (error) {
-                          console.error(error);
-                          return;
-                        }
-
-                        const url = `${BUKET_URL}/${data.path}`;
-                        const imagesRes = await supabase
-                          .from("images")
-                          .insert({
-                            image_url: url,
-                          })
-                          .select(
-                            `
-                            id,
-                            url:image_url
-                            `,
-                          )
-                          .single();
-
-                        if (imagesRes.error) {
-                          console.error(imagesRes.error);
-                          return;
-                        }
-
-                        setImages(prevImages => {
-                          return [
-                            ...prevImages,
-                            {
-                              id: imagesRes.data.id,
-                              url: imagesRes.data.url,
-                              isNew: true,
-                            },
-                          ];
-                        });
-                        // setImages(prevImages => {
-                        //   return [...prevImages, { url: data.path }];
-                        // });
-                      }}
+                      onChange={handleFileChange}
                     />
                   </button>
                 </div>
@@ -196,20 +185,12 @@ const Modal = ({ widget, onClose }: ModalProps) => {
                 onClick={async () => {
                   await editInstaPostWidget({
                     invitationId,
-                    widgetId: widget.id,
+                    widgetIndex: index,
                     content,
-                    imageIds: images
-                      .filter(({ isNew }) => isNew)
-                      .map(image => image.id),
+                    images,
                   });
 
-                  // revalidatePath를 통해서, 위젯 수정 완료 후 페이지 컴포넌트를 다시 렌더링하도록 했음.
-                  // 하지만, EditInstaPostWidgetModal 컴포넌트는 페이지 컴포넌트를 다시 렌더링하더라도 유지가 된다.
-                  // 그래서, useState의 기본값이 새로 업데이트되어도, 이전 값을 유지하고 있다.
                   onClose();
-                  // setImages(prev =>
-                  //   prev.map(image => ({ ...image, isNew: false })),
-                  // );
                 }}
               >
                 <span className="font-bold text-white">저장</span>

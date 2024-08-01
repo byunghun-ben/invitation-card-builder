@@ -19,12 +19,14 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { updateInstaMapWidget } from "../_actions/updateInstaMapWidget";
 import { useInvitationContext } from "../_contexts/InvitationContext";
+import logger from "@/utils/logger";
 
 type Props = {
   widget: InstaMapWidgetType;
+  index: number;
 };
 
-const EditInstaMapWidgetModal = ({ widget }: Props) => {
+const EditInstaMapWidgetModal = ({ widget, index }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -37,13 +39,16 @@ const EditInstaMapWidgetModal = ({ widget }: Props) => {
         위젯 수정
       </button>
 
-      {isOpen && <Modal widget={widget} onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <Modal widget={widget} index={index} onClose={() => setIsOpen(false)} />
+      )}
     </>
   );
 };
 
 type ModalProps = {
   widget: InstaMapWidgetType;
+  index: number;
   onClose: () => void;
 };
 
@@ -59,7 +64,7 @@ const EditFormSchema = z.object({
 
 type EditFormValues = z.infer<typeof EditFormSchema>;
 
-const Modal = ({ widget, onClose }: ModalProps) => {
+const Modal = ({ widget, index, onClose }: ModalProps) => {
   const { invitation } = useInvitationContext();
   const invitationId = invitation.id;
 
@@ -82,12 +87,17 @@ const Modal = ({ widget, onClose }: ModalProps) => {
 
   const onSubmitSuccess = async (formValues: EditFormValues) => {
     console.log("onSubmitSuccess", formValues);
-    await updateInstaMapWidget({
-      formValues,
-      widgetId: widget.id,
-      invitationId,
-    });
-    onClose();
+    try {
+      await updateInstaMapWidget({
+        formValues,
+        widgetIndex: index,
+        invitationId,
+      });
+      onClose();
+    } catch (error) {
+      logger.error(error);
+      return;
+    }
   };
 
   return (

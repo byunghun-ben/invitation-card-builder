@@ -20,7 +20,7 @@ const MyPage = async () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {invitations.map(invitation => {
-            const invitationId = invitation._id.toString();
+            const invitationId = invitation.id;
             const invitationLabel = `${invitation.owners[0].name} & ${invitation.owners[1].name} 결혼식`;
             const locationLabel = invitation.location
               ? `${invitation.location.placeName}(${invitation.location.placeDetail})`

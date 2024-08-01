@@ -112,7 +112,9 @@ export const getInvitations = async () => {
       "user.id": user.id,
     })
     .toArray();
-  return invitationSchema.array().parse(result);
+  return invitationSchema
+    .array()
+    .parse(result.map(r => ({ ...r, id: r._id.toString() })));
 };
 
 export const getInvitation = async (id: string) => {

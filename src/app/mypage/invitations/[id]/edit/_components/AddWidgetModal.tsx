@@ -6,6 +6,8 @@ import { MouseEvent, useState } from "react";
 import { onAddWidget } from "../_actions/addWidget";
 import { useInvitationContext } from "../_contexts/InvitationContext";
 import { InvitationType, WidgetType } from "@/types/invitation";
+import { convertEventAtToDate } from "@/utils/helpers";
+import { format } from "date-fns";
 
 // 위젯 종류
 const WIDGET_TYPES = [
@@ -31,15 +33,21 @@ const WIDGET_TYPES = [
 
 const widgetFactory = (
   widgetType: string,
-  location: InvitationType["location"],
+  invitation: InvitationType,
 ): WidgetType => {
   switch (widgetType) {
     case "INSTA_COVER": {
+      const locationLabel = invitation.location
+        ? `${invitation.location?.placeName} (${invitation.location?.placeDetail})`
+        : "";
+      const eventAtDate = convertEventAtToDate(invitation.eventAt);
+      const eventAtString = format(eventAtDate, "yyyy년 MM월 dd일 HH시 mm분");
       return {
         type: "INSTA_COVER",
         id: Math.random().toString(36).slice(2),
         title: "표지",
         url: "",
+        content: `💌 ${eventAtString}\n📍 ${locationLabel}`,
       };
     }
 
@@ -58,11 +66,11 @@ const widgetFactory = (
         type: "INSTA_MAP",
         id: Math.random().toString(36).slice(2),
         title: "지도",
-        address: location?.address || "",
-        coord: location?.coord || [],
-        placeName: location?.placeName || "",
-        placeDetail: location?.placeDetail || "",
-        roadAddress: location?.roadAddress || "",
+        address: invitation.location?.address || "",
+        coord: invitation.location?.coord || [],
+        placeName: invitation.location?.placeName || "",
+        placeDetail: invitation.location?.placeDetail || "",
+        roadAddress: invitation.location?.roadAddress || "",
       };
     }
 
@@ -85,7 +93,7 @@ const AddWidgetModal = () => {
       return;
     }
 
-    const newWidget = widgetFactory(widgetType, invitation.location);
+    const newWidget = widgetFactory(widgetType, invitation);
 
     await onAddWidget({ invitationId, newWidget });
     // TODO: 에러 처리

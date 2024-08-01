@@ -30,6 +30,7 @@ const BaseWidgetSchema = z.object({
 
 export const InstaCoverWidgetSchema = BaseWidgetSchema.extend({
   type: z.literal("INSTA_COVER"),
+  content: z.string().default(""),
   url: z.string(),
 });
 

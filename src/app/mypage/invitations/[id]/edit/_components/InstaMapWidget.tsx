@@ -4,12 +4,14 @@ import { useEffect, useRef } from "react";
 import EditInstaMapWidgetModal from "./EditInstaMapWidgetModal";
 import logger from "@/utils/logger";
 import { InstaMapWidgetType } from "@/types/invitation";
+import WidgetReorderer from "./WidgetReorderer";
 
 type Props = {
   widget: InstaMapWidgetType;
+  index: number;
 };
 
-const InstaMapWidget = ({ widget }: Props) => {
+const InstaMapWidget = ({ widget, index }: Props) => {
   // MAP
   const {
     coord: [coordX, coordY],
@@ -121,7 +123,10 @@ const InstaMapWidget = ({ widget }: Props) => {
         <div className="flex-1 flex items-center">
           <span className="font-bold">지도</span>
         </div>
-        <EditInstaMapWidgetModal widget={widget} />
+        <div className="flex-none flex items-center gap-1">
+          <WidgetReorderer widgetIndex={index} />
+          <EditInstaMapWidgetModal widget={widget} index={index} />
+        </div>
       </div>
 
       <div className="flex flex-col border-b border-slate-200">
