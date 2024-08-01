@@ -3,6 +3,7 @@ import Link from "next/link";
 import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
 import { InvitationContextProvider } from "./_contexts/InvitationContext";
+import PreviewModal from "./_components/previewModal/PreviewModal";
 
 type PageProps = {
   params: {
@@ -24,13 +25,14 @@ const InvitationEditPage = async ({ params }: PageProps) => {
             <div className="flex-none h-10 px-3 flex items-center">
               <span className="flex font-bold">청첩장 수정하기</span>
               <div className="ml-auto flex items-center">
-                <Link
+                <PreviewModal invitation={invitation} />
+                {/* <Link
                   href={`/mypage/invitations/${invitationId}/preview`}
                   className="flex text-sm font-bold text-slate-700"
                   target="_blank"
                 >
                   미리보기
-                </Link>
+                </Link> */}
               </div>
             </div>
 

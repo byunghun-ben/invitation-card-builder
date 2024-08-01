@@ -1,7 +1,7 @@
-import Image from "next/image";
-import EditInstaPostWidgetModal from "./EditInstaPostWidgetModal";
 import { InstaPostWidgetType } from "@/types/invitation";
+import EditInstaPostWidgetModal from "./EditInstaPostWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
+import InstaPostItem from "./previewModal/InstaPostItem";
 
 type Props = {
   widget: InstaPostWidgetType;
@@ -24,51 +24,8 @@ const InstaPostWidget = async ({ widget, index }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col border-b border-slate-200">
-        {isImageEmpty && (
-          <div className="flex-center py-20">
-            <span className="text-sm font-medium text-slate-500">
-              사진을 등록해주세요
-            </span>
-          </div>
-        )}
-
-        {!isImageEmpty && (
-          <div className="relative">
-            <div className="w-full" style={{ paddingBottom: "100%" }} />
-            <div className="absolute inset-0">
-              <div className="w-full h-full relative overflow-hidden">
-                <ul
-                  className="flex bg-yellow-50 h-full w-full overflow-x-scroll snap-x snap-mandatory scroll-smooth no-scrollbar scrolling-touch"
-                  role="presentation"
-                >
-                  {images.map((image, index) => (
-                    <li
-                      key={image.id}
-                      className="relative flex-none h-full w-full snap-start"
-                    >
-                      <Image
-                        src={image.url}
-                        alt="이미지"
-                        className="object-cover h-full w-full"
-                        width={510}
-                        height={510}
-                        draggable={false}
-                        priority={index === 0}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="p-4">
-        <span className="text-sm text-slate-900">
-          {widget.content || "내용을 입력해주세요"}
-        </span>
+      <div className="flex flex-col bg-slate-100">
+        <InstaPostItem widget={widget} />
       </div>
     </div>
   );

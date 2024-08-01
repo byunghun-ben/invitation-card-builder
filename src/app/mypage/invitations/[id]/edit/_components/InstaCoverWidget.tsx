@@ -1,7 +1,7 @@
 import { InstaCoverWidgetType } from "@/types/invitation";
 import EditInstaCoverWidgetModal from "./EditInstaCoverWidgetModal";
-import Image from "next/image";
 import WidgetReorderer from "./WidgetReorderer";
+import InstaCoverItem from "./previewModal/InstaCoverItem";
 
 type Props = {
   widget: InstaCoverWidgetType;
@@ -23,25 +23,7 @@ const InstaCoverWidget = ({ widget, index }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex flex-col p-4">
-          <span className="font-bold mb-2">{title}</span>
-          <span className="text-sm text-slate-500 whitespace-pre-line">
-            {content}
-          </span>
-        </div>
-        <div className="relative aspect-[9/16] bg-yellow-100">
-          {widget.url && (
-            <Image
-              src={widget.url}
-              alt="표지 이미지"
-              width={450}
-              height={800}
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
-      </div>
+      <InstaCoverItem widget={widget} />
     </div>
   );
 };

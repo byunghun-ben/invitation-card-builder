@@ -16,7 +16,7 @@ const InstaPostItem = ({ widget }: Props) => {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col py-10">
       <div className="relative">
         <div className="w-full" style={{ paddingBottom: "100%" }} />
         <div className="absolute inset-0">

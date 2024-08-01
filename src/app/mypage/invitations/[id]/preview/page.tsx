@@ -1,7 +1,8 @@
-import { getInvitationV1 } from "@/actions/invitations";
+import { getInvitation } from "@/actions/invitations";
 import Link from "next/link";
-import InstaPostItem from "./_components/InstaPostItem";
 import InstaMapItem from "./_components/InstaMapItem";
+import InstaPostItem from "./_components/InstaPostItem";
+import InstaCoverItem from "./_components/InstaCoverItem";
 
 type PageProps = {
   params: {
@@ -11,15 +12,13 @@ type PageProps = {
 };
 
 const Page = async ({ params: { id } }: PageProps) => {
-  const invitationId = Number(id);
-
-  const invitation = await getInvitationV1(invitationId);
+  const invitation = await getInvitation(id);
 
   return (
-    <div className="flex-1 flex flex-col gap-4 py-6 overflow-y-auto">
+    <div className="flex-1 max-w-lg flex flex-col gap-4 py-6 overflow-y-auto">
       {/* Header */}
       <header className="flex-none h-10 px-3 flex items-center">
-        <Link href={`/mypage/invitations/${invitationId}/preview`}>
+        <Link href={`/mypage/invitations/${id}/preview`}>
           <span className="font-bold">내 청첩장 미리보기</span>
         </Link>
       </header>
@@ -32,6 +31,8 @@ const Page = async ({ params: { id } }: PageProps) => {
             return <InstaPostItem key={widget.id} widget={widget} />;
           } else if (widget.type === "INSTA_MAP") {
             return <InstaMapItem key={widget.id} widget={widget} />;
+          } else if (widget.type === "INSTA_COVER") {
+            return <InstaCoverItem key={widget.id} widget={widget} />;
           }
         })}
       </section>
@@ -40,7 +41,7 @@ const Page = async ({ params: { id } }: PageProps) => {
       {/* Footer */}
       <footer className="flex-none px-3">
         <Link
-          href={`/mypage/invitations/${invitationId}/edit`}
+          href={`/mypage/invitations/${id}/edit`}
           className="w-full flex-center p-3 bg-slate-500 rounded-lg"
         >
           <span className="font-bold text-white">청첩장 수정하기</span>
