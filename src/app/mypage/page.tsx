@@ -23,7 +23,7 @@ const MyPage = async () => {
             const invitationId = invitation.id;
             const invitationLabel = `${invitation.owners[0].name} & ${invitation.owners[1].name} 결혼식`;
             const locationLabel = invitation.location
-              ? `${invitation.location.placeName}(${invitation.location.placeDetail})`
+              ? `${invitation.location.placeName} (${invitation.location.placeDetail})`
               : "아직 예식장 정보는 입력되지 않았어요.";
             const date = new Date(
               `${invitation.eventAt.date} ${invitation.eventAt.time}`,
@@ -31,15 +31,30 @@ const MyPage = async () => {
             const weddingDate = format(date, "yyyy년 MM월 dd일 HH시 mm분");
 
             return (
-              <Link
+              <div
                 key={invitationId}
-                className="flex flex-col gap-1 p-3 border border-slate-200 rounded-lg"
-                href={`/mypage/invitations/${invitationId}/edit`}
+                className="flex flex-col gap-4 p-3 border border-slate-200 rounded-lg"
               >
-                <h3 className="text-lg font-bold">{invitationLabel}</h3>
-                <p className="text-sm">{locationLabel}</p>
-                <p className="text-sm">{weddingDate}</p>
-              </Link>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-lg font-bold">{invitationLabel}</h3>
+                  <p className="text-sm text-slate-700">{locationLabel}</p>
+                  <p className="text-sm text-slate-500">{weddingDate}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Link
+                    href={`/mypage/invitations/${invitationId}/edit`}
+                    className="border border-slate-200 rounded p-2 text-sm font-bold text-center hover:bg-slate-50"
+                  >
+                    수정하기
+                  </Link>
+                  <Link
+                    href={`/invitations/${invitationId}`}
+                    className="border border-slate-200 rounded p-2 text-sm font-bold text-center hover:bg-slate-50"
+                  >
+                    보기
+                  </Link>
+                </div>
+              </div>
             );
           })}
         </div>

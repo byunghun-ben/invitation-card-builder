@@ -1,7 +1,7 @@
+import InstaMapItem from "@/app/_components/invitations/InstaMapItem";
 import { InstaMapWidgetType } from "@/types/invitation";
 import EditInstaMapWidgetModal from "./editModal/EditInstaMapWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
-import InstaMapItem from "./previewModal/InstaMapItem";
 
 type Props = {
   widget: InstaMapWidgetType;

@@ -1,14 +1,14 @@
 "use client";
 
 import { InvitationType } from "@/types/invitation";
-import Link from "next/link";
-import InstaPostItem from "./InstaPostItem";
-import InstaMapItem from "./InstaMapItem";
-import InstaCoverItem from "./InstaCoverItem";
-import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { XIcon } from "lucide-react";
-import InstaGreetingItem from "./InstaGreetingItem";
+import { useState } from "react";
+
+import InstaCoverItem from "@/app/_components/invitations/InstaCoverItem";
+import InstaGreetingItem from "@/app/_components/invitations/InstaGreetingItem";
+import InstaMapItem from "@/app/_components/invitations/InstaMapItem";
+import InstaPostItem from "@/app/_components/invitations/InstaPostItem";
 
 type Props = {
   invitation: InvitationType;

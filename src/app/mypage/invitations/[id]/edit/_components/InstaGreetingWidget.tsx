@@ -1,7 +1,7 @@
 import { InstaGreetingWidgetType } from "@/types/invitation";
 import WidgetReorderer from "./WidgetReorderer";
-import InstaGreetingItem from "./previewModal/InstaGreetingItem";
 import EditInstaGreetingWidgetModal from "./editModal/EditInstaGreetingWidgetModal";
+import InstaGreetingItem from "@/app/_components/invitations/InstaGreetingItem";
 
 type Props = {
   widget: InstaGreetingWidgetType;
