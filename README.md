@@ -1,4 +1,4 @@
-# 청첩장 빌더 서비스
+# 청첩장 빌더 서비스 (Party Door)
 
 ## 페이지 구조
 
@@ -20,92 +20,6 @@
 
 - /invitations/:id (초대장 상세 페이지)
 
-## TODO
-
-### Auth
-
-- [x] 카카오 로그인
-
-### MyPage
-
-- [x] 내 템플릿 목록 확인하기
-- [x] 템플릿 생성하기
-- [x] 템플릿 수정하기
-- [x] 템플릿 미리보기
-
-### Invitation Edit
-
-위젯을 하나씩 추가하는 형태로 진행하기
-
-위젯 데이터는 어떻게 구성될까?
-
-```sql
-CREATE TABLE widgets (
-  id SERIAL PRIMARY KEY,
-  invitation_id INT REFERENCES invitations(id),
-  type VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-```sql
-CREATE TABLE post_widgets (
-  id SERIAL PRIMARY KEY,
-  widget_id INT REFERENCES wigets(id) ON DELETE CASCADE,
-  content TEXT,
-)
-```
-
-```sql
-CREATE TABLE post_widget_images (
-  id SERIAL PRIMARY KEY,
-  post_widget_id INT REFERENCES post_widgets(id) ON DELETE CASCADE,
-  image_url VARCHAR(255) NOT NULL
-);
-```
-
-```sql
-CREATE TABLE directions_widgets (
-  id SERIAL PRIMARY KEY,
-  widget_id INT REFERENCES widgets(id) ON DELETE CASCADE,
-  venue_id INT REFERENCES venues(id) ON DELETE CASCADE
-);
-```
-
-```sql
-CREATE TABLE insta_map_widgets (
-  id SERIAL PRIMARY KEY,
-  widget_id INT REFERENCES widgets(id) ON DELETE CASCADE,
-  title VARCHAR(200) NOT NULL,
-  place_name VARCHAR(200) NOT NULL,
-  place_detail VARCHAR(200) NOT NULL,
-  address,
-  road_address,
-  coord_x,
-  coord_y,
-)
-```
-
-인스타그램 게시물 위젯을 추가할 떄, 해야할 일
-
-1. widgets 테이블의 컬럼을 추가한다.
-   invitation_id을 어떻게 가져올 것인가? (props or 경로)
-
-- 컴포넌트가 특정 경로에 강하게 종속되고, 다른 곳에서 사용될 가능성이 적다면 경로에서 invitation_id를 추출하는 방식이 더 적합합니다.
-  - 컴포넌트가 재사용될 가능성이 높고, 여러 곳에서 사용될 수 있다면 props로 전달받는 것이 더 나은 선택입니다.
-
-2. insta_post_widgets 테이블의 컬럼을 추가한다.
-
-3. invitations 데이터를 새로 가져온다.
-
-order는 어떻게 관리해야 할까?
-
-order가 고려되어야 하는 케이스
-
-- 위젯 삭제
-- 위젯 순서 변경
-- 위젯 추가
-
 ## 문제
 
 ### 클라이언트 컴포넌트에서 action 함수에 props를 전달하는 방법
@@ -126,24 +40,26 @@ order가 고려되어야 하는 케이스
 
 - 위젯 업데이트 성공 시, 모달을 닫도록 할 예정인데 이때 모달을 언마운트 시키면 이후 다시 그 모달을 열었을 때 useState가 새로 선언되기 때문에 서버 상태에 맞추어 동기화가 됨.
 
-# 작업
+## 작업
 
-## #0 Mongodb로 마이그레이션하기
+### #0 Mongodb로 마이그레이션하기
 
 1. Atlas 플랫폼을 통해 mongodb 적용하기
 2. 데이터 베이스 이동하기
 
-### 문제점
+#### 문제점
 
 - globalThis 타입 에러
   [참고 블로그](https://huns.me/2022-05-22-43-TypeScript%EC%97%90%EC%84%9C%20%EC%A0%84%EC%97%AD%20%EA%B0%9C%EC%B2%B4%20%ED%83%80%EC%9E%85%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%A0%95%EC%9D%98%ED%95%98%EB%82%98%EC%9A%94)
 
-## #1 표지 위젯 추가하기
+---
+
+### #1 표지 위젯 추가하기
 
 - 표지 이미지
 - 표지 라벨
 
-### 작업 대상 페이지
+#### 작업 대상 페이지
 
 - 수정 페이지
 
@@ -152,7 +68,9 @@ order가 고려되어야 하는 케이스
 - 미리보기 페이지
   - 표지 위젯 보여주기
 
-## #2 인사말 위젯 추가하기
+---
+
+### #2 인사말 위젯 추가하기
 
 - 수정 페이지
 
@@ -161,3 +79,18 @@ order가 고려되어야 하는 케이스
 - 미리보기 페이지
 
   - 인사말 위젯 보여주기
+
+---
+
+### #3 공유 페이지
+
+#### 페이지 경로
+
+`/invitations/:id`
+
+#### 세부 작업 내용
+
+- 모바일 기준의 레이아웃으로 구성합니다.
+- 게시물에 반응(댓글 및 좋아요)을 할 수 있도록 합니다.
+
+---
