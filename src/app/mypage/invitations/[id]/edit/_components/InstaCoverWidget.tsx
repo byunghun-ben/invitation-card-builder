@@ -1,7 +1,7 @@
 import { InstaCoverWidgetType } from "@/types/invitation";
 import EditInstaCoverWidgetModal from "./editModal/EditInstaCoverWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
-import InstaCoverItem from "./previewModal/InstaCoverItem";
+import InstaCoverItem from "@/app/_components/invitations/InstaCoverItem";
 
 type Props = {
   widget: InstaCoverWidgetType;

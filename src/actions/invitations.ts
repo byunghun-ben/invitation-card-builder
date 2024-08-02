@@ -3,6 +3,7 @@
 import { InvitationSchema } from "@/app/mypage/invitations/[id]/edit/types";
 import clientPromise from "@/lib/mongodb";
 import { invitationSchema, WeddingSchema } from "@/schemas/invitation";
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
@@ -124,11 +125,19 @@ export const getInvitation = async (id: string) => {
   const result = await invitations.findOne({ _id: new ObjectId(id) });
 
   if (!result) {
-    throw new Error("Invitation not found");
+    logger.error(`Failed to find invitation: ${id}`);
+    return null;
   }
 
-  return invitationSchema.parse({
+  const { data, error } = invitationSchema.safeParse({
     ...result,
     id: result._id.toString(),
   });
+
+  if (error) {
+    logger.error(`Failed to parse invitation: ${error.message}`);
+    return null;
+  }
+
+  return data;
 };

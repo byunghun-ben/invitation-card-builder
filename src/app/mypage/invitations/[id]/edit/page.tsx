@@ -4,6 +4,7 @@ import AddWidgetModal from "./_components/AddWidgetModal";
 import Widget from "./_components/Widget";
 import { InvitationContextProvider } from "./_contexts/InvitationContext";
 import PreviewModal from "./_components/previewModal/PreviewModal";
+import { notFound } from "next/navigation";
 
 type PageProps = {
   params: {
@@ -14,6 +15,10 @@ type PageProps = {
 const InvitationEditPage = async ({ params }: PageProps) => {
   const invitationId = params.id;
   const invitation = await getInvitation(invitationId);
+
+  if (!invitation) {
+    notFound();
+  }
 
   return (
     <InvitationContextProvider invitation={invitation}>
