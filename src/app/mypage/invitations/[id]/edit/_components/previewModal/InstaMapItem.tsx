@@ -113,13 +113,20 @@ const InstaMapItem = ({ widget }: Props) => {
   }, [coordX, coordY, placeName, roadAddress]);
 
   return (
-    <div className="flex-none flex flex-col gap-2">
-      <div className="flex flex-col gap-1 px-3">
-        <span className="font-bold">{title}</span>
-        <span className="font-medium">{`${placeName} (${placeDetail})`}</span>
-        <span className="text-sm text-slate-700">{roadAddress}</span>
+    <div className="flex-none flex flex-col gap-8 py-10">
+      <div className="flex flex-col px-6">
+        <div className="flex items-center py-3">
+          <span className="font-bold">{title}</span>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-sm">{`${placeName} (${placeDetail})`}</span>
+          <span className="text-sm text-slate-500">{roadAddress}</span>
+        </div>
       </div>
-      <div ref={mapWrapperRef} className="w-full aspect-square" />
+
+      <div className="px-6">
+        <div ref={mapWrapperRef} className="w-full aspect-square" />
+      </div>
     </div>
   );
 };

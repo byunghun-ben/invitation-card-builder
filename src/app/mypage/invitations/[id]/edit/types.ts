@@ -31,9 +31,20 @@ export const InstaMapWidgetSchema = z.object({
   }),
 });
 
+export const InstaCoverWidgetSchema = z.object({
+  id: z.number(),
+  order: z.number(),
+  type: z.literal("INSTA_COVER"),
+  instaCoverWidget: z.object({
+    title: z.string(),
+    url: z.string(),
+  }),
+});
+
 export const WidgetSchema = z.discriminatedUnion("type", [
   InstaPostWidgetSchema,
   InstaMapWidgetSchema,
+  InstaCoverWidgetSchema,
 ]);
 
 export const InvitationSchema = z.object({
@@ -56,5 +67,6 @@ export const VenueSchema = z.object({
 // Type
 export type InstaPostWidget = z.infer<typeof InstaPostWidgetSchema>;
 export type InstaMapWidget = z.infer<typeof InstaMapWidgetSchema>;
+export type InstaCoverWidget = z.infer<typeof InstaCoverWidgetSchema>;
 export type Widget = z.infer<typeof WidgetSchema>;
 export type Invitation = z.infer<typeof InvitationSchema>;

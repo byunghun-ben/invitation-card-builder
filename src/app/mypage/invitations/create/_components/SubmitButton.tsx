@@ -5,7 +5,7 @@ import {
   TemplateFormValues,
   useTemplateFormContext,
 } from "../_hooks/TemplateFormContext";
-import { createTemplateMetadata } from "../_actions";
+import { createInvitationByMongoDB, createTemplateMetadata } from "../_actions";
 import { redirect, useRouter } from "next/navigation";
 
 const SubmitButton = () => {
@@ -19,9 +19,15 @@ const SubmitButton = () => {
     logger.log("청첩장 만들기", props);
 
     // TODO: 에러 핸들링
-    const { invitationId } = await createTemplateMetadata(props);
+    // const { invitationId } = await createTemplateMetadata(props);
+    try {
+      const insertedId = await createInvitationByMongoDB(props);
+      router.replace(`/mypage/invitations/${insertedId}/edit`);
+    } catch (error) {
+      logger.error("청첩장 만들기 실패", error);
+    }
 
-    router.replace(`/mypage/invitations/${invitationId}/edit`);
+    // router.replace(`/mypage/invitations/${invitationId}/edit`);
   };
 
   return (

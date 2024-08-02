@@ -13,7 +13,7 @@ const NavigationHeader = async () => {
       key={`isLogged-${isLogged}`}
     >
       <Link href="/" className="text-lg font-bold">
-        Bora-n-maria
+        party door
       </Link>
       <div className="items-center gap-2">
         {isLogged ? (

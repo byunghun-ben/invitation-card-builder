@@ -10,21 +10,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { InstaMapWidgetType } from "@/types/invitation";
 import { Dialog } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { updateInstaMapWidget } from "../_actions/updateInstaMapWidget";
-import { InstaMapWidget } from "../types";
+import { updateInstaMapWidget } from "../../_actions/updateInstaMapWidget";
+import { useInvitationContext } from "../../_contexts/InvitationContext";
+import logger from "@/utils/logger";
 
 type Props = {
-  widget: InstaMapWidget;
-  invitationId: number;
+  widget: InstaMapWidgetType;
+  index: number;
 };
 
-const EditInstaMapWidgetModal = ({ widget, invitationId }: Props) => {
+const EditInstaMapWidgetModal = ({ widget, index }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -38,19 +40,15 @@ const EditInstaMapWidgetModal = ({ widget, invitationId }: Props) => {
       </button>
 
       {isOpen && (
-        <Modal
-          invitationId={invitationId}
-          widget={widget}
-          onClose={() => setIsOpen(false)}
-        />
+        <Modal widget={widget} index={index} onClose={() => setIsOpen(false)} />
       )}
     </>
   );
 };
 
 type ModalProps = {
-  invitationId: number;
-  widget: InstaMapWidget;
+  widget: InstaMapWidgetType;
+  index: number;
   onClose: () => void;
 };
 
@@ -66,17 +64,20 @@ const EditFormSchema = z.object({
 
 type EditFormValues = z.infer<typeof EditFormSchema>;
 
-const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
+const Modal = ({ widget, index, onClose }: ModalProps) => {
+  const { invitation } = useInvitationContext();
+  const invitationId = invitation.id;
+
   const form = useForm<EditFormValues>({
     resolver: zodResolver(EditFormSchema),
     defaultValues: {
-      title: widget.instaMapWidget.title,
-      placeName: widget.instaMapWidget.placeName,
-      placeDetail: widget.instaMapWidget.placeDetail,
-      coordX: widget.instaMapWidget.coordX,
-      coordY: widget.instaMapWidget.coordY,
-      address: widget.instaMapWidget.address,
-      roadAddress: widget.instaMapWidget.roadAddress,
+      title: widget.title,
+      placeName: widget.placeName,
+      placeDetail: widget.placeDetail,
+      coordX: widget.coord[0],
+      coordY: widget.coord[1],
+      address: widget.address,
+      roadAddress: widget.roadAddress,
     },
   });
 
@@ -85,13 +86,17 @@ const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
   const [showLocationSearch, setShowLocationSearch] = useState(false);
 
   const onSubmitSuccess = async (formValues: EditFormValues) => {
-    console.log("onSubmitSuccess", formValues);
-    await updateInstaMapWidget({
-      formValues,
-      widgetId: widget.id,
-      invitationId,
-    });
-    onClose();
+    try {
+      await updateInstaMapWidget({
+        formValues,
+        widgetIndex: index,
+        invitationId,
+      });
+      onClose();
+    } catch (error) {
+      logger.error(error);
+      return;
+    }
   };
 
   return (
@@ -115,7 +120,7 @@ const Modal = ({ invitationId, widget, onClose }: ModalProps) => {
             <Form {...form}>
               <form
                 className="flex-1 flex flex-col gap-6 p-4"
-                onSubmit={form.handleSubmit(onSubmitSuccess, console.error)}
+                onSubmit={form.handleSubmit(onSubmitSuccess, logger.error)}
               >
                 <div className="flex flex-col gap-4">
                   <FormField

@@ -1,37 +1,84 @@
 "use client";
 
+import { WIDGET_TYPES } from "@/constants";
+import { InvitationType, WidgetType } from "@/types/invitation";
+import { convertEventAtToDate } from "@/utils/helpers";
 import { Dialog } from "@headlessui/react";
+import { format } from "date-fns";
 import { PlusIcon, XIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
 import { onAddWidget } from "../_actions/addWidget";
+import { useInvitationContext } from "../_contexts/InvitationContext";
 
 // 위젯 종류
-const WIDGET_TYPES = [
-  {
-    id: 1,
-    name: "게시물",
-    description: "사진과 본문으로 구성된 게시물이에요.",
-    type: "INSTA_POST",
-  },
-  {
-    id: 2,
-    name: "지도",
-    description: "위치를 표시하는 지도 위젯이에요.",
-    type: "INSTA_MAP",
-  },
-] as const;
 
-type Props = {
-  widgetLastOrder: number;
-  invitationId: number;
-  weddingId: number;
+const widgetFactory = (
+  widgetType: string,
+  invitation: InvitationType,
+): WidgetType => {
+  switch (widgetType) {
+    case "INSTA_COVER": {
+      const locationLabel = invitation.location
+        ? `${invitation.location?.placeName} (${invitation.location?.placeDetail})`
+        : "";
+      const eventAtDate = convertEventAtToDate(invitation.eventAt);
+      const eventAtString = format(eventAtDate, "yyyy년 MM월 dd일 HH시 mm분");
+      return {
+        type: "INSTA_COVER",
+        id: Math.random().toString(36).slice(2),
+        title: "표지",
+        url: "",
+        content: `💌 ${eventAtString}\n📍 ${locationLabel}`,
+      };
+    }
+
+    case "INSTA_POST": {
+      return {
+        type: "INSTA_POST",
+        id: Math.random().toString(36).slice(2),
+        images: [],
+        title: "포스트",
+        content: "",
+      };
+    }
+
+    case "INSTA_MAP": {
+      return {
+        type: "INSTA_MAP",
+        id: Math.random().toString(36).slice(2),
+        title: "지도",
+        address: invitation.location?.address || "",
+        coord: invitation.location?.coord || [],
+        placeName: invitation.location?.placeName || "",
+        placeDetail: invitation.location?.placeDetail || "",
+        roadAddress: invitation.location?.roadAddress || "",
+      };
+    }
+
+    case "INSTA_GREETING": {
+      return {
+        type: "INSTA_GREETING",
+        id: Math.random().toString(36).slice(2),
+        title: "인사말",
+        greetingContent:
+          "결혼을 하게 되었습니다.\n감사한 마음을 담아 초대하오니\n참석하시어 자리를 빛내주시기를 바랍니다.",
+        hosts: invitation.owners.map(owner => ({
+          name: owner.name,
+          description: `[아버지 · 어머지]의 ${owner.role === "groom" ? "장남" : "장녀"}`,
+        })),
+      };
+    }
+
+    default: {
+      throw new Error(`Unknown widget type: ${widgetType}`);
+    }
+  }
 };
 
-const AddWidgetModal = ({
-  widgetLastOrder,
-  invitationId,
-  weddingId,
-}: Props) => {
+const AddWidgetModal = () => {
+  const { invitation } = useInvitationContext();
+  const invitationId = invitation.id;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickAddWidget = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -41,8 +88,9 @@ const AddWidgetModal = ({
       return;
     }
 
-    console.log("invitationId", invitationId, widgetType);
-    await onAddWidget({ weddingId, invitationId, widgetType, widgetLastOrder });
+    const newWidget = widgetFactory(widgetType, invitation);
+
+    await onAddWidget({ invitationId, newWidget });
     // TODO: 에러 처리
     setIsOpen(false);
   };
@@ -66,7 +114,7 @@ const AddWidgetModal = ({
         as="div"
         className="fixed inset-0 z-50"
       >
-        <Dialog.Backdrop className="fixed inset-0 bg-black/50" />
+        <Dialog.Backdrop className="fixed z-10 inset-0 bg-black/50" />
         <div className="fixed inset-0 px-6">
           <Dialog.Panel className="relative flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90%] w-full max-w-[640px] bg-white rounded shadow-md z-50 overflow-hidden">
             <div className="flex-none flex items-center p-4">

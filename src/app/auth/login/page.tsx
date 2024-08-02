@@ -19,7 +19,7 @@ const Page = async ({ searchParams }: Props) => {
   const { data: sessionData } = await supabase.auth.getSession();
 
   if (sessionData.session) {
-    redirect("/");
+    redirect("/mypage");
   }
 
   return (

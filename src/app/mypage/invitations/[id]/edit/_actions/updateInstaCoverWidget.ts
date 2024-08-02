@@ -7,17 +7,21 @@ import { ObjectId } from "mongodb";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const editInstaPostWidget = async ({
-  images,
-  widgetIndex,
-  invitationId,
-  content,
-}: {
-  widgetIndex: number;
-  images: { id: string; url: string }[];
+type Props = {
   invitationId: string;
+  widgetIndex: number;
+  title: string;
+  imageUrl: string;
   content: string;
-}) => {
+};
+
+export const updateInstaCoverWidget = async ({
+  invitationId,
+  widgetIndex,
+  title,
+  content,
+  imageUrl,
+}: Props) => {
   const supabase = createClient();
 
   const {
@@ -30,17 +34,18 @@ export const editInstaPostWidget = async ({
 
   const mongoClient = await clientPromise;
   const db = mongoClient.db("invitations");
-  const invitations = db.collection<InvitationType>("invitations");
+  const collection = db.collection<InvitationType>("invitations");
 
-  const invitation = await invitations.updateOne(
+  await collection.updateOne(
     {
       _id: new ObjectId(invitationId),
       "user.id": user.id,
     },
     {
       $set: {
+        [`widgets.${widgetIndex}.title`]: title,
+        [`widgets.${widgetIndex}.url`]: imageUrl,
         [`widgets.${widgetIndex}.content`]: content,
-        [`widgets.${widgetIndex}.images`]: images,
       },
     },
   );

@@ -15,3 +15,11 @@ export const getURL = () => {
 
   return url;
 };
+
+export const convertEventAtToDate = (eventAt: {
+  date: string;
+  time: string;
+}) => {
+  const date = new Date(`${eventAt.date} ${eventAt.time}`);
+  return date;
+};

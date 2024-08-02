@@ -1,21 +1,36 @@
-import { Widget as WidgetType } from "../types";
+import { WidgetType } from "@/types/invitation";
+import InstaCoverWidget from "./InstaCoverWidget";
 import InstaMapWidget from "./InstaMapWidget";
 import InstaPostWidget from "./InstaPostWidget";
+import InstaGreetingWidget from "./InstaGreetingWidget";
 
 type Props = {
   widget: WidgetType;
-  invitationId: number;
-  weddingId: number;
+  index: number;
 };
 
-const Widget = async ({ widget, invitationId, weddingId }: Props) => {
-  const isInstaPostWidget = widget.type === "INSTA_POST";
+const Widget = async ({ widget, index }: Props) => {
+  switch (widget.type) {
+    case "INSTA_COVER": {
+      return <InstaCoverWidget widget={widget} index={index} />;
+    }
 
-  if (!isInstaPostWidget) {
-    return <InstaMapWidget widget={widget} invitationId={invitationId} />;
+    case "INSTA_MAP": {
+      return <InstaMapWidget widget={widget} index={index} />;
+    }
+
+    case "INSTA_POST": {
+      return <InstaPostWidget widget={widget} index={index} />;
+    }
+
+    case "INSTA_GREETING": {
+      return <InstaGreetingWidget widget={widget} index={index} />;
+    }
+
+    default: {
+      return null;
+    }
   }
-
-  return <InstaPostWidget widget={widget} invitationId={invitationId} />;
 };
 
 export default Widget;

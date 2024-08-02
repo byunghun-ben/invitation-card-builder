@@ -1,73 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
+import { getInvitations } from "@/actions/invitations";
+import { format } from "date-fns";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const invitationSchema = z.object({
-  id: z.number(),
-  weddingId: z.number(),
-  invitationTypeId: z.number(),
-  wedding: z.object({
-    weddingDate: z.string(),
-    weddingTime: z.string(),
-    couples: z.object({
-      firstPersonName: z.string(),
-      secondPersonName: z.string(),
-    }),
-    venues: z.object({
-      venueName: z.string(),
-      hallName: z.string(),
-    }),
-  }),
-});
-
-const getInvitations = async () => {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    console.error("사용자 정보를 가져올 수 없습니다.");
-    redirect("/auth/login");
-  }
-
-  const { data, error } = await supabase
-    .from("invitations")
-    .select(
-      `
-      id,
-      weddingId:wedding_id,
-      invitationTypeId:invitation_type_id,
-      wedding:weddings (
-        weddingDate:wedding_date,
-        weddingTime:wedding_time,
-        couples (
-          firstPersonName:first_person_name,
-          secondPersonName:second_person_name
-        ),
-        venues (
-          venueName:venue_name,
-          hallName:hall_name
-        )
-      )
-    `,
-    )
-    .eq("user_id", user.id);
-
-  if (error) {
-    return [];
-  }
-
-  const safeParseReturn = invitationSchema.array().safeParse(data);
-
-  if (!safeParseReturn.success) {
-    return [];
-  }
-
-  return safeParseReturn.data;
-};
 
 const MyPage = async () => {
   const invitations = await getInvitations();
@@ -87,15 +20,21 @@ const MyPage = async () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {invitations.map(invitation => {
-            const invitationLabel = `${invitation.wedding.couples.firstPersonName} & ${invitation.wedding.couples.secondPersonName} 결혼식`;
-            const locationLabel = `${invitation.wedding.venues.venueName} (${invitation.wedding.venues.hallName})`;
-            const weddingDate = `${invitation.wedding.weddingDate} ${invitation.wedding.weddingTime}`;
+            const invitationId = invitation.id;
+            const invitationLabel = `${invitation.owners[0].name} & ${invitation.owners[1].name} 결혼식`;
+            const locationLabel = invitation.location
+              ? `${invitation.location.placeName}(${invitation.location.placeDetail})`
+              : "아직 예식장 정보는 입력되지 않았어요.";
+            const date = new Date(
+              `${invitation.eventAt.date} ${invitation.eventAt.time}`,
+            );
+            const weddingDate = format(date, "yyyy년 MM월 dd일 HH시 mm분");
 
             return (
               <Link
-                key={invitation.id}
+                key={invitationId}
                 className="flex flex-col gap-1 p-3 border border-slate-200 rounded-lg"
-                href={`/mypage/invitations/${invitation.id}/edit`}
+                href={`/mypage/invitations/${invitationId}/edit`}
               >
                 <h3 className="text-lg font-bold">{invitationLabel}</h3>
                 <p className="text-sm">{locationLabel}</p>

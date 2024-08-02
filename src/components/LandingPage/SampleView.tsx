@@ -2,11 +2,7 @@
 
 import { SyntheticEvent, useRef, useState } from "react";
 import { Loading } from "../Loading";
-import { getURL } from "@/utils/helpers";
 
-// 왜 getURL 함수를 사용하면 process 참조 에러가 발생하는지 모르겠다.
-// const URL = getURL();
-// console.log("process.env", process.env.NEXT_PUBLIC_SITE_URL, getURL());
 const URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const IFRAME_URL = `${URL}/sample`;
 
