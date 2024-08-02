@@ -8,6 +8,7 @@ import InstaCoverItem from "./InstaCoverItem";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { XIcon } from "lucide-react";
+import InstaGreetingItem from "./InstaGreetingItem";
 
 type Props = {
   invitation: InvitationType;
@@ -54,6 +55,10 @@ const PreviewModal = ({ invitation }: Props) => {
                     return <InstaMapItem key={widget.id} widget={widget} />;
                   } else if (widget.type === "INSTA_COVER") {
                     return <InstaCoverItem key={widget.id} widget={widget} />;
+                  } else if (widget.type === "INSTA_GREETING") {
+                    return (
+                      <InstaGreetingItem key={widget.id} widget={widget} />
+                    );
                   }
                 })}
               </section>

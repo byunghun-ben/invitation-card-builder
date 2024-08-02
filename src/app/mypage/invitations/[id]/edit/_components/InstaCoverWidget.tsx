@@ -1,5 +1,5 @@
 import { InstaCoverWidgetType } from "@/types/invitation";
-import EditInstaCoverWidgetModal from "./EditInstaCoverWidgetModal";
+import EditInstaCoverWidgetModal from "./editModal/EditInstaCoverWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
 import InstaCoverItem from "./previewModal/InstaCoverItem";
 

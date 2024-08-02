@@ -1,5 +1,5 @@
 import { InstaPostWidgetType } from "@/types/invitation";
-import EditInstaPostWidgetModal from "./EditInstaPostWidgetModal";
+import EditInstaPostWidgetModal from "./editModal/EditInstaPostWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
 import InstaPostItem from "./previewModal/InstaPostItem";
 

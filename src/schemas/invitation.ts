@@ -54,10 +54,22 @@ export const InstaMapWidgetSchema = BaseWidgetSchema.extend({
   coord: z.array(z.number()),
 });
 
+export const InstaGreetingWidgetSchema = BaseWidgetSchema.extend({
+  type: z.literal("INSTA_GREETING"),
+  greetingContent: z.string(),
+  hosts: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+    }),
+  ),
+});
+
 export const WidgetSchema = z.union([
   InstaCoverWidgetSchema,
   InstaPostWidgetSchema,
   InstaMapWidgetSchema,
+  InstaGreetingWidgetSchema,
 ]);
 
 export const invitationSchema = z.object({

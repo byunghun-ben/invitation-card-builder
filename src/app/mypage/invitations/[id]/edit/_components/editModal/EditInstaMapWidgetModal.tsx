@@ -17,8 +17,8 @@ import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { updateInstaMapWidget } from "../_actions/updateInstaMapWidget";
-import { useInvitationContext } from "../_contexts/InvitationContext";
+import { updateInstaMapWidget } from "../../_actions/updateInstaMapWidget";
+import { useInvitationContext } from "../../_contexts/InvitationContext";
 import logger from "@/utils/logger";
 
 type Props = {

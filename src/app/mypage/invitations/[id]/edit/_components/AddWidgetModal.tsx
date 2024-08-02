@@ -1,35 +1,16 @@
 "use client";
 
+import { WIDGET_TYPES } from "@/constants";
+import { InvitationType, WidgetType } from "@/types/invitation";
+import { convertEventAtToDate } from "@/utils/helpers";
 import { Dialog } from "@headlessui/react";
+import { format } from "date-fns";
 import { PlusIcon, XIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
 import { onAddWidget } from "../_actions/addWidget";
 import { useInvitationContext } from "../_contexts/InvitationContext";
-import { InvitationType, WidgetType } from "@/types/invitation";
-import { convertEventAtToDate } from "@/utils/helpers";
-import { format } from "date-fns";
 
 // 위젯 종류
-const WIDGET_TYPES = [
-  {
-    id: 3,
-    name: "표지",
-    description: "청첩장의 표지로 사용할 수 있는 위젯이에요.",
-    type: "INSTA_COVER",
-  },
-  {
-    id: 1,
-    name: "게시물",
-    description: "사진과 본문으로 구성된 게시물이에요.",
-    type: "INSTA_POST",
-  },
-  {
-    id: 2,
-    name: "지도",
-    description: "위치를 표시하는 지도 위젯이에요.",
-    type: "INSTA_MAP",
-  },
-] as const;
 
 const widgetFactory = (
   widgetType: string,
@@ -71,6 +52,20 @@ const widgetFactory = (
         placeName: invitation.location?.placeName || "",
         placeDetail: invitation.location?.placeDetail || "",
         roadAddress: invitation.location?.roadAddress || "",
+      };
+    }
+
+    case "INSTA_GREETING": {
+      return {
+        type: "INSTA_GREETING",
+        id: Math.random().toString(36).slice(2),
+        title: "인사말",
+        greetingContent:
+          "결혼을 하게 되었습니다.\n감사한 마음을 담아 초대하오니\n참석하시어 자리를 빛내주시기를 바랍니다.",
+        hosts: invitation.owners.map(owner => ({
+          name: owner.name,
+          description: `[아버지 · 어머지]의 ${owner.role === "groom" ? "장남" : "장녀"}`,
+        })),
       };
     }
 

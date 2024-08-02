@@ -1,5 +1,5 @@
 import { InstaMapWidgetType } from "@/types/invitation";
-import EditInstaMapWidgetModal from "./EditInstaMapWidgetModal";
+import EditInstaMapWidgetModal from "./editModal/EditInstaMapWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
 import InstaMapItem from "./previewModal/InstaMapItem";
 

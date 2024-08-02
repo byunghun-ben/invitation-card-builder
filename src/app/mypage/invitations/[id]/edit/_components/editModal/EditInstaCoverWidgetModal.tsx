@@ -1,18 +1,18 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { InstaCoverWidgetType } from "@/types/invitation";
+import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/client";
 import { Dialog } from "@headlessui/react";
-import { Loader2, PlusIcon, XIcon } from "lucide-react";
+import { Loader2, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { updateInstaCoverWidget } from "../_actions/updateInstaCoverWidget";
-import { useInvitationContext } from "../_contexts/InvitationContext";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import logger from "@/utils/logger";
+import { updateInstaCoverWidget } from "../../_actions/updateInstaCoverWidget";
+import { useInvitationContext } from "../../_contexts/InvitationContext";
 
 type Props = {
   widget: InstaCoverWidgetType;
