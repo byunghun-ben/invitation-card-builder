@@ -12,7 +12,7 @@ import { Loader2, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { updateInstaCoverWidget } from "../../_actions/updateInstaCoverWidget";
-import { useInvitationContext } from "../../_contexts/InvitationContext";
+import { useInvitationContext } from "../../../../../../_contexts/InvitationContext";
 
 type Props = {
   widget: InstaCoverWidgetType;

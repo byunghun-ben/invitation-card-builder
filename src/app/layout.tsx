@@ -3,9 +3,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import Script from "next/script";
+import { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { ReactNode } from "react";
+import { ClientIdProvider } from "./_contexts/ClientIdContext";
 
 const APP_KEY = process.env.KAKAO_APP_KEY || "";
 
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         )}
       >
         <Toaster />
-        {children}
+        <ClientIdProvider>{children}</ClientIdProvider>
         <Script
           type="text/javascript"
           src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&autoload=false`}

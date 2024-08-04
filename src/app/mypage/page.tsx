@@ -1,4 +1,4 @@
-import { getInvitations } from "@/actions/invitations";
+import { getInvitations } from "@/actions/invitations/invitations";
 import { format } from "date-fns";
 import Link from "next/link";
 

@@ -1,22 +1,32 @@
-"use client";
-
+import { getWidgetLike } from "@/actions/invitations/likes";
 import { InstaPostWidgetType } from "@/types/invitation";
-import { ChatBubbleOvalLeftIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { DocumentIcon } from "@heroicons/react/20/solid";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import InstaPostLikeButton from "./InstaPostLikeButton";
 
 type Props = {
   widget: InstaPostWidgetType;
 };
 
-const InstaPostItem = ({ widget }: Props) => {
+const InstaPostItem = async ({ widget }: Props) => {
   const { images, content } = widget;
 
-  const [isLiked, setIsLiked] = useState(false);
+  const widgetLike = await getWidgetLike(widget.id);
+  const widgetLikeCount = widgetLike?.likes.length || 0;
+
+  // console.log(widgetLike);
 
   return (
-    <div className="flex flex-col py-10">
+    <div className="flex-none flex flex-col py-4">
+      <div className="flex items-center gap-2 p-2">
+        <div className="flex-center w-6 h-6 bg-violet-100 rounded-full">
+          <DocumentIcon width={16} height={16} color="#7F3DFF" />
+        </div>
+        <p className="text-sm">{widget.title}</p>
+      </div>
+
       <div className="relative">
         <div className="w-full" style={{ paddingBottom: "100%" }} />
         <div className="absolute inset-0">
@@ -54,24 +64,13 @@ const InstaPostItem = ({ widget }: Props) => {
 
       <div className="flex flex-col py-1">
         <div className="relative flex items-center">
-          <button
-            type="button"
-            className="p-2 group"
-            // onClick={handleLike}
-            aria-label="좋아요 버튼"
-          >
-            <HeartIcon
-              className={`${
-                isLiked ? "fill-red-400 stroke-red-400" : ""
-              } w-6 h-6 transition group-active:scale-90 group-active:rotate-12`}
-            />
-          </button>
+          <InstaPostLikeButton widgetId={widget.id} widgetLike={widgetLike} />
           <Link className="flex p-2 active:opacity-50" href={"/"}>
             <ChatBubbleOvalLeftIcon className="w-6 h-6" />
           </Link>
         </div>
         <div className="flex gap-2 px-3">
-          <span className="text-sm font-medium">{`좋아요 000개`}</span>
+          <span className="text-sm font-medium">{`좋아요 ${widgetLikeCount}개`}</span>
           <span className="text-sm font-medium">{`댓글 000개`}</span>
         </div>
       </div>

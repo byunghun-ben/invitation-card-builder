@@ -1,6 +1,5 @@
 "use client";
 
-import { WeddingType } from "@/schemas/invitation";
 import { InvitationType } from "@/types/invitation";
 import { createContext, ReactNode, useContext } from "react";
 
