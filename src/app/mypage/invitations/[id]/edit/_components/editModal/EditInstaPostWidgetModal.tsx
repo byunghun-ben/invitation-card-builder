@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { editInstaPostWidget } from "../../_actions/editInstaPostWidget";
 import { InstaPostWidget } from "../../types";
-import { useInvitationContext } from "../../_contexts/InvitationContext";
+import { useInvitationContext } from "../../../../../../_contexts/InvitationContext";
 import logger from "@/utils/logger";
 
 type Props = {

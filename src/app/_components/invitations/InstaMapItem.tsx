@@ -2,6 +2,8 @@
 
 import { InstaMapWidgetType } from "@/types/invitation";
 import logger from "@/utils/logger";
+import { MapIcon } from "@heroicons/react/20/solid";
+
 import { useEffect, useRef } from "react";
 
 type Props = {
@@ -113,19 +115,25 @@ const InstaMapItem = ({ widget }: Props) => {
   }, [coordX, coordY, placeName, roadAddress]);
 
   return (
-    <div className="flex-none flex flex-col gap-8 py-10">
-      <div className="flex flex-col px-6">
-        <div className="flex items-center py-3">
-          <span className="font-bold">{title}</span>
+    <div className="flex-none flex flex-col py-4">
+      <div className="flex items-center gap-2 py-3">
+        <div className="flex-center w-6 h-6 bg-orange-100 rounded-full">
+          <MapIcon width={16} height={16} color="#FFA500" />
         </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm">{`${placeName} (${placeDetail})`}</span>
-          <span className="text-sm text-slate-500">{roadAddress}</span>
-        </div>
+        <span className="text-sm">{title}</span>
       </div>
 
-      <div className="px-6">
-        <div ref={mapWrapperRef} className="w-full aspect-square" />
+      <div className="flex flex-col gap-4">
+        <div className="">
+          <div ref={mapWrapperRef} className="w-full aspect-square" />
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm">{`${placeName} (${placeDetail})`}</span>
+            <span className="text-sm text-slate-500">{roadAddress}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

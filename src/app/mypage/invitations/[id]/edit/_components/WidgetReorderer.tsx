@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { reorderWidgets } from "../_actions/reorderWidgets";
-import { useInvitationContext } from "../_contexts/InvitationContext";
+import { useInvitationContext } from "../../../../../_contexts/InvitationContext";
 import { Button } from "@/components/ui/button";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 

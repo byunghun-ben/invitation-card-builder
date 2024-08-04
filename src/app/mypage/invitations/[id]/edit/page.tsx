@@ -1,10 +1,9 @@
-import { getInvitation } from "@/actions/invitations";
-import Link from "next/link";
-import AddWidgetModal from "./_components/AddWidgetModal";
-import Widget from "./_components/Widget";
-import { InvitationContextProvider } from "./_contexts/InvitationContext";
-import PreviewModal from "./_components/previewModal/PreviewModal";
+import { getInvitation } from "@/actions/invitations/invitations";
+import { InvitationContextProvider } from "@/app/_contexts/InvitationContext";
 import { notFound } from "next/navigation";
+import AddWidgetModal from "./_components/AddWidgetModal";
+import PreviewModal from "./_components/previewModal/PreviewModal";
+import Widget from "./_components/Widget";
 
 type PageProps = {
   params: {

@@ -108,3 +108,9 @@ export const invitationSchema = z.object({
   updatedAt: z.date(),
   widgets: z.array(WidgetSchema),
 });
+
+export const LikeSchema = z.object({
+  id: z.string(),
+  widgetId: z.string(),
+  likes: z.array(z.object({ userId: z.string(), likedAt: z.date() })),
+});

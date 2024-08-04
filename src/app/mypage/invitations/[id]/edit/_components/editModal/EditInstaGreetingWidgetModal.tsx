@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
-import { useInvitationContext } from "../../_contexts/InvitationContext";
+import { useInvitationContext } from "../../../../../../_contexts/InvitationContext";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstaGreetingWidgetType } from "@/types/invitation";

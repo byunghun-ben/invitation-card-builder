@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { PlusIcon, XIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
 import { onAddWidget } from "../_actions/addWidget";
-import { useInvitationContext } from "../_contexts/InvitationContext";
+import { useInvitationContext } from "../../../../../_contexts/InvitationContext";
 
 // 위젯 종류
 

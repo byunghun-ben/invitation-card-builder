@@ -7,7 +7,7 @@ type Props = {
 
 const InstaCoverItem = ({ widget }: Props) => {
   return (
-    <div className="flex flex-col gap-6 py-12 bg-slate-100">
+    <div className="flex flex-col gap-6 py-12">
       <div className="flex flex-col gap-1 items-center">
         <span className="flex text-lg font-bold">{widget.title}</span>
       </div>
