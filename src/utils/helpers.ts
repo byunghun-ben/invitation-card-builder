@@ -5,7 +5,7 @@ export const checkIfError = (error: unknown): error is Error => {
 export const getURL = () => {
   let url =
     process.env?.NEXT_PUBLIC_SITE_URL ??
-    process.env?.NEXT_PUBLIC_VERCEL_URL ??
+    process.env?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ??
     "http://localhost:3000";
 
   url = url.startsWith("http") ? url : `https://${url}`;
