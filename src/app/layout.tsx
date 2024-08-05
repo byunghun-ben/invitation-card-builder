@@ -16,8 +16,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "bora-n-maria",
-  description: "당신의 결혼식을 위한 청첩장을 만들어보세요",
+  metadataBase: new URL("https://party-door.vercel.app"),
+  title: "party door",
+  description: "우리의 이야기를 담은 모바일 청첩장을 만들어보세요",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
