@@ -3,7 +3,9 @@
 import { SyntheticEvent, useRef, useState } from "react";
 import { Loading } from "../Loading";
 
-const URL = process.env.NEXT_PUBLIC_VERCEL_URL ?? "http://localhost:3000";
+const URL =
+  process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ??
+  "http://localhost:3000";
 const IFRAME_URL = `${URL}/sample`;
 
 const SampleView = () => {
