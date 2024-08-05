@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createComment } from "./action";
+import { createComment_DEPRECATED } from "./action";
 import { createCommentRequestSchema } from "./schema";
 
 export const POST = async (request: NextRequest) => {
@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
   const createCommentDto = createCommentRequestSafeParseReturn.data;
 
   try {
-    const data = await createComment(createCommentDto);
+    const data = await createComment_DEPRECATED(createCommentDto);
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {

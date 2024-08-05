@@ -1,10 +1,13 @@
+import { getComments } from "@/actions/invitations/comments";
 import { getWidgetLike } from "@/actions/invitations/likes";
 import { InstaPostWidgetType } from "@/types/invitation";
-import { DocumentIcon } from "@heroicons/react/20/solid";
+import { PhotoIcon } from "@heroicons/react/20/solid";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import Link from "next/link";
 import InstaPostLikeButton from "./InstaPostLikeButton";
+import InstaPostCommentsModal from "./modals/InstaPostCommentsModal";
+import { ModalProvider } from "./modals/ModalContext";
+import ModalTrigger from "./modals/ModalTrigger";
 
 type Props = {
   widget: InstaPostWidgetType;
@@ -13,16 +16,19 @@ type Props = {
 const InstaPostItem = async ({ widget }: Props) => {
   const { images, content } = widget;
 
-  const widgetLike = await getWidgetLike(widget.id);
-  const widgetLikeCount = widgetLike?.likes.length || 0;
+  const [widgetLike, widgetComments] = await Promise.all([
+    getWidgetLike(widget.id),
+    getComments(widget.id),
+  ]);
 
-  // console.log(widgetLike);
+  const widgetLikeCount = widgetLike?.likes.length || 0;
+  const widgetCommentCount = widgetComments?.comments.length || 0;
 
   return (
     <div className="flex-none flex flex-col py-4">
       <div className="flex items-center gap-2 p-2">
-        <div className="flex-center w-6 h-6 bg-violet-100 rounded-full">
-          <DocumentIcon width={16} height={16} color="#7F3DFF" />
+        <div className="flex-center w-6 h-6 bg-orange-100 rounded-full">
+          <PhotoIcon width={16} height={16} color="#FFA500" />
         </div>
         <p className="text-sm">{widget.title}</p>
       </div>
@@ -62,24 +68,34 @@ const InstaPostItem = async ({ widget }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col py-1">
-        <div className="relative flex items-center">
-          <InstaPostLikeButton widgetId={widget.id} widgetLike={widgetLike} />
-          <Link className="flex p-2 active:opacity-50" href={"/"}>
-            <ChatBubbleOvalLeftIcon className="w-6 h-6" />
-          </Link>
+      <ModalProvider>
+        <div className="flex flex-col py-1">
+          <div className="relative flex items-center">
+            <InstaPostLikeButton widgetId={widget.id} widgetLike={widgetLike} />
+            <ModalTrigger>
+              <div className="flex p-2">
+                <ChatBubbleOvalLeftIcon className="w-6 h-6" />
+              </div>
+            </ModalTrigger>
+          </div>
+          <div className="flex gap-2 px-3">
+            <span className="text-sm font-medium">{`좋아요 ${widgetLikeCount}개`}</span>
+            <ModalTrigger>
+              <span className="text-sm font-medium">{`댓글 ${widgetCommentCount}개`}</span>
+            </ModalTrigger>
+          </div>
         </div>
-        <div className="flex gap-2 px-3">
-          <span className="text-sm font-medium">{`좋아요 ${widgetLikeCount}개`}</span>
-          <span className="text-sm font-medium">{`댓글 000개`}</span>
-        </div>
-      </div>
 
-      {!!content && (
-        <div className="flex flex-col gap-1 py-1 px-3">
-          <p className="text-sm whitespace-pre-line">{content}</p>
-        </div>
-      )}
+        {!!content && (
+          <div className="flex flex-col gap-1 py-1 px-3">
+            <p className="text-sm whitespace-pre-line">{content}</p>
+          </div>
+        )}
+        <InstaPostCommentsModal
+          widgetComments={widgetComments}
+          widgetId={widget.id}
+        />
+      </ModalProvider>
     </div>
   );
 };

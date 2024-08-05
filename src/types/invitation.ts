@@ -1,4 +1,5 @@
 import {
+  CommentSchema,
   InstaCoverWidgetSchema,
   InstaGreetingWidgetSchema,
   InstaMapWidgetSchema,
@@ -16,3 +17,4 @@ export type InstaMapWidgetType = z.infer<typeof InstaMapWidgetSchema>;
 export type InstaCoverWidgetType = z.infer<typeof InstaCoverWidgetSchema>;
 export type InstaGreetingWidgetType = z.infer<typeof InstaGreetingWidgetSchema>;
 export type LikeType = z.infer<typeof LikeSchema>;
+export type CommentType = z.infer<typeof CommentSchema>;

@@ -1,10 +1,12 @@
+"use server";
+
 import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { CreateCommentRequest } from "./schema";
 
-export const createComment = async (createCommentDto: CreateCommentRequest) => {
-  "use server";
-
+export const createComment_DEPRECATED = async (
+  createCommentDto: CreateCommentRequest,
+) => {
   const supabase = createClient();
   const { data, error } = await supabase
     .schema("insta_template")

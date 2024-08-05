@@ -3,7 +3,6 @@
 import clientPromise from "@/lib/mongodb";
 import { LikeSchema } from "@/schemas/invitation";
 import { LikeType } from "@/types/invitation";
-import { ObjectId } from "mongodb";
 import { revalidatePath } from "next/cache";
 
 export const getWidgetLike = async (widgetId: string) => {
