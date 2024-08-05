@@ -36,7 +36,7 @@ const EditInstaMapWidgetModal = ({ widget, index }: Props) => {
         className="flex py-2 px-3 text-xs font-bold text-slate-700 bg-slate-100 rounded-md hover:bg-slate-200"
         onClick={() => setIsOpen(true)}
       >
-        위젯 수정
+        수정
       </button>
 
       {isOpen && (

@@ -2,6 +2,7 @@ import { InstaGreetingWidgetType } from "@/types/invitation";
 import WidgetReorderer from "./WidgetReorderer";
 import EditInstaGreetingWidgetModal from "./editModal/EditInstaGreetingWidgetModal";
 import InstaGreetingItem from "@/app/_components/invitations/InstaGreetingItem";
+import DeleteAlertDialog from "./DeleteAlertDialog";
 
 type Props = {
   widget: InstaGreetingWidgetType;
@@ -18,10 +19,11 @@ const InstaGreetingWidget = async ({ widget, index }: Props) => {
         <div className="flex-none flex items-center gap-1">
           <WidgetReorderer widgetIndex={index} />
           <EditInstaGreetingWidgetModal widget={widget} index={index} />
+          <DeleteAlertDialog widgetId={widget.id} />
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col p-4">
         <InstaGreetingItem widget={widget} />
       </div>
     </div>

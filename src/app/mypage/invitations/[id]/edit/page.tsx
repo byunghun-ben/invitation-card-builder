@@ -1,9 +1,10 @@
 import { getInvitation } from "@/actions/invitations/invitations";
 import { InvitationContextProvider } from "@/app/_contexts/InvitationContext";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import AddWidgetModal from "./_components/AddWidgetModal";
-import PreviewModal from "./_components/previewModal/PreviewModal";
 import Widget from "./_components/Widget";
+import { ExternalLinkIcon, NewspaperIcon } from "lucide-react";
 
 type PageProps = {
   params: {
@@ -27,16 +28,18 @@ const InvitationEditPage = async ({ params }: PageProps) => {
           <div className="flex flex-col gap-3">
             {/* InstaHeader */}
             <div className="flex-none h-10 px-3 flex items-center">
-              <span className="flex font-bold">청첩장 수정하기</span>
+              <p className="flex-1 flex font-bold">청첩장 수정하기</p>
               <div className="ml-auto flex items-center">
-                <PreviewModal invitation={invitation} />
-                {/* <Link
-                  href={`/mypage/invitations/${invitationId}/preview`}
-                  className="flex text-sm font-bold text-slate-700"
+                <Link
+                  className="flex items-start gap-0.5 text-slate-700"
+                  href={`/invitations/${invitationId}`}
                   target="_blank"
                 >
-                  미리보기
-                </Link> */}
+                  <span className="text-sm font-bold">미리보기</span>
+                  <div className="pt-0.5">
+                    <ExternalLinkIcon size={12} />
+                  </div>
+                </Link>
               </div>
             </div>
 

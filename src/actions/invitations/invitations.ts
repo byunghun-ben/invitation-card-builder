@@ -1,7 +1,7 @@
 "use server";
 
 import clientPromise from "@/lib/mongodb";
-import { invitationSchema, WeddingSchema } from "@/schemas/invitation";
+import { invitationSchema } from "@/schemas/invitation";
 import logger from "@/utils/logger";
 import { createClient } from "@/utils/supabase/server";
 import { ObjectId } from "mongodb";

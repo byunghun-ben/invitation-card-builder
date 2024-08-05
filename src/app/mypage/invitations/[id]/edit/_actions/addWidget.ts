@@ -1,5 +1,6 @@
 "use server";
 
+import { getInvitation } from "@/actions/invitations/invitations";
 import clientPromise from "@/lib/mongodb";
 import { InvitationType, WidgetType } from "@/types/invitation";
 import logger from "@/utils/logger";
@@ -46,4 +47,39 @@ export const onAddWidget = async ({
   }
 
   revalidatePath(`/mypage/invitations/${invitationId}/edit`);
+};
+
+export const removeWidget = async ({
+  invitationId,
+  widgetId,
+}: {
+  invitationId: string;
+  widgetId: string;
+}) => {
+  try {
+    const invitation = await getInvitation(invitationId);
+
+    if (!invitation) {
+      logger.error(`Failed to find invitation: ${invitationId}`);
+      return;
+    }
+
+    const newWidgets = invitation.widgets.filter(({ id }) => id !== widgetId);
+    const mongoClient = await clientPromise;
+    const db = mongoClient.db("invitations");
+    const collection = db.collection<InvitationType>("invitations");
+    await collection.updateOne(
+      { _id: new ObjectId(invitationId) },
+      {
+        $set: {
+          widgets: newWidgets,
+        },
+      },
+    );
+
+    revalidatePath(`/mypage/invitations/${invitationId}/edit`);
+  } catch (error) {
+    logger.error("Failed to remove widget", error);
+    return;
+  }
 };
