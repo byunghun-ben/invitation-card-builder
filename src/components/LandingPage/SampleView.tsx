@@ -4,7 +4,7 @@ import { SyntheticEvent, useRef, useState } from "react";
 import { Loading } from "../Loading";
 
 const URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const IFRAME_URL = `${URL}/sample`;
+const IFRAME_URL = `${URL}/invitations/66b0c965fdac2259712d26e8`;
 
 const SampleView = () => {
   const [loading, setLoading] = useState(true);

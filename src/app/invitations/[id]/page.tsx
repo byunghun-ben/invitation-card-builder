@@ -40,7 +40,7 @@ const InvitationPage = async ({ params: { id } }: PageProps) => {
   return (
     <InvitationContextProvider invitation={invitation}>
       <div className="w-full max-w-lg mx-auto flex-1 flex flex-col p-4">
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col gap-4">
           {invitation.widgets.map(widget => {
             switch (widget.type) {
               case "INSTA_COVER": {

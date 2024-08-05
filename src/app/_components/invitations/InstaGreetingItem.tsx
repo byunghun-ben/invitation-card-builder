@@ -15,7 +15,7 @@ const InstaGreetingItem = ({ widget }: Props) => {
         <p className="text-sm">{widget.title}</p>
       </div>
 
-      <div className="flex flex-col gap-10 border rounded-xl py-3">
+      <div className="flex flex-col gap-10 border rounded-xl p-3">
         <p className="text-sm text-slate-700 whitespace-pre-line text-center leading-loose">
           {widget.greetingContent}
         </p>

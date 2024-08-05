@@ -28,7 +28,7 @@ const Page = async () => {
               </Link>
             </div>
 
-            <div className="relative flex-none mx-auto w-full max-w-96 aspect-[1/2] bg-white p-4 border border-slate-400 rounded-3xl">
+            <div className="relative flex-none mx-auto w-full max-w-96 aspect-[1/2] bg-white border border-slate-400 rounded-3xl overflow-hidden">
               <SampleView />
             </div>
           </div>

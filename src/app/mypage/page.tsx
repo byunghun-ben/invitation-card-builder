@@ -6,7 +6,7 @@ const MyPage = async () => {
   const invitations = await getInvitations();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-y-auto">
       <section className="flex flex-col py-10 px-6">
         <div className="flex items-center mb-10">
           <h2 className="flex-1 text-2xl font-black">청첩장 목록</h2>
