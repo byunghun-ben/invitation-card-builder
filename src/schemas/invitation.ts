@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 export const WeddingSchema = z.object({
@@ -113,4 +112,18 @@ export const LikeSchema = z.object({
   id: z.string(),
   widgetId: z.string(),
   likes: z.array(z.object({ userId: z.string(), likedAt: z.date() })),
+});
+
+export const CommentSchema = z.object({
+  id: z.string(),
+  widgetId: z.string(),
+  comments: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      content: z.string(),
+      createdAt: z.date(),
+      password: z.string(),
+    }),
+  ),
 });
