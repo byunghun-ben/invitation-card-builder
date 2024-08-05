@@ -2,6 +2,7 @@ import InstaMapItem from "@/app/_components/invitations/InstaMapItem";
 import { InstaMapWidgetType } from "@/types/invitation";
 import EditInstaMapWidgetModal from "./editModal/EditInstaMapWidgetModal";
 import WidgetReorderer from "./WidgetReorderer";
+import DeleteAlertDialog from "./DeleteAlertDialog";
 
 type Props = {
   widget: InstaMapWidgetType;
@@ -18,10 +19,11 @@ const InstaMapWidget = ({ widget, index }: Props) => {
         <div className="flex-none flex items-center gap-1">
           <WidgetReorderer widgetIndex={index} />
           <EditInstaMapWidgetModal widget={widget} index={index} />
+          <DeleteAlertDialog widgetId={widget.id} />
         </div>
       </div>
 
-      <div className="flex flex-col bg-slate-100">
+      <div className="flex flex-col p-4">
         <InstaMapItem widget={widget} />
       </div>
     </div>

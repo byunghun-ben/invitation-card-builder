@@ -7,7 +7,7 @@ type Props = {
 
 const InstaGreetingItem = ({ widget }: Props) => {
   return (
-    <div className="flex-none flex flex-col py-4">
+    <div className="flex-none flex flex-col">
       <div className="flex items-center gap-2 p-2">
         <div className="flex-center w-6 h-6 bg-orange-100 rounded-full">
           <HandRaisedIcon width={16} height={16} color="#FFA500" />
@@ -15,7 +15,7 @@ const InstaGreetingItem = ({ widget }: Props) => {
         <p className="text-sm">{widget.title}</p>
       </div>
 
-      <div className="flex flex-col gap-10 border rounded-xl py-3">
+      <div className="flex flex-col gap-10 border rounded-xl p-3">
         <p className="text-sm text-slate-700 whitespace-pre-line text-center leading-loose">
           {widget.greetingContent}
         </p>

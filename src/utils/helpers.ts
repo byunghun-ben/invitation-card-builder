@@ -1,3 +1,7 @@
+import { InvitationType } from "@/types/invitation";
+import { format } from "date-fns";
+import { Metadata } from "next";
+
 export const checkIfError = (error: unknown): error is Error => {
   return error instanceof Error;
 };
@@ -22,4 +26,45 @@ export const convertEventAtToDate = (eventAt: {
 }) => {
   const date = new Date(`${eventAt.date} ${eventAt.time}`);
   return date;
+};
+
+export const getMetadataFromInvitation = (
+  invitation: InvitationType,
+): Metadata => {
+  const title = `${invitation.owners[0].name}, ${invitation.owners[1].name} 결혼합니다`;
+
+  const eventAt = convertEventAtToDate(invitation.eventAt);
+  const eventAtString = format(eventAt, "yy.MM.dd HH:mm");
+  const descriptionArray = [eventAtString];
+
+  if (invitation.location) {
+    descriptionArray.push(
+      `${invitation.location.placeName}(${invitation.location.placeDetail})`,
+    );
+  }
+
+  const description = descriptionArray.join(" ");
+
+  let ogImageUrl = "";
+
+  invitation.widgets.forEach(widget => {
+    if (widget.type === "INSTA_COVER") {
+      ogImageUrl = widget.url;
+    }
+  });
+
+  return {
+    title,
+    description,
+    robots: "noindex, nofollow",
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `${getURL()}/invitations/${invitation.id}`,
+      images: {
+        url: ogImageUrl,
+      },
+    },
+  };
 };

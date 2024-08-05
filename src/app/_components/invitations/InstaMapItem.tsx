@@ -115,8 +115,8 @@ const InstaMapItem = ({ widget }: Props) => {
   }, [coordX, coordY, placeName, roadAddress]);
 
   return (
-    <div className="flex-none flex flex-col py-4">
-      <div className="flex items-center gap-2 py-3">
+    <div className="flex-none flex flex-col">
+      <div className="flex items-center gap-2 p-2">
         <div className="flex-center w-6 h-6 bg-orange-100 rounded-full">
           <MapIcon width={16} height={16} color="#FFA500" />
         </div>
