@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
-import { removeWidget } from "../_actions/addWidget";
+import { removeWidget } from "../_actions/invitationWidget";
 import { useInvitationContext } from "@/app/_contexts/InvitationContext";
 
 type Props = {

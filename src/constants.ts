@@ -39,4 +39,22 @@ export const WIDGET_TYPES = [
     description: "청첩장의 인사말로 사용할 수 있는 위젯이에요.",
     type: "INSTA_GREETING",
   },
+  {
+    id: 5,
+    name: "일정",
+    description: "청첩장의 일정으로 사용할 수 있는 위젯이에요.",
+    type: "INSTA_SCHEDULE",
+  },
+  {
+    id: 6,
+    name: "방명록",
+    description: "방명록으로 사용할 수 있는 위젯이에요.",
+    type: "INSTA_GUESTBOOK",
+  },
+  {
+    id: 7,
+    name: "식순",
+    description: "식순으로 사용할 수 있는 위젯이에요.",
+    type: "INSTA_SEATING",
+  },
 ] as const;

@@ -7,11 +7,10 @@ import { Dialog } from "@headlessui/react";
 import { format } from "date-fns";
 import { PlusIcon, XIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
-import { onAddWidget } from "../_actions/addWidget";
+import { addWidget } from "../_actions/invitationWidget";
 import { useInvitationContext } from "../../../../../_contexts/InvitationContext";
 
-// 위젯 종류
-
+// 위젯 종류에 따라 위젯 객체를 생성하는 함수
 const widgetFactory = (
   widgetType: string,
   invitation: InvitationType,
@@ -69,6 +68,18 @@ const widgetFactory = (
       };
     }
 
+    case "INSTA_SCHEDULE": {
+      return {
+        type: "INSTA_SCHEDULE",
+        title: "일정",
+        date: invitation.eventAt.date,
+        time: invitation.eventAt.time,
+        showTime: true,
+        DDayType: "D_DAY",
+        id: Math.random().toString(36).slice(2),
+      };
+    }
+
     default: {
       throw new Error(`Unknown widget type: ${widgetType}`);
     }
@@ -90,7 +101,7 @@ const AddWidgetModal = () => {
 
     const newWidget = widgetFactory(widgetType, invitation);
 
-    await onAddWidget({ invitationId, newWidget });
+    await addWidget({ invitationId, newWidget });
     // TODO: 에러 처리
     setIsOpen(false);
   };
