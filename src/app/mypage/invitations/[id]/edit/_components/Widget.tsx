@@ -1,8 +1,9 @@
 import { WidgetType } from "@/types/invitation";
 import InstaCoverWidget from "./InstaCoverWidget";
+import InstaGreetingWidget from "./InstaGreetingWidget";
 import InstaMapWidget from "./InstaMapWidget";
 import InstaPostWidget from "./InstaPostWidget";
-import InstaGreetingWidget from "./InstaGreetingWidget";
+import InstaScheduleWidget from "./InstaScheduleWidget";
 
 type Props = {
   widget: WidgetType;
@@ -25,6 +26,9 @@ const Widget = async ({ widget, index }: Props) => {
 
     case "INSTA_GREETING": {
       return <InstaGreetingWidget widget={widget} index={index} />;
+    }
+    case "INSTA_SCHEDULE": {
+      return <InstaScheduleWidget widget={widget} index={index} />;
     }
 
     default: {

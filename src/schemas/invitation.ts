@@ -64,11 +64,20 @@ export const InstaGreetingWidgetSchema = BaseWidgetSchema.extend({
   ),
 });
 
+export const InstaScheduleWidgetSchema = BaseWidgetSchema.extend({
+  type: z.literal("INSTA_SCHEDULE"),
+  date: z.string(),
+  time: z.string(),
+  showTime: z.boolean(),
+  DDayType: z.union([z.literal("D_DAY"), z.literal("COUNTDOWN")]),
+});
+
 export const WidgetSchema = z.union([
   InstaCoverWidgetSchema,
   InstaPostWidgetSchema,
   InstaMapWidgetSchema,
   InstaGreetingWidgetSchema,
+  InstaScheduleWidgetSchema,
 ]);
 
 export const invitationSchema = z.object({
